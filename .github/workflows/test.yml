@@ -1,0 +1,33 @@
+name: CloudnetPy CI
+
+on: [push]
+
+jobs:
+  build:
+
+    timeout-minutes: 10
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install .
+    - name: Lint with pylint
+      run: |
+        pip install pylint
+        pylint cloudnetpy_qc/*.py --errors-only
+    - name: Test with pytest
+      run: |
+        pip install pytest-cov
+        pytest --cov=cloudnetpy tests/
