@@ -108,7 +108,7 @@ class Quality:
                     expected_value = custom_value
                     break
             if value != expected_value:
-                if key == 'time' and (value == 'float32' or value == 'float64'):
+                if key == 'time' and value in ('float32', 'float64'):
                     continue
                 invalid.append((key, value, expected_value))
                 self.n_metadata_test_failures += 1
