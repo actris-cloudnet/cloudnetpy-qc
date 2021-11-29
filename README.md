@@ -1,4 +1,7 @@
 # cloudnetpy-qc
+
+![](https://github.com/actris-cloudnet/cloudnetpy-qc/workflows/CloudnetPy-QC%20CI/badge.svg)
+
 CloudnetPy quality control
 
 Installation
