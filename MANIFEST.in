@@ -1,2 +1,2 @@
-include cloudnetpy_qc/quality/data_quality_config.ini
-include cloudnetpy_qc/quality/metadata_config.ini
+include cloudnetpy_qc/data_quality_config.ini
+include cloudnetpy_qc/metadata_config.ini
