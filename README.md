@@ -1,4 +1,4 @@
-# cloudnetpy-qc
+# CloudnetPy-QC
 
 ![](https://github.com/actris-cloudnet/cloudnetpy-qc/workflows/CloudnetPy-QC%20CI/badge.svg)
 
