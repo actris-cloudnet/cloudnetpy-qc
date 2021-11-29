@@ -1,4 +1,4 @@
-name: CloudnetPy CI
+name: CloudnetPy-QC CI
 
 on: [push]
 
