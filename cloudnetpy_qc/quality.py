@@ -53,11 +53,27 @@ class Quality:
             >>> result = quality.check_data()
 
         """
-        return {'outOfBounds': self._find_invalid_data_values()}
+        return {
+            'outOfBounds': self._find_invalid_data_values(),
+            'timeVectorStep': self._check_time_vector()
+        }
 
     def close(self) -> None:
         """Close the inspected file."""
         self._nc.close()
+
+    def _check_time_vector(self):
+        invalid = []
+        time = self._nc['time'][:]
+        differences = np.diff(time)
+        min_difference = np.min(differences)
+        max_difference = np.max(differences)
+        print(min_difference)
+        print(max_difference)
+        if min_difference <= 0 or max_difference >= 24:
+            invalid.append(('time', (min_difference, max_difference), '0, 24'))
+            self.n_data_test_failures += 1
+        return invalid
 
     def _find_invalid_data_values(self) -> list:
         invalid = []
