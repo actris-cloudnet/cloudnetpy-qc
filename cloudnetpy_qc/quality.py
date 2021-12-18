@@ -68,10 +68,10 @@ class Quality:
         differences = np.diff(time)
         min_difference = np.min(differences)
         max_difference = np.max(differences)
-        print(min_difference)
-        print(max_difference)
+
         if min_difference <= 0 or max_difference >= 24:
-            invalid.append(('time', (min_difference, max_difference), '0, 24'))
+            invalid.append(('time step difference x 1e3', (round(min_difference*1000),
+                                                           round(max_difference*1000)), '0, 24'))
             self.n_data_test_failures += 1
         return invalid
 
