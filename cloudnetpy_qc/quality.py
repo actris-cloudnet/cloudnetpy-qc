@@ -65,6 +65,8 @@ class Quality:
     def _check_time_vector(self):
         invalid = []
         time = self._nc['time'][:]
+        if len(time) == 1:
+            return invalid
         differences = np.diff(time)
         min_difference = np.min(differences)
         max_difference = np.max(differences)
