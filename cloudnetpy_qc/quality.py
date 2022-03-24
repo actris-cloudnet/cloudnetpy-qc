@@ -68,13 +68,14 @@ class Quality:
         invalid = []
         if self._nc.cloudnet_file_type != 'mwr' or 'lwp' not in self._nc.variables:
             return invalid
-        min_threshold = 0
+        min_threshold = -0.5
         max_threshold = 10
         median_lwp = ma.median(self._nc.variables['lwp'][:]) / 1000
         if not (min_threshold < median_lwp < max_threshold):
             invalid.append(('median lwp',
                             (median_lwp, median_lwp),
                             f'{str(min_threshold), str(max_threshold)}'))
+            self.n_data_test_failures += 1
         return invalid
 
     def _check_time_vector(self) -> list:
