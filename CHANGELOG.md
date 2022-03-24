@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- Run lwp test
+
 ## 0.1.0
 
 - Test for median LWP
