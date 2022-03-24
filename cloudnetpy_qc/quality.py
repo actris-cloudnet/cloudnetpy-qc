@@ -55,7 +55,8 @@ class Quality:
         """
         return {
             'outOfBounds': self._find_invalid_data_values(),
-            'timeVectorStep': self._check_time_vector()
+            'timeVectorStep': self._check_time_vector(),
+            'medianLwp': self._check_median_lwp(),
         }
 
     def close(self) -> None:
