@@ -15,7 +15,9 @@ def test_invalid_lwp():
     filename = f'{SCRIPT_PATH}/data/20220215_schneefernerhaus_hatpro.nc'
     check = Check(filename)
     check.check_metadata()
-    check.check_data(1)
+    res = check.check_data(1)
+    assert 'medianLwp' in res
+    assert 'outOfBounds' in res
 
 
 class Check:
@@ -27,5 +29,6 @@ class Check:
         assert self.quality.n_metadata_test_failures == n_failures
 
     def check_data(self, n_failures: int = 0):
-        self.quality.check_data()
+        res = self.quality.check_data()
         assert self.quality.n_data_test_failures == n_failures
+        return res
