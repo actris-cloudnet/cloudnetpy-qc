@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4
+
+- Fix median lwp test
+
 ## 0.1.3
 
 - Use ma.median
