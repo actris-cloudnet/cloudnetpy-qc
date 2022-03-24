@@ -62,6 +62,18 @@ class Quality:
         """Close the inspected file."""
         self._nc.close()
 
+    def _check_median_lwp(self):
+        invalid = []
+        if self._nc.cloudnet_file_type != 'mwr' or 'lwp' not in self._nc.variables:
+            return invalid
+        min_threshold = 0
+        max_threshold = 10
+        median_lwp = np.median(self._nc.variables['lwp'][:]) / 1000
+        if not (min_threshold < median_lwp < max_threshold):
+            invalid.append(('median lwp',
+                            (median_lwp, median_lwp),
+                            f'{str(min_threshold), str(max_threshold)}'))
+
     def _check_time_vector(self):
         invalid = []
         time = self._nc['time'][:]
