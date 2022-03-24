@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+
+- Use ma.median
+
 ## 0.1.2
 
 - Add missing return
