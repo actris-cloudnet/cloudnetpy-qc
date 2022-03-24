@@ -12,7 +12,7 @@ CHANGELOG_FILE = 'CHANGELOG.md'
 
 def main(component: str):
     current_branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).decode("utf-8").strip()
-    assert current_branch == 'master', 'FATAL: Not in master branch'
+    assert current_branch == 'main', 'FATAL: Not in main branch'
     old_version = _read_version()
     if component == 'major':
         new_version = Version(old_version.major + 1, 0, 0)
@@ -20,10 +20,10 @@ def main(component: str):
         new_version = Version(old_version.major, old_version.minor + 1, 0)
     elif component == 'patch':
         new_version = Version(old_version.major, old_version.minor, old_version.patch + 1)
-    entry = _read_changelog()
+    entry = _read_changelog(old_version)
     if not _confirm(f'Updating cloudnetPy-QC version {old_version} -> {new_version}. Continue?'):
         return
-    print(f"\nCurrent changelog entry:\n\n{entry}\n")
+    print(f"\nCurrent changelog entry in {CHANGELOG_FILE}:\n\n{entry}\n")
     if not _confirm('Use this for the release?'):
         return
     _update_changelog(new_version)
@@ -54,7 +54,7 @@ def _commit_and_push(version: Version):
         ['push', '--tags']
     ]
     for command in git_commands:
-        subprocess.run(['git'] + command)
+        subprocess.run(['git'] + command, check=True)
 
 
 def _read_int(text: str, key: str) -> int:
@@ -81,13 +81,16 @@ def _write_version(version: Version):
     p.write_text(text)
 
 
-def _read_changelog():
+def _read_changelog(old_version: Version) -> str:
     path = Path(CHANGELOG_FILE)
     old_content = path.read_text()
     entry_start = re.search(r'^## Unpublished$', old_content, re.M)
     if entry_start is None:
-        print(f'ERROR: No changelog entry found! Please specify your changes in "Unpublished" section of {CHANGELOG_FILE}', file=sys.stderr)
-        new_content = re.sub('^##[^#]', '## Unpublished\n\n\n## ', old_content, count=1, flags=re.M)
+        old_tag = f'v{old_version}'
+        print(f'ERROR: No changelog entry found! Updating {CHANGELOG_FILE} with commits since {old_tag}:\n', file=sys.stderr)
+        git_log = subprocess.run(['git', 'log', '--pretty=format:- %s', f'{old_tag}..'], check=True, capture_output=True, text=True).stdout
+        print(f'{git_log}\n\nPlease edit {CHANGELOG_FILE} to your liking and try again.', file=sys.stderr)
+        new_content = re.sub('^##[^#]', f'## Unpublished\n\n{git_log}\n\n## ', old_content, count=1, flags=re.M)
         path.write_text(new_content)
         sys.exit(1)
     entry_end = re.search(r'^##[^#]', old_content[entry_start.end():], re.M)
@@ -107,7 +110,7 @@ def _update_changelog(version: Version):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Release new version of CloudnetPy-QC.')
+    parser = argparse.ArgumentParser(description='Release new CloudnetPy-QC version.')
     parser.add_argument('component',
                         choices=['major', 'minor', 'patch'],
                         type=str,
