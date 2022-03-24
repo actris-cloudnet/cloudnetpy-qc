@@ -2,6 +2,7 @@ from typing import Optional
 import os
 import configparser
 import numpy as np
+import numpy.ma as ma
 import netCDF4
 
 FILE_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -69,7 +70,7 @@ class Quality:
             return invalid
         min_threshold = 0
         max_threshold = 10
-        median_lwp = np.median(self._nc.variables['lwp'][:]) / 1000
+        median_lwp = ma.median(self._nc.variables['lwp'][:]) / 1000
         if not (min_threshold < median_lwp < max_threshold):
             invalid.append(('median lwp',
                             (median_lwp, median_lwp),
