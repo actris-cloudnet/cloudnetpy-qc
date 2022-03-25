@@ -1,11 +1,14 @@
-from typing import Optional
+from typing import Tuple, List, Any
 import os
 import configparser
 import numpy as np
-import numpy.ma as ma
+from numpy import ma
 import netCDF4
 
 FILE_PATH = os.path.dirname(os.path.realpath(__file__))
+
+
+QualityResult = Tuple[str, Any, Any]
 
 
 class Quality:
@@ -64,8 +67,8 @@ class Quality:
         """Close the inspected file."""
         self._nc.close()
 
-    def _check_median_lwp(self) -> list:
-        invalid = []
+    def _check_median_lwp(self) -> List[QualityResult]:
+        invalid: List[QualityResult] = []
         if self._nc.cloudnet_file_type != 'mwr' or 'lwp' not in self._nc.variables:
             return invalid
         min_threshold = -0.5
@@ -78,8 +81,8 @@ class Quality:
             self.n_data_test_failures += 1
         return invalid
 
-    def _check_time_vector(self) -> list:
-        invalid = []
+    def _check_time_vector(self) -> List[QualityResult]:
+        invalid: List[QualityResult] = []
         time = self._nc['time'][:]
         if len(time) == 1:
             return invalid
@@ -93,12 +96,13 @@ class Quality:
             self.n_data_test_failures += 1
         return invalid
 
-    def _find_invalid_data_values(self) -> list:
+
+    def _find_invalid_data_values(self) -> List[QualityResult]:
         invalid = []
-        for var, limits in self._data_config.items('limits'):
+        for var, limits_str in self._data_config.items('limits'):
             if var in self._nc.variables:
                 self.n_data_tests += 1
-                limits = tuple(map(float, limits.split(',')))
+                limits = tuple(map(float, limits_str.split(',')))
                 max_value = np.max(self._nc.variables[var][:])
                 min_value = np.min(self._nc.variables[var][:])
                 if min_value < limits[0] or max_value > limits[1]:
@@ -108,18 +112,18 @@ class Quality:
 
     def _find_invalid_global_attribute_values(self) -> list:
         invalid = []
-        for key, limits in self._metadata_config.items('attribute_limits'):
+        for key, limits_str in self._metadata_config.items('attribute_limits'):
             if hasattr(self._nc, key):
                 self.n_metadata_tests += 1
-                limits = tuple(map(float, limits.split(',')))
+                limits = tuple(map(float, limits_str.split(',')))
                 value = int(self._nc.getncattr(key))
                 if not limits[0] <= value <= limits[1]:
                     invalid.append((key, value, limits))
                     self.n_metadata_test_failures += 1
         return invalid
 
-    def _check_attribute(self, name: str, ignore_model: Optional[bool] = False) -> list:
-        invalid = []
+    def _check_attribute(self, name: str, ignore_model: bool = False) -> list:
+        invalid: List[QualityResult] = []
         if ignore_model is True and self._nc.cloudnet_file_type == 'model':
             return invalid
         for key, expected in self._metadata_config.items(name):
@@ -164,6 +168,7 @@ class Quality:
 
 def _read_config(filename: str) -> configparser.ConfigParser:
     conf = configparser.ConfigParser()
-    conf.optionxform = str
+    # Case sensitive option names.
+    conf.optionxform = str # type: ignore
     conf.read(filename)
     return conf

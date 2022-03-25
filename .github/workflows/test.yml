@@ -26,7 +26,11 @@ jobs:
     - name: Lint with pylint
       run: |
         pip install pylint
-        pylint cloudnetpy_qc/*.py --errors-only
+        pylint cloudnetpy_qc/ tests/ --errors-only
+    - name: Type check
+      run: |
+        pip install mypy
+        mypy --ignore-missing-import cloudnetpy_qc/ tests/
     - name: Test with pytest
       run: |
         pip install pytest-cov
