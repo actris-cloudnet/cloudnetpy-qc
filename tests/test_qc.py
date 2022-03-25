@@ -1,23 +1,24 @@
 from os import path
+
 from cloudnetpy_qc import Quality
 
 SCRIPT_PATH = path.dirname(path.realpath(__file__))
 
 
 def test_valid_file():
-    filename = f'{SCRIPT_PATH}/data/20211129_juelich_hatpro.nc'
+    filename = f"{SCRIPT_PATH}/data/20211129_juelich_hatpro.nc"
     check = Check(filename)
     check.check_metadata()
     check.check_data()
 
 
 def test_invalid_lwp():
-    filename = f'{SCRIPT_PATH}/data/20220215_schneefernerhaus_hatpro.nc'
+    filename = f"{SCRIPT_PATH}/data/20220215_schneefernerhaus_hatpro.nc"
     check = Check(filename)
     check.check_metadata()
     res = check.check_data(2)
-    assert 'medianLwp' in res
-    assert 'outOfBounds' in res
+    assert "medianLwp" in res
+    assert "outOfBounds" in res
 
 
 class Check:
