@@ -23,6 +23,15 @@ setup(
     include_package_data=True,
     python_requires=">=3.8",
     install_requires=["numpy", "netCDF4"],
+    extras_require={
+        "test": [
+            "pytest",
+            "pytest-flakefinder",
+            "pylint",
+            "mypy",
+        ],
+        "dev": ["pre-commit"],
+    },
     classifiers=[
         "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: MIT License",
