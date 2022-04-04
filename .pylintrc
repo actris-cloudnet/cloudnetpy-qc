@@ -4,7 +4,7 @@ ignored-modules	= numpy, netCDF4, scipy
 
 [MESSAGES CONTROL]
 
-disable = C0330, C0326
+disable = C0330,C0326,C0103,C0114,C0116
 
 [format]
 max-line-length = 100

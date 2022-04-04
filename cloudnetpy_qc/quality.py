@@ -75,7 +75,7 @@ class Quality:
         min_threshold = -0.5
         max_threshold = 10
         median_lwp = ma.median(self._nc.variables["lwp"][:]) / 1000
-        if not (min_threshold < median_lwp < max_threshold):
+        if not min_threshold < median_lwp < max_threshold:
             invalid.append(
                 (
                     "median lwp",

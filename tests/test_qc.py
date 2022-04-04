@@ -1,3 +1,4 @@
+"""cloudnetpy-qc tests."""
 from os import path
 
 from cloudnetpy_qc import Quality
@@ -22,6 +23,8 @@ def test_invalid_lwp():
 
 
 class Check:
+    """Check class."""
+
     def __init__(self, filename: str):
         self.quality = Quality(filename)
 
