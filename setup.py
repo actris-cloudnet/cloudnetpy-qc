@@ -3,10 +3,10 @@ from typing import Any, Dict
 from setuptools import find_packages, setup
 
 version: Dict[str, Any] = {}
-with open("cloudnetpy_qc/version.py") as f:
-    exec(f.read(), version)
+with open("cloudnetpy_qc/version.py", encoding="utf-8") as f:
+    exec(f.read(), version)  # pylint: disable=W0122
 
-with open("README.md") as f:
+with open("README.md", encoding="utf-8") as f:
     readme = f.read()
 
 setup(
@@ -25,7 +25,6 @@ setup(
     install_requires=["numpy", "netCDF4"],
     extras_require={
         "test": [
-            "pytest",
             "pytest-flakefinder",
             "pylint",
             "mypy",
