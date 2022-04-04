@@ -22,16 +22,13 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install .
+        pip install .[test]
     - name: Lint with pylint
       run: |
-        pip install pylint
-        pylint cloudnetpy_qc/ tests/ --errors-only
+        pylint cloudnetpy_qc
     - name: Type check
       run: |
-        pip install mypy
         mypy --ignore-missing-import cloudnetpy_qc/ tests/
-    - name: Test with pytest
+    - name: Test with pytest-flakefinder
       run: |
-        pip install pytest-cov
-        pytest --cov=cloudnetpy tests/
+        pytest --flake-finder tests/ --flake-runs=2
