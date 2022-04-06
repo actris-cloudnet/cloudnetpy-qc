@@ -21,6 +21,7 @@ setup(
     license="MIT License",
     packages=find_packages(),
     include_package_data=True,
+    setup_requires=["wheel"],
     python_requires=">=3.8",
     install_requires=["numpy", "netCDF4"],
     extras_require={
