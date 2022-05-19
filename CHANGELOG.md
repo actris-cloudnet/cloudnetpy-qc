@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.6 - 2022-05-19
+
+- Test drizzle_retrieval_status data type
+
 ## 0.1.5 - 2022-05-19
 
 - Add der product
