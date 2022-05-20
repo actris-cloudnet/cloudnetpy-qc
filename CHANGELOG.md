@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.7 - 2022-05-20
+
+- Add initial required variables for ier
+
 ## 0.1.6 - 2022-05-19
 
 - Test drizzle_retrieval_status data type
