@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.11 - 2022-06-06
+
+- Check units and long names of rainfall variables
+
 ## 0.1.10 - 2022-05-24
 
 - Add ier and der units
