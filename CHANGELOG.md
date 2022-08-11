@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.12 - 2022-08-11
+
+- Check iwv unit and long name
+
 ## 0.1.11 - 2022-06-06
 
 - Check units and long names of rainfall variables
