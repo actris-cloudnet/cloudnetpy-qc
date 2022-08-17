@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 - 2022-08-17
+
+- Adjust zenith angle limits
+- Fix azimuth angle
+
 ## 0.1.12 - 2022-08-11
 
 - Check iwv unit and long name
