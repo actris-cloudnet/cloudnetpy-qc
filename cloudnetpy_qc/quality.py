@@ -1,183 +1,347 @@
-import configparser
+"""Cloudnet product quality checks."""
+import dataclasses
+import datetime
+import logging
 import os
-from typing import Any, List, Tuple
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, List, Optional, Union
 
 import netCDF4
 import numpy as np
+from cfchecker import cfchecks
 from numpy import ma
+
+from . import utils
+from .utils import format_value, str2num
 
 FILE_PATH = os.path.dirname(os.path.realpath(__file__))
 
+METADATA_CONFIG = utils.read_config(f"{FILE_PATH}/metadata_config.ini")
+DATA_CONFIG = utils.read_config(f"{FILE_PATH}/data_quality_config.ini")
 
-QualityResult = Tuple[str, Any, Any]
+
+@dataclass
+class Product:
+    # Level 1b
+    RADAR: str = "radar"
+    LIDAR: str = "lidar"
+    MWR: str = "mwr"
+    DISDROMETER: str = "disdrometer"
+    MODEL: str = "model"
+    # Level 1c
+    CATEGORIZE: str = "categorize"
+    # Level 2
+    CLASSIFICATION: str = "classification"
+    IWC: str = "iwc"
+    LWC: str = "lwc"
+    DRIZZLE: str = "drizzle"
 
 
-class Quality:
-    """Class containing quality control routines."""
+@dataclass
+class ErrorLevel:
+    PASS: str = "pass"
+    WARNING: str = "warning"
+    ERROR: str = "error"
 
-    def __init__(self, filename: str):
-        self.n_metadata_tests = 0
-        self.n_metadata_test_failures = 0
-        self.n_data_tests = 0
-        self.n_data_test_failures = 0
-        self._nc = netCDF4.Dataset(filename)
-        self._metadata_config = _read_config(f"{FILE_PATH}/metadata_config.ini")
-        self._data_config = _read_config(f"{FILE_PATH}/data_quality_config.ini")
 
-    def check_metadata(self) -> dict:
-        """Check metadata of Cloudnet file.
+@dataclass
+class TestReport:
+    testId: str
+    description: str
+    exceptions: List[dict]
 
-        Returns:
-            dict: Dictionary containing test results and some diagnostics.
-
-        Examples:
-            >>> from cloudnetpy_qc import Quality
-            >>> quality = Quality('/foo/bar/categorize.nc')
-            >>> result = quality.check_metadata()
-
-        """
+    def values(self):
         return {
-            "missingVariables": self._find_missing_keys("required_variables"),
-            "missingGlobalAttributes": self._find_missing_keys("required_global_attributes"),
-            "invalidGlobalAttributeValues": self._find_invalid_global_attribute_values(),
-            "invalidDataTypes": self._find_invalid_data_types(),
-            "invalidUnits": self._check_attribute("units"),
-            "invalidLongNames": self._check_attribute("long_name", ignore_model=True),
-            "invalidStandardNames": self._check_attribute("standard_name", ignore_model=True),
+            field.name: getattr(self, field.name)
+            for field in dataclasses.fields(self)
+            if getattr(self, field.name) is not None
         }
 
-    def check_data(self) -> dict:
-        """Check data values of Cloudnet file.
 
-        Returns:
-            dict: Dictionary containing test results and some diagnostics.
+@dataclass
+class FileReport:
+    timestamp: str
+    qcVersion: str
+    tests: List[Dict]
 
-        Examples:
-            >>> from cloudnetpy_qc import Quality
-            >>> quality = Quality('/foo/bar/categorize.nc')
-            >>> result = quality.check_data()
 
-        """
-        return {
-            "outOfBounds": self._find_invalid_data_values(),
-            "timeVectorStep": self._check_time_vector(),
-            "medianLwp": self._check_median_lwp(),
-        }
+def run_tests(filename: Path, cloudnet_file_type: Optional[str] = None) -> dict:
+    with netCDF4.Dataset(filename) as nc:
+        cloudnet_file_type = (
+            cloudnet_file_type if cloudnet_file_type is not None else nc.cloudnet_file_type
+        )
+        logging.info(f"Filename: {filename.stem}")
+        logging.info(f"File type: {cloudnet_file_type}")
+        test_reports: List[Dict] = []
+        for cls in Test.__subclasses__():
+            test_instance = cls(nc, filename, cloudnet_file_type)
+            if cloudnet_file_type in test_instance.products:
+                test_instance.run()
+                for exception in test_instance.report.values()["exceptions"]:
+                    assert exception["result"] in (
+                        ErrorLevel.ERROR,
+                        ErrorLevel.PASS,
+                        ErrorLevel.WARNING,
+                    )
+                test_reports.append(test_instance.report.values())
+    return FileReport(
+        timestamp=datetime.datetime.now().isoformat(),
+        qcVersion=utils.read_version(),
+        tests=test_reports,
+    ).__dict__
 
-    def close(self) -> None:
-        """Close the inspected file."""
-        self._nc.close()
 
-    def _check_median_lwp(self) -> List[QualityResult]:
-        invalid: List[QualityResult] = []
-        if self._nc.cloudnet_file_type != "mwr" or "lwp" not in self._nc.variables:
-            return invalid
-        min_threshold = -0.5
-        max_threshold = 10
-        median_lwp = ma.median(self._nc.variables["lwp"][:]) / 1000
-        if not min_threshold < median_lwp < max_threshold:
-            invalid.append(
-                (
-                    "median lwp",
-                    (median_lwp, median_lwp),
-                    f"{str(min_threshold), str(max_threshold)}",
-                )
-            )
-            self.n_data_test_failures += 1
-        return invalid
+def test(description: str, error_level: Optional[str] = None, products: Optional[list] = None):
+    """Decorator for the tests."""
 
-    def _check_time_vector(self) -> List[QualityResult]:
-        invalid: List[QualityResult] = []
-        time = self._nc["time"][:]
-        if len(time) == 1:
-            return invalid
-        differences = np.diff(time)
-        min_difference = np.min(differences)
-        max_difference = np.max(differences)
+    def fun(cls):
 
-        if min_difference <= 0 or max_difference >= 24:
-            invalid.append(
-                (
-                    "time step difference x 1e5",
-                    (round(min_difference * 1e5), round(max_difference * 1e5)),
-                    "0, 24",
-                )
-            )
-            self.n_data_test_failures += 1
-        return invalid
+        setattr(cls, "description", description)
+        if error_level is not None:
+            setattr(cls, "severity", error_level)
+        if products is not None:
+            setattr(cls, "products", products)
+        return cls
 
-    def _find_invalid_data_values(self) -> List[QualityResult]:
-        invalid = []
-        for var, limits_str in self._data_config.items("limits"):
-            if var in self._nc.variables:
-                self.n_data_tests += 1
-                limits = tuple(map(float, limits_str.split(",")))
-                max_value = np.max(self._nc.variables[var][:])
-                min_value = np.min(self._nc.variables[var][:])
-                if min_value < limits[0] or max_value > limits[1]:
-                    invalid.append((var, (min_value, max_value), limits))
-                    self.n_data_test_failures += 1
-        return invalid
+    return fun
 
-    def _find_invalid_global_attribute_values(self) -> list:
-        invalid = []
-        for key, limits_str in self._metadata_config.items("attribute_limits"):
-            if hasattr(self._nc, key):
-                self.n_metadata_tests += 1
-                limits = tuple(map(float, limits_str.split(",")))
-                value = int(self._nc.getncattr(key))
-                if not limits[0] <= value <= limits[1]:
-                    invalid.append((key, value, limits))
-                    self.n_metadata_test_failures += 1
-        return invalid
 
-    def _check_attribute(self, name: str, ignore_model: bool = False) -> list:
-        invalid: List[QualityResult] = []
-        if ignore_model is True and self._nc.cloudnet_file_type == "model":
-            return invalid
-        for key, expected in self._metadata_config.items(name):
-            if key in self._nc.variables:
-                self.n_metadata_tests += 1
-                value = getattr(self._nc.variables[key], name, "")
+class Test:
+    """Test base class."""
+
+    description: str
+    severity: str = ErrorLevel.WARNING
+    products = [field.default for field in dataclasses.fields(Product)]  # All products by default
+
+    def __init__(self, nc: netCDF4.Dataset, filename: Path, cloudnet_file_type: str):
+        self.filename = filename
+        self.nc = nc
+        self.cloudnet_file_type = cloudnet_file_type
+        self.report = TestReport(
+            testId=self.__class__.__name__,
+            description=self.description,
+            exceptions=[],
+        )
+
+    def run(self):
+        pass
+
+    def _test_variable_attribute(self, attribute: str):
+        for key, expected in METADATA_CONFIG.items(attribute):
+            if key in self.nc.variables:
+                value = getattr(self.nc.variables[key], attribute, "")
                 if value != expected:
-                    invalid.append((key, value, expected))
-                    self.n_metadata_test_failures += 1
-        return invalid
+                    self._add_string_exception(key, expected, value)
 
-    def _find_invalid_data_types(self) -> list:
-        invalid = []
-        for key in self._nc.variables:
-            expected_value = "float32"
-            self.n_metadata_tests += 1
-            value = self._nc.variables[key].dtype.name
-            for config_key, custom_value in self._metadata_config.items("data_types"):
-                if config_key == key:
-                    expected_value = custom_value
-                    break
-            if value != expected_value:
-                if key == "time" and value in ("float32", "float64"):
-                    continue
-                invalid.append((key, value, expected_value))
-                self.n_metadata_test_failures += 1
-        return invalid
+    def _add_suspicious_number(
+        self,
+        key: str,
+        min_value: Union[float, int],
+        max_value: Union[float, int],
+        value: Union[float, int],
+    ):
 
-    def _find_missing_keys(self, config_section: str) -> list:
-        nc_keys = self._nc.ncattrs() if "attr" in config_section else self._nc.variables.keys()
-        config_keys = self._read_config_keys(config_section)
-        missing_keys = list(set(config_keys) - set(nc_keys))
-        self.n_metadata_tests += len(config_keys)
-        self.n_metadata_test_failures += len(missing_keys)
-        return missing_keys
+        self.report.exceptions.append(
+            {
+                "variable": key,
+                "message": "Suspicious data value.",
+                "minThreshold": format_value(min_value),
+                "maxThreshold": format_value(max_value),
+                "value": format_value(value),
+                "result": self.severity,
+            }
+        )
+
+    def _add_string_exception(self, key: str, expected: str, value: str):
+        self.report.exceptions.append(
+            {
+                "variable": key,
+                "expected": expected,
+                "received": value,
+                "result": self.severity,
+            }
+        )
+
+    def _add_message(self, key, message: Union[str, list]):
+        self.report.exceptions.append(
+            {
+                "variable": key,
+                "message": utils.format_msg(message),
+                "result": self.severity,
+            }
+        )
 
     def _read_config_keys(self, config_section: str) -> np.ndarray:
-        field = "all" if "attr" in config_section else self._nc.cloudnet_file_type
-        keys = self._metadata_config[config_section][field].split(",")
+        field = "all" if "attr" in config_section else self.cloudnet_file_type
+        keys = METADATA_CONFIG[config_section][field].split(",")
         return np.char.strip(keys)
 
 
-def _read_config(filename: str) -> configparser.ConfigParser:
-    conf = configparser.ConfigParser()
-    # Case sensitive option names.
-    conf.optionxform = str  # type: ignore
-    conf.read(filename)
-    return conf
+# ---------------------- #
+# ------ Warnings ------ #
+# ---------------------- #
+
+
+@test("Test that unit attribute of variable matches expected value")
+class TestUnits(Test):
+    def run(self):
+        self._test_variable_attribute("units")
+
+
+@test("Test that long_name attribute of variable matches expected value")
+class TestLongNames(Test):
+    def run(self):
+        self._test_variable_attribute("long_name")
+
+
+@test("Test that standard_name attribute of variable matches CF convention")
+class TestStandardNames(Test):
+    def run(self):
+        self._test_variable_attribute("standard_name")
+
+
+@test("Find invalid data types")
+class TestDataTypes(Test):
+    def run(self):
+        for key in self.nc.variables:
+            expected = "float32"
+            value = self.nc.variables[key].dtype.name
+            for config_key, custom_value in METADATA_CONFIG.items("data_types"):
+                if config_key == key:
+                    expected = custom_value
+                    break
+            if value != expected:
+                if key == "time" and value in ("float32", "float64"):
+                    continue
+                self._add_string_exception(key, expected, value)
+
+
+@test("Find missing global attributes")
+class TestGlobalAttributes(Test):
+    def run(self):
+        nc_keys = self.nc.ncattrs()
+        config_keys = self._read_config_keys("required_global_attributes")
+        missing_keys = list(set(config_keys) - set(nc_keys))
+        for key in missing_keys:
+            self._add_message(key, "Required global attribute missing.")
+
+
+@test("Test median LWP value", ErrorLevel.WARNING, ["mwr", "categorize"])
+class TestMedianLwp(Test):
+    def run(self):
+        key = "lwp"
+        min_threshold = -0.5
+        max_threshold = 10
+        median_lwp = ma.median(self.nc.variables[key][:]) / 1000  # g -> kg
+        if not min_threshold < median_lwp < max_threshold:
+            self._add_suspicious_number(key, min_threshold, max_threshold, median_lwp)
+
+
+@test("Find suspicious data values")
+class FindVariableOutliers(Test):
+    def run(self):
+        for key, limits_str in DATA_CONFIG.items("limits"):
+            limits = [str2num(x) for x in limits_str.split(",")]
+            if key in self.nc.variables:
+                max_value = np.max(self.nc.variables[key][:])
+                min_value = np.min(self.nc.variables[key][:])
+                if min_value < limits[0]:
+                    self._add_suspicious_number(key, *limits, min_value)
+                if max_value > limits[1]:
+                    self._add_suspicious_number(key, *limits, max_value)
+
+
+@test("Find suspicious global attribute values")
+class FindAttributeOutliers(Test):
+    def run(self):
+        for key, limits_str in METADATA_CONFIG.items("attribute_limits"):
+            limits = [str2num(x) for x in limits_str.split(",")]
+            if hasattr(self.nc, key):
+                value = str2num(self.nc.getncattr(key))
+                if not limits[0] < value < limits[1]:
+                    self._add_suspicious_number(key, *limits, value)
+
+
+@test("Test that file contains data")
+class TestDataCoverage(Test):
+    def run(self):
+        grid = ma.array(np.linspace(0, 24, 288 + 1))
+        time = self.nc["time"][:]
+        bins_with_no_data = 0
+        for ind, t in enumerate(grid[:-1]):
+            ind2 = np.where((time > t) & (time <= grid[ind + 1]))[0]
+            if len(ind2) == 0:
+                bins_with_no_data += 1
+        missing = bins_with_no_data / len(grid) * 100
+        if missing > 10:
+            self._add_message("time", f"{round(missing)}% of day's data is missing.")
+
+
+@test(
+    "Test that valid instrument PID exists",
+    ErrorLevel.WARNING,
+    [Product.MWR, Product.LIDAR, Product.RADAR, Product.DISDROMETER],
+)
+class TestInstrumentPid(Test):
+    def run(self):
+        key = "instrument_pid"
+        try:
+            getattr(self.nc, key)
+        except AttributeError:
+            self._add_message(key, "Instrument PID missing.")
+
+
+# ---------------------#
+# ------ Errors ------ #
+# -------------------- #
+
+
+@test("Test that time vector is continuous", ErrorLevel.ERROR)
+class TestTimeVector(Test):
+    def run(self):
+        time = self.nc["time"][:]
+        if len(time) == 1:
+            self._add_message("time", "One time step only.")
+            return
+        differences = np.diff(time)
+        min_difference = np.min(differences)
+        max_difference = np.max(differences)
+        if min_difference <= 0:
+            self._add_suspicious_number("time", 0, 24, min_difference)
+        if max_difference >= 24:
+            self._add_suspicious_number("time", 0, 24, max_difference)
+
+
+@test("Find missing variables", ErrorLevel.ERROR)
+class TestVariableNames(Test):
+    def run(self):
+        nc_keys = self.nc.variables.keys()
+        config_keys = self._read_config_keys("required_variables")
+        missing_keys = list(set(config_keys) - set(nc_keys))
+        for key in missing_keys:
+            self._add_message(key, "Required global attribute missing.")
+            self._add_message(key, "Required variable missing.")
+
+
+# ------------------------------#
+# ------ Error / Warning ------ #
+# ----------------------------- #
+
+
+@test("Test that file passes CF convention")
+class TestCFConvention(Test):
+    def run(self):
+        inst = cfchecks.CFChecker(silent=True, version="1.8", cacheTables=True, cacheDir="/tmp")
+        result = inst.checker(str(self.filename))
+        for key in result["variables"]:
+            for level, value in result["variables"][key].items():
+                if not value:
+                    continue
+                if level in ("FATAL", "ERROR"):
+                    self.severity = ErrorLevel.ERROR
+                elif level == "WARN":
+                    self.severity = ErrorLevel.WARNING
+                else:
+                    continue
+                self._add_message(key, value)

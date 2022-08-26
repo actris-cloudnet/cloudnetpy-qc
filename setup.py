@@ -1,3 +1,4 @@
+"""Package configuration."""
 from typing import Any, Dict
 
 from setuptools import find_packages, setup
@@ -12,7 +13,7 @@ with open("README.md", encoding="utf-8") as f:
 setup(
     name="cloudnetpy_qc",
     version=version["__version__"],
-    description="Quality control routines for CloudnetPy",
+    description="Quality control routines for CloudnetPy products",
     long_description=readme,
     long_description_content_type="text/markdown",
     author="Finnish Meteorological Institute",
@@ -23,14 +24,13 @@ setup(
     include_package_data=True,
     setup_requires=["wheel"],
     python_requires=">=3.8",
-    install_requires=["numpy", "netCDF4"],
+    install_requires=["numpy", "netCDF4", "cfchecker"],
     extras_require={
         "test": [
             "pytest-flakefinder",
             "pylint",
             "mypy",
         ],
-        "dev": ["pre-commit"],
     },
     classifiers=[
         "Programming Language :: Python :: 3.8",
