@@ -4,6 +4,7 @@ import datetime
 import logging
 import os
 from dataclasses import dataclass
+from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
@@ -21,28 +22,26 @@ METADATA_CONFIG = utils.read_config(f"{FILE_PATH}/metadata_config.ini")
 DATA_CONFIG = utils.read_config(f"{FILE_PATH}/data_quality_config.ini")
 
 
-@dataclass
-class Product:
+class Product(Enum):
     # Level 1b
-    RADAR: str = "radar"
-    LIDAR: str = "lidar"
-    MWR: str = "mwr"
-    DISDROMETER: str = "disdrometer"
-    MODEL: str = "model"
+    RADAR = "radar"
+    LIDAR = "lidar"
+    MWR = "mwr"
+    DISDROMETER = "disdrometer"
+    MODEL = "model"
     # Level 1c
-    CATEGORIZE: str = "categorize"
+    CATEGORIZE = "categorize"
     # Level 2
-    CLASSIFICATION: str = "classification"
-    IWC: str = "iwc"
-    LWC: str = "lwc"
-    DRIZZLE: str = "drizzle"
+    CLASSIFICATION = "classification"
+    IWC = "iwc"
+    LWC = "lwc"
+    DRIZZLE = "drizzle"
 
 
-@dataclass
-class ErrorLevel:
-    PASS: str = "pass"
-    WARNING: str = "warning"
-    ERROR: str = "error"
+class ErrorLevel(Enum):
+    PASS = "pass"
+    WARNING = "warning"
+    ERROR = "error"
 
 
 @dataclass
@@ -80,9 +79,9 @@ def run_tests(filename: Path, cloudnet_file_type: Optional[str] = None) -> dict:
                 test_instance.run()
                 for exception in test_instance.report.values()["exceptions"]:
                     assert exception["result"] in (
-                        ErrorLevel.ERROR,
-                        ErrorLevel.PASS,
-                        ErrorLevel.WARNING,
+                        ErrorLevel.ERROR.value,
+                        ErrorLevel.PASS.value,
+                        ErrorLevel.WARNING.value,
                     )
                 test_reports.append(test_instance.report.values())
     return FileReport(
@@ -92,16 +91,20 @@ def run_tests(filename: Path, cloudnet_file_type: Optional[str] = None) -> dict:
     ).__dict__
 
 
-def test(description: str, error_level: Optional[str] = None, products: Optional[list] = None):
+def test(
+    description: str,
+    error_level: Optional[ErrorLevel] = None,
+    products: Optional[List[Product]] = None,
+):
     """Decorator for the tests."""
 
     def fun(cls):
 
         setattr(cls, "description", description)
         if error_level is not None:
-            setattr(cls, "severity", error_level)
+            setattr(cls, "severity", error_level.value)
         if products is not None:
-            setattr(cls, "products", products)
+            setattr(cls, "products", [member.value for member in products])
         return cls
 
     return fun
@@ -111,8 +114,8 @@ class Test:
     """Test base class."""
 
     description: str
-    severity: str = ErrorLevel.WARNING
-    products = [field.default for field in dataclasses.fields(Product)]  # All products by default
+    severity = ErrorLevel.WARNING.value
+    products: List[str] = [member.value for member in Product]  # All products by default
 
     def __init__(self, nc: netCDF4.Dataset, filename: Path, cloudnet_file_type: str):
         self.filename = filename
@@ -125,7 +128,7 @@ class Test:
         )
 
     def run(self):
-        pass
+        raise NotImplementedError
 
     def _test_variable_attribute(self, attribute: str):
         for key, expected in METADATA_CONFIG.items(attribute):
@@ -227,7 +230,7 @@ class TestGlobalAttributes(Test):
             self._add_message(key, "Required global attribute missing.")
 
 
-@test("Test median LWP value", ErrorLevel.WARNING, ["mwr", "categorize"])
+@test("Test median LWP value", ErrorLevel.WARNING, [Product.MWR, Product.CATEGORIZE])
 class TestMedianLwp(Test):
     def run(self):
         key = "lwp"
@@ -266,7 +269,7 @@ class FindAttributeOutliers(Test):
 @test("Test that file contains data")
 class TestDataCoverage(Test):
     def run(self):
-        grid = ma.array(np.linspace(0, 24, 288 + 1))
+        grid = ma.array(np.linspace(0, 24, int(24 * (60 / 5)) + 1))
         time = self.nc["time"][:]
         bins_with_no_data = 0
         for ind, t in enumerate(grid[:-1]):
@@ -339,9 +342,9 @@ class TestCFConvention(Test):
                 if not value:
                     continue
                 if level in ("FATAL", "ERROR"):
-                    self.severity = ErrorLevel.ERROR
+                    self.severity = ErrorLevel.ERROR.value
                 elif level == "WARN":
-                    self.severity = ErrorLevel.WARNING
+                    self.severity = ErrorLevel.WARNING.value
                 else:
                     continue
                 self._add_message(key, value)
