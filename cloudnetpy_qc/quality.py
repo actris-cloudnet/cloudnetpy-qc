@@ -86,7 +86,7 @@ def run_tests(filename: Path, cloudnet_file_type: Optional[str] = None) -> dict:
                     )
                 test_reports.append(test_instance.report.values())
     return FileReport(
-        timestamp=datetime.datetime.now().isoformat(),
+        timestamp=f"{datetime.datetime.now().isoformat()}Z",
         qcVersion=__version__,
         tests=test_reports,
     ).__dict__
