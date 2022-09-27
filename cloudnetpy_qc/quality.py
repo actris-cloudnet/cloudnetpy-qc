@@ -323,7 +323,6 @@ class TestVariableNames(Test):
         config_keys = self._read_config_keys("required_variables")
         missing_keys = list(set(config_keys) - set(nc_keys))
         for key in missing_keys:
-            self._add_message(key, "Required global attribute missing.")
             self._add_message(key, "Required variable missing.")
 
 
