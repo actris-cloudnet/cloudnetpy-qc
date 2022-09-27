@@ -14,7 +14,7 @@ from cfchecker import cfchecks
 from numpy import ma
 
 from . import utils
-from .utils import format_value, str2num
+from .utils import str2num
 from .version import __version__
 
 FILE_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -71,8 +71,8 @@ def run_tests(filename: Path, cloudnet_file_type: Optional[str] = None) -> dict:
         cloudnet_file_type = (
             cloudnet_file_type if cloudnet_file_type is not None else nc.cloudnet_file_type
         )
-        logging.info(f"Filename: {filename.stem}")
-        logging.info(f"File type: {cloudnet_file_type}")
+        logging.debug(f"Filename: {filename.stem}")
+        logging.debug(f"File type: {cloudnet_file_type}")
         test_reports: List[Dict] = []
         for cls in Test.__subclasses__():
             test_instance = cls(nc, filename, cloudnet_file_type)
@@ -136,46 +136,14 @@ class Test:
             if key in self.nc.variables:
                 value = getattr(self.nc.variables[key], attribute, "")
                 if value != expected:
-                    self._add_exception(key, expected, value)
+                    msg = utils.create_expected_received_msg(key, expected, value)
+                    self._add_message(msg)
 
-    def _add_suspicious_number(
-        self,
-        key: str,
-        min_value: Union[float, int],
-        max_value: Union[float, int],
-        value: Union[float, int],
-    ):
-
+    def _add_message(self, message: Union[str, list]):
         self.report.exceptions.append(
             {
-                "variable": key,
-                "message": "Suspicious data value.",
-                "minThreshold": format_value(min_value),
-                "maxThreshold": format_value(max_value),
-                "value": format_value(value),
-                "result": self.severity,
-                "type": "outOfBounds",
-            }
-        )
-
-    def _add_exception(self, key: str, expected: str, value: str):
-        self.report.exceptions.append(
-            {
-                "variable": key,
-                "expected": expected,
-                "received": value,
-                "result": self.severity,
-                "type": "exception",
-            }
-        )
-
-    def _add_message(self, key, message: Union[str, list]):
-        self.report.exceptions.append(
-            {
-                "variable": key,
                 "message": utils.format_msg(message),
                 "result": self.severity,
-                "type": "message",
             }
         )
 
@@ -213,15 +181,16 @@ class TestDataTypes(Test):
     def run(self):
         for key in self.nc.variables:
             expected = "float32"
-            value = self.nc.variables[key].dtype.name
+            received = self.nc.variables[key].dtype.name
             for config_key, custom_value in METADATA_CONFIG.items("data_types"):
                 if config_key == key:
                     expected = custom_value
                     break
-            if value != expected:
-                if key == "time" and value in ("float32", "float64"):
+            if received != expected:
+                if key == "time" and received in ("float32", "float64"):
                     continue
-                self._add_exception(key, expected, value)
+                msg = utils.create_expected_received_msg(key, expected, received)
+                self._add_message(msg)
 
 
 @test("Find missing global attributes")
@@ -231,18 +200,18 @@ class TestGlobalAttributes(Test):
         config_keys = self._read_config_keys("required_global_attributes")
         missing_keys = list(set(config_keys) - set(nc_keys))
         for key in missing_keys:
-            self._add_message(key, "Required global attribute missing.")
+            self._add_message(f"'{key}' is missing.")
 
 
 @test("Test median LWP value", ErrorLevel.WARNING, [Product.MWR, Product.CATEGORIZE])
 class TestMedianLwp(Test):
     def run(self):
         key = "lwp"
-        min_threshold = -0.5
-        max_threshold = 10
+        limits = [-0.5, 10]
         median_lwp = ma.median(self.nc.variables[key][:]) / 1000  # g -> kg
-        if not min_threshold < median_lwp < max_threshold:
-            self._add_suspicious_number(key, min_threshold, max_threshold, median_lwp)
+        if not limits[0] < median_lwp < limits[1]:
+            msg = utils.create_out_of_bounds_msg(key, *limits, median_lwp)
+            self._add_message(msg)
 
 
 @test("Find suspicious data values")
@@ -254,9 +223,11 @@ class FindVariableOutliers(Test):
                 max_value = np.max(self.nc.variables[key][:])
                 min_value = np.min(self.nc.variables[key][:])
                 if min_value < limits[0]:
-                    self._add_suspicious_number(key, *limits, min_value)
+                    msg = utils.create_out_of_bounds_msg(key, *limits, min_value)
+                    self._add_message(msg)
                 if max_value > limits[1]:
-                    self._add_suspicious_number(key, *limits, max_value)
+                    msg = utils.create_out_of_bounds_msg(key, *limits, max_value)
+                    self._add_message(msg)
 
 
 @test("Find suspicious global attribute values")
@@ -267,7 +238,8 @@ class FindAttributeOutliers(Test):
             if hasattr(self.nc, key):
                 value = str2num(self.nc.getncattr(key))
                 if not limits[0] < value < limits[1]:
-                    self._add_suspicious_number(key, *limits, value)
+                    msg = utils.create_out_of_bounds_msg(key, *limits, value)
+                    self._add_message(msg)
 
 
 @test("Test that file contains data")
@@ -282,7 +254,7 @@ class TestDataCoverage(Test):
                 bins_with_no_data += 1
         missing = bins_with_no_data / len(grid) * 100
         if missing > 10:
-            self._add_message("time", f"{round(missing)}% of day's data is missing.")
+            self._add_message(f"{round(missing)}% of day's data is missing.")
 
 
 @test(
@@ -296,7 +268,7 @@ class TestInstrumentPid(Test):
         try:
             getattr(self.nc, key)
         except AttributeError:
-            self._add_message(key, "Instrument PID missing.")
+            self._add_message("Instrument PID is missing.")
 
 
 # ---------------------#
@@ -309,15 +281,17 @@ class TestTimeVector(Test):
     def run(self):
         time = self.nc["time"][:]
         if len(time) == 1:
-            self._add_message("time", "One time step only.")
+            self._add_message("One time step only.")
             return
         differences = np.diff(time)
         min_difference = np.min(differences)
         max_difference = np.max(differences)
         if min_difference <= 0:
-            self._add_suspicious_number("time", 0, 24, min_difference)
+            msg = utils.create_out_of_bounds_msg("time", 0, 24, min_difference)
+            self._add_message(msg)
         if max_difference >= 24:
-            self._add_suspicious_number("time", 0, 24, max_difference)
+            msg = utils.create_out_of_bounds_msg("time", 0, 24, max_difference)
+            self._add_message(msg)
 
 
 @test("Find missing variables", ErrorLevel.ERROR)
@@ -327,7 +301,7 @@ class TestVariableNames(Test):
         config_keys = self._read_config_keys("required_variables")
         missing_keys = list(set(config_keys) - set(nc_keys))
         for key in missing_keys:
-            self._add_message(key, "Required variable missing.")
+            self._add_message(f"'{key}' is missing.")
 
 
 # ------------------------------#
@@ -341,8 +315,8 @@ class TestCFConvention(Test):
         inst = cfchecks.CFChecker(silent=True, version="1.8", cacheTables=True, cacheDir="/tmp")
         result = inst.checker(str(self.filename))
         for key in result["variables"]:
-            for level, value in result["variables"][key].items():
-                if not value:
+            for level, error_msg in result["variables"][key].items():
+                if not error_msg:
                     continue
                 if level in ("FATAL", "ERROR"):
                     self.severity = ErrorLevel.ERROR
@@ -350,4 +324,6 @@ class TestCFConvention(Test):
                     self.severity = ErrorLevel.WARNING
                 else:
                     continue
-                self._add_message(key, value)
+                msg = utils.format_msg(error_msg)
+                msg = f"Variable '{key}': {msg}"
+                self._add_message(msg)

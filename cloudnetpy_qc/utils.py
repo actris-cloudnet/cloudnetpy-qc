@@ -22,7 +22,7 @@ def format_msg(msg_in: Union[str, list]) -> str:
     msg = msg_in[0] if isinstance(msg_in, list) else msg_in
     if not msg.endswith("."):
         msg += "."
-    x = re.search("^(.+):", msg)
+    x = re.search("^\\(.+\\):", msg)
     if x:
         msg = msg[x.end() :]
     msg = re.sub(" +", " ", msg)
@@ -38,3 +38,19 @@ def str2num(value: Union[str, int, float]) -> Union[float, int]:
         return int(value)
     except ValueError:
         return float(value)
+
+
+def create_expected_received_msg(variable: str, expected: str, received: str) -> str:
+    return f"Expected '{expected}' but received '{received}' with variable '{variable}'"
+
+
+def create_out_of_bounds_msg(
+    variable: str,
+    lower_limit: Union[str, int, float],
+    upper_limit: Union[str, int, float],
+    value: Union[str, int, float],
+) -> str:
+    return (
+        f"Value {format_value(value)} exceeds expected limits {format_value(lower_limit)} ... "
+        f"{format_value(upper_limit)} with variable '{variable}'"
+    )
