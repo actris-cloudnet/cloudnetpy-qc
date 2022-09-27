@@ -15,6 +15,7 @@ from numpy import ma
 
 from . import utils
 from .utils import format_value, str2num
+from .version import __version__
 
 FILE_PATH = os.path.dirname(os.path.realpath(__file__))
 
@@ -86,7 +87,7 @@ def run_tests(filename: Path, cloudnet_file_type: Optional[str] = None) -> dict:
                 test_reports.append(test_instance.report.values())
     return FileReport(
         timestamp=datetime.datetime.now().isoformat(),
-        qcVersion=utils.read_version(),
+        qcVersion=__version__,
         tests=test_reports,
     ).__dict__
 

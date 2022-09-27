@@ -1,7 +1,7 @@
 """ Helper functions. """
 import configparser
 import re
-from typing import Any, Dict, Union
+from typing import Union
 
 
 def read_config(filename: str) -> configparser.ConfigParser:
@@ -9,13 +9,6 @@ def read_config(filename: str) -> configparser.ConfigParser:
     conf.optionxform = str  # type: ignore
     conf.read(filename)
     return conf
-
-
-def read_version() -> str:
-    version: Dict[str, Any] = {}
-    with open("cloudnetpy_qc/version.py", encoding="utf-8") as f:
-        exec(f.read(), version)  # pylint: disable=W0122
-    return version["__version__"]
 
 
 def format_value(value: Union[str, int, float]) -> Union[float, int]:
