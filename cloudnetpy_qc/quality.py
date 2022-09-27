@@ -135,7 +135,7 @@ class Test:
             if key in self.nc.variables:
                 value = getattr(self.nc.variables[key], attribute, "")
                 if value != expected:
-                    self._add_string_exception(key, expected, value)
+                    self._add_exception(key, expected, value)
 
     def _add_suspicious_number(
         self,
@@ -153,16 +153,18 @@ class Test:
                 "maxThreshold": format_value(max_value),
                 "value": format_value(value),
                 "result": self.severity,
+                "type": "outOfBounds",
             }
         )
 
-    def _add_string_exception(self, key: str, expected: str, value: str):
+    def _add_exception(self, key: str, expected: str, value: str):
         self.report.exceptions.append(
             {
                 "variable": key,
                 "expected": expected,
                 "received": value,
                 "result": self.severity,
+                "type": "exception",
             }
         )
 
@@ -172,6 +174,7 @@ class Test:
                 "variable": key,
                 "message": utils.format_msg(message),
                 "result": self.severity,
+                "type": "message",
             }
         )
 
@@ -217,7 +220,7 @@ class TestDataTypes(Test):
             if value != expected:
                 if key == "time" and value in ("float32", "float64"):
                     continue
-                self._add_string_exception(key, expected, value)
+                self._add_exception(key, expected, value)
 
 
 @test("Find missing global attributes")
