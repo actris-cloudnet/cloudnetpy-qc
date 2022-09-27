@@ -22,7 +22,7 @@ METADATA_CONFIG = utils.read_config(f"{FILE_PATH}/metadata_config.ini")
 DATA_CONFIG = utils.read_config(f"{FILE_PATH}/data_quality_config.ini")
 
 
-class Product(Enum):
+class Product(str, Enum):
     # Level 1b
     RADAR = "radar"
     LIDAR = "lidar"
@@ -38,7 +38,7 @@ class Product(Enum):
     DRIZZLE = "drizzle"
 
 
-class ErrorLevel(Enum):
+class ErrorLevel(str, Enum):
     PASS = "pass"
     WARNING = "warning"
     ERROR = "error"
@@ -79,9 +79,9 @@ def run_tests(filename: Path, cloudnet_file_type: Optional[str] = None) -> dict:
                 test_instance.run()
                 for exception in test_instance.report.values()["exceptions"]:
                     assert exception["result"] in (
-                        ErrorLevel.ERROR.value,
-                        ErrorLevel.PASS.value,
-                        ErrorLevel.WARNING.value,
+                        ErrorLevel.ERROR,
+                        ErrorLevel.PASS,
+                        ErrorLevel.WARNING,
                     )
                 test_reports.append(test_instance.report.values())
     return FileReport(
@@ -102,7 +102,7 @@ def test(
 
         setattr(cls, "description", description)
         if error_level is not None:
-            setattr(cls, "severity", error_level.value)
+            setattr(cls, "severity", error_level)
         if products is not None:
             setattr(cls, "products", [member.value for member in products])
         return cls
@@ -114,7 +114,7 @@ class Test:
     """Test base class."""
 
     description: str
-    severity = ErrorLevel.WARNING.value
+    severity = ErrorLevel.WARNING
     products: List[str] = [member.value for member in Product]  # All products by default
 
     def __init__(self, nc: netCDF4.Dataset, filename: Path, cloudnet_file_type: str):
@@ -342,9 +342,9 @@ class TestCFConvention(Test):
                 if not value:
                     continue
                 if level in ("FATAL", "ERROR"):
-                    self.severity = ErrorLevel.ERROR.value
+                    self.severity = ErrorLevel.ERROR
                 elif level == "WARN":
-                    self.severity = ErrorLevel.WARNING.value
+                    self.severity = ErrorLevel.WARNING
                 else:
                     continue
                 self._add_message(key, value)
