@@ -52,9 +52,12 @@ class Check:
         self.tests = self.report["tests"]
 
     def verify_exceptions(self, keys: list):
+        n = 0
         for test in self.tests:
             if test["testId"] in keys:
                 assert test["exceptions"]
+                n += 1
+        assert n == len(keys)
 
     def errors(self, n_expected: int = 0):
         assert self._count("error") == n_expected
