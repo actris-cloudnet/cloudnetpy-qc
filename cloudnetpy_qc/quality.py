@@ -209,7 +209,7 @@ class TestMedianLwp(Test):
         key = "lwp"
         limits = [-0.5, 10]
         median_lwp = ma.median(self.nc.variables[key][:]) / 1000  # g -> kg
-        if not limits[0] < median_lwp < limits[1]:
+        if median_lwp < limits[0] or median_lwp > limits[1]:
             msg = utils.create_out_of_bounds_msg(key, *limits, median_lwp)
             self._add_message(msg)
 
@@ -237,7 +237,7 @@ class FindAttributeOutliers(Test):
             limits = [str2num(x) for x in limits_str.split(",")]
             if hasattr(self.nc, key):
                 value = str2num(self.nc.getncattr(key))
-                if not limits[0] < value < limits[1]:
+                if value < limits[0] or value > limits[1]:
                     msg = utils.create_out_of_bounds_msg(key, *limits, value)
                     self._add_message(msg)
 
@@ -255,6 +255,44 @@ class TestDataCoverage(Test):
         missing = bins_with_no_data / len(grid) * 100
         if missing > 10:
             self._add_message(f"{round(missing)}% of day's data is missing.")
+
+
+@test("Test that LDR values are proper", products=[Product.RADAR, Product.CATEGORIZE])
+class TestLDR(Test):
+    def run(self):
+        if "ldr" in self.nc.variables:
+            ldr = self.nc["ldr"][:]
+            if ldr.mask.all():
+                self._add_message("LDR exists but all the values are invalid.")
+
+
+@test("Test radar folding", products=[Product.RADAR, Product.CATEGORIZE])
+class FindFolding(Test):
+    def run(self):
+        v_threshold = 8
+        data = self.nc["v"][:]
+        difference = np.abs(np.diff(data, axis=1))
+        n_suspicious = ma.sum(difference > v_threshold)
+        if n_suspicious > 20:
+            self._add_message(f"{n_suspicious} suspicious range gates. Folding might be present.")
+
+
+@test("Test if beta not range-corrected", products=[Product.LIDAR])
+class TestIfRangeCorrected(Test):
+    def run(self):
+        try:
+            data = self.nc["beta_raw"][:]
+        except IndexError:
+            return
+        noise_threshold = 2e-6
+        std_threshold = 1e-6
+        noise_ind = np.where(data < noise_threshold)
+        noise_std = float(np.std(data[noise_ind]))
+        if noise_std < std_threshold:
+            self._add_message(
+                f"Suspiciously low noise std ({utils.format_value(noise_std)}). "
+                f"Data might not be range-corrected."
+            )
 
 
 @test(

@@ -11,8 +11,10 @@ def read_config(filename: str) -> configparser.ConfigParser:
     return conf
 
 
-def format_value(value: Union[str, int, float]) -> Union[float, int]:
+def format_value(value: Union[str, int, float]) -> Union[float, int, str]:
     value = str2num(value)
+    if value < 0.001 or value > 1e3:
+        return "{:,.2e}".format(value)
     if isinstance(value, int):
         return value
     return round(float(value), 3)
