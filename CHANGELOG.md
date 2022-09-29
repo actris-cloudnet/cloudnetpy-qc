@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3 - 2022-09-29
+
+- Add ignore_products option
+
 ## 1.0.2 - 2022-09-29
 
 - Remove model from standard_name check
