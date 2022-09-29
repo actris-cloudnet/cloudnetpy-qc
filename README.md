@@ -7,14 +7,16 @@ CloudnetPy quality control
 Installation
 ------------
 ```shell
-$ pip3 install cloudnetpy_qc
+$ pip3 install cloudnetpy-qc
 ```
 
 Usage
 -----
 ```python
-from cloudnetpy_qc import Quality
-quality = Quality('cloudnet-file.nc')
-metadata_result = quality.check_metadata()
-data_result = quality.check_data()
+import json
+from pathlib import Path
+from cloudnetpy_qc import quality
+report = quality.run_tests(Path('cloudnet-file.nc'))
+json_object = json.dumps(report, indent=4)
+print(json_object)
 ```
