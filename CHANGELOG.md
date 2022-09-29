@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4 - 2022-09-29
+
+- Read cf tables from local files
+
 ## 1.0.3 - 2022-09-29
 
 - Add ignore_products option
