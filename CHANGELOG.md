@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 - 2022-09-29
+
+- Add IER and DER products
+
 ## 1.0.0 - 2022-09-29
 
 - Implement three level QC (pass, warning, error)
