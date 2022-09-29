@@ -37,6 +37,9 @@ class Product(str, Enum):
     IWC = "iwc"
     LWC = "lwc"
     DRIZZLE = "drizzle"
+    # Experimental
+    DER = "der"
+    IER = "ier"
 
 
 class ErrorLevel(str, Enum):
@@ -176,6 +179,8 @@ class TestUnits(Test):
         Product.IWC,
         Product.LWC,
         Product.DRIZZLE,
+        Product.DER,
+        Product.IER,
     ],
 )
 class TestLongNames(Test):
