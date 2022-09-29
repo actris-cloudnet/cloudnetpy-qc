@@ -363,7 +363,14 @@ class TestVariableNames(Test):
 @test("Test that file passes CF convention")
 class TestCFConvention(Test):
     def run(self):
-        inst = cfchecks.CFChecker(silent=True, version="1.8", cacheTables=True, cacheDir="/tmp")
+        env = os.environ
+        inst = cfchecks.CFChecker(
+            silent=True,
+            version="1.8",
+            cfStandardNamesXML=env["cfStandardNamesXML"],
+            cfAreaTypesXML=env["cfAreaTypesXML"],
+            cfRegionNamesXML=env["cfRegionNamesXML"],
+        )
         result = inst.checker(str(self.filename))
         for key in result["variables"]:
             for level, error_msg in result["variables"][key].items():
