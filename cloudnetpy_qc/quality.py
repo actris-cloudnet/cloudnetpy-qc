@@ -99,6 +99,7 @@ def test(
     description: str,
     error_level: Optional[ErrorLevel] = None,
     products: Optional[List[Product]] = None,
+    ignore_products: Optional[List[Product]] = None,
 ):
     """Decorator for the tests."""
 
@@ -109,6 +110,9 @@ def test(
             setattr(cls, "severity", error_level)
         if products is not None:
             setattr(cls, "products", [member.value for member in products])
+        if ignore_products is not None:
+            prods = list(set(getattr(cls, "products")) - set(ignore_products))
+            setattr(cls, "products", prods)
         return cls
 
     return fun
@@ -169,19 +173,7 @@ class TestUnits(Test):
 
 @test(
     "Test that long_name attribute of variable matches expected value",
-    products=[
-        Product.RADAR,
-        Product.LIDAR,
-        Product.MWR,
-        Product.DISDROMETER,
-        Product.CATEGORIZE,
-        Product.CLASSIFICATION,
-        Product.IWC,
-        Product.LWC,
-        Product.DRIZZLE,
-        Product.DER,
-        Product.IER,
-    ],
+    ignore_products=[Product.MODEL],
 )
 class TestLongNames(Test):
     def run(self):
@@ -190,19 +182,7 @@ class TestLongNames(Test):
 
 @test(
     "Test that standard_name attribute of variable matches CF convention",
-    products=[
-        Product.RADAR,
-        Product.LIDAR,
-        Product.MWR,
-        Product.DISDROMETER,
-        Product.CATEGORIZE,
-        Product.CLASSIFICATION,
-        Product.IWC,
-        Product.LWC,
-        Product.DRIZZLE,
-        Product.DER,
-        Product.IER,
-    ],
+    ignore_products=[Product.MODEL],
 )
 class TestStandardNames(Test):
     def run(self):
@@ -275,7 +255,7 @@ class FindAttributeOutliers(Test):
                     self._add_message(msg)
 
 
-@test("Test that file contains data")
+@test("Test that file contains data", ignore_products=[Product.MODEL])
 class TestDataCoverage(Test):
     def run(self):
         grid = ma.array(np.linspace(0, 24, int(24 * (60 / 5)) + 1))
