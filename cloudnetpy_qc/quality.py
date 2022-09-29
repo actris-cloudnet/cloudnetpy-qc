@@ -164,7 +164,20 @@ class TestUnits(Test):
         self._test_variable_attribute("units")
 
 
-@test("Test that long_name attribute of variable matches expected value")
+@test(
+    "Test that long_name attribute of variable matches expected value",
+    products=[
+        Product.RADAR,
+        Product.LIDAR,
+        Product.MWR,
+        Product.DISDROMETER,
+        Product.CATEGORIZE,
+        Product.CLASSIFICATION,
+        Product.IWC,
+        Product.LWC,
+        Product.DRIZZLE,
+    ],
+)
 class TestLongNames(Test):
     def run(self):
         self._test_variable_attribute("long_name")
