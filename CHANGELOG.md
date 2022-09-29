@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2 - 2022-09-29
+
+- Remove model from standard_name check
+
 ## 1.0.1 - 2022-09-29
 
 - Add IER and DER products
