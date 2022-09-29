@@ -188,7 +188,22 @@ class TestLongNames(Test):
         self._test_variable_attribute("long_name")
 
 
-@test("Test that standard_name attribute of variable matches CF convention")
+@test(
+    "Test that standard_name attribute of variable matches CF convention",
+    products=[
+        Product.RADAR,
+        Product.LIDAR,
+        Product.MWR,
+        Product.DISDROMETER,
+        Product.CATEGORIZE,
+        Product.CLASSIFICATION,
+        Product.IWC,
+        Product.LWC,
+        Product.DRIZZLE,
+        Product.DER,
+        Product.IER,
+    ],
+)
 class TestStandardNames(Test):
     def run(self):
         self._test_variable_attribute("standard_name")
