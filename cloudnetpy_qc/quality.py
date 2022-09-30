@@ -220,6 +220,10 @@ class TestGlobalAttributes(Test):
 class TestMedianLwp(Test):
     def run(self):
         key = "lwp"
+        if key not in self.nc.variables:
+            self.severity = ErrorLevel.ERROR
+            self._add_message(f"'{key}' is missing.")
+            return
         limits = [-0.5, 10]
         median_lwp = ma.median(self.nc.variables[key][:]) / 1000  # g -> kg
         if median_lwp < limits[0] or median_lwp > limits[1]:
@@ -233,8 +237,12 @@ class FindVariableOutliers(Test):
         for key, limits_str in DATA_CONFIG.items("limits"):
             limits = [str2num(x) for x in limits_str.split(",")]
             if key in self.nc.variables:
-                max_value = np.max(self.nc.variables[key][:])
-                min_value = np.min(self.nc.variables[key][:])
+                data = self.nc.variables[key][:]
+                if data.ndim > 0 and len(data) == 0:
+                    self.severity = ErrorLevel.ERROR
+                    break
+                max_value = np.max(data)
+                min_value = np.min(data)
                 if min_value < limits[0]:
                     msg = utils.create_out_of_bounds_msg(key, *limits, min_value)
                     self._add_message(msg)
@@ -331,7 +339,10 @@ class TestInstrumentPid(Test):
 class TestTimeVector(Test):
     def run(self):
         time = self.nc["time"][:]
-        if time.shape == () or len(time) == 1:
+        if time.ndim == 1 and time.shape == (0,):
+            self._add_message("Time vector is empty.")
+            return
+        if len(time) == 1:
             self._add_message("One time step only.")
             return
         differences = np.diff(time)

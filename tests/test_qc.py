@@ -44,6 +44,16 @@ def test_invalid_lwp():
     check.verify_exceptions(["FindVariableOutliers"])
 
 
+def test_file_without_time_array():
+    filename = f"{SCRIPT_PATH}/data/20200505_chilbolton_mira.nc"
+    Check(filename)
+
+
+def test_bad_mwr_from_delft():
+    filename = f"{SCRIPT_PATH}/data/20210421_delft_hatpro.nc"
+    Check(filename)
+
+
 class Check:
     """Check class."""
 
