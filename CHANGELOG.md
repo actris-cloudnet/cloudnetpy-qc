@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.6 - 2022-09-30
+
+- Make checks more robust
+
 ## 1.0.5 - 2022-09-30
 
 - Fix testing of scalar time vector
