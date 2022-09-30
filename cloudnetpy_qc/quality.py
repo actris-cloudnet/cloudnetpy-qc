@@ -331,7 +331,7 @@ class TestInstrumentPid(Test):
 class TestTimeVector(Test):
     def run(self):
         time = self.nc["time"][:]
-        if len(time) == 1:
+        if time.shape == () or len(time) == 1:
             self._add_message("One time step only.")
             return
         differences = np.diff(time)
