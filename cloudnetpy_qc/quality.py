@@ -14,7 +14,6 @@ from cfchecker import cfchecks
 from numpy import ma
 
 from . import utils
-from .utils import str2num
 from .version import __version__
 
 FILE_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -235,7 +234,7 @@ class TestMedianLwp(Test):
 class FindVariableOutliers(Test):
     def run(self):
         for key, limits_str in DATA_CONFIG.items("limits"):
-            limits = [str2num(x) for x in limits_str.split(",")]
+            limits = [float(x) for x in limits_str.split(",")]
             if key in self.nc.variables:
                 data = self.nc.variables[key][:]
                 if data.ndim > 0 and len(data) == 0:
@@ -255,9 +254,9 @@ class FindVariableOutliers(Test):
 class FindAttributeOutliers(Test):
     def run(self):
         for key, limits_str in METADATA_CONFIG.items("attribute_limits"):
-            limits = [str2num(x) for x in limits_str.split(",")]
+            limits = [float(x) for x in limits_str.split(",")]
             if hasattr(self.nc, key):
-                value = str2num(self.nc.getncattr(key))
+                value = float(self.nc.getncattr(key))
                 if value < limits[0] or value > limits[1]:
                     msg = utils.create_out_of_bounds_msg(key, *limits, value)
                     self._add_message(msg)
