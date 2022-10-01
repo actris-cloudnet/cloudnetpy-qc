@@ -46,12 +46,26 @@ def test_invalid_lwp():
 
 def test_file_without_time_array():
     filename = f"{SCRIPT_PATH}/data/20200505_chilbolton_mira.nc"
-    Check(filename)
+    check = Check(filename)
+    check.verify_exceptions(["TestTimeVector"])
 
 
 def test_bad_mwr_from_delft():
     filename = f"{SCRIPT_PATH}/data/20210421_delft_hatpro.nc"
-    Check(filename)
+    check = Check(filename)
+    check.verify_exceptions(["TestTimeVector"])
+
+
+def test_bad_mwr_from_granada():
+    filename = f"{SCRIPT_PATH}/data/20160610_granada_hatpro.nc"
+    check = Check(filename)
+    check.verify_exceptions(["TestTimeVector"])
+
+
+def test_bad_categorize_from_chilbolton():
+    filename = f"{SCRIPT_PATH}/data/20001017_chilbolton_categorize.nc"
+    check = Check(filename, "categorize")
+    check.verify_exceptions(["FindFolding"])
 
 
 class Check:

@@ -70,9 +70,15 @@ class FileReport:
 
 def run_tests(filename: Path, cloudnet_file_type: Optional[str] = None) -> dict:
     with netCDF4.Dataset(filename) as nc:
-        cloudnet_file_type = (
-            cloudnet_file_type if cloudnet_file_type is not None else nc.cloudnet_file_type
-        )
+        if cloudnet_file_type is None:
+            try:
+                cloudnet_file_type = nc.cloudnet_file_type
+            except AttributeError:
+                logging.error(
+                    "No cloudnet_file_type global attribute found, can not run tests. "
+                    "Is this a legacy file?"
+                )
+                return {}
         logging.debug(f"Filename: {filename.stem}")
         logging.debug(f"File type: {cloudnet_file_type}")
         test_reports: List[Dict] = []
@@ -289,8 +295,14 @@ class TestLDR(Test):
 @test("Test radar folding", products=[Product.RADAR, Product.CATEGORIZE])
 class FindFolding(Test):
     def run(self):
+        key = "v"
         v_threshold = 8
-        data = self.nc["v"][:]
+        try:
+            data = self.nc[key][:]
+        except IndexError:
+            self.severity = ErrorLevel.ERROR
+            self._add_message(f"Doppler velocity, '{key}', is missing.")
+            return
         difference = np.abs(np.diff(data, axis=1))
         n_suspicious = ma.sum(difference > v_threshold)
         if n_suspicious > 20:
@@ -338,10 +350,15 @@ class TestInstrumentPid(Test):
 class TestTimeVector(Test):
     def run(self):
         time = self.nc["time"][:]
-        if time.ndim == 1 and time.shape == (0,):
+        try:
+            n_time = len(time)
+        except (TypeError, ValueError):
             self._add_message("Time vector is empty.")
             return
-        if len(time) == 1:
+        if n_time == 0:
+            self._add_message("Time vector is empty.")
+            return
+        if n_time == 1:
             self._add_message("One time step only.")
             return
         differences = np.diff(time)
