@@ -64,8 +64,14 @@ def test_bad_mwr_from_granada():
 
 def test_bad_categorize_from_chilbolton():
     filename = f"{SCRIPT_PATH}/data/20001017_chilbolton_categorize.nc"
-    check = Check(filename, "categorize")
+    check = Check(filename, file_type="categorize")
     check.verify_exceptions(["FindFolding"])
+
+
+def test_empty_instrument_pid():
+    filename = f"{SCRIPT_PATH}/data/20220326_schneefernerhaus_mira.nc"
+    check = Check(filename)
+    check.verify_exceptions(["TestInstrumentPid"])
 
 
 class Check:

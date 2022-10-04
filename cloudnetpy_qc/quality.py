@@ -336,7 +336,9 @@ class TestInstrumentPid(Test):
     def run(self):
         key = "instrument_pid"
         try:
-            getattr(self.nc, key)
+            pid = getattr(self.nc, key)
+            if pid == "":
+                self._add_message("Instrument PID is empty.")
         except AttributeError:
             self._add_message("Instrument PID is missing.")
 
