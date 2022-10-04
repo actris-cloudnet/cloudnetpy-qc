@@ -10,7 +10,6 @@ from typing import Dict, List, Optional, Union
 
 import netCDF4
 import numpy as np
-from cfchecker import cfchecks
 from numpy import ma
 
 from . import utils
@@ -398,6 +397,8 @@ class TestVariableNames(Test):
 @test("Test that file passes CF convention")
 class TestCFConvention(Test):
     def run(self):
+        from cfchecker import cfchecks  # pylint: disable=import-outside-toplevel
+
         standard_names = "CF_STANDARD_NAMES_XML"
         area_types = "CF_AREA_TYPES_XML"
         region_names = "CF_REGION_NAMES_XML"
