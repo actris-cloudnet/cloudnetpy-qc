@@ -68,7 +68,11 @@ class FileReport:
     tests: List[Dict]
 
 
-def run_tests(filename: Path, cloudnet_file_type: Optional[str] = None) -> dict:
+def run_tests(
+    filename: Path,
+    cloudnet_file_type: Optional[str] = None,
+    ignore_tests: Optional[List[str]] = None,
+) -> dict:
     with netCDF4.Dataset(filename) as nc:
         if cloudnet_file_type is None:
             try:
@@ -83,6 +87,8 @@ def run_tests(filename: Path, cloudnet_file_type: Optional[str] = None) -> dict:
         logging.debug(f"File type: {cloudnet_file_type}")
         test_reports: List[Dict] = []
         for cls in Test.__subclasses__():
+            if ignore_tests and cls.__name__ in ignore_tests:
+                continue
             test_instance = cls(nc, filename, cloudnet_file_type)
             if cloudnet_file_type in test_instance.products:
                 test_instance.run()
