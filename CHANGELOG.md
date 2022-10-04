@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0 - 2022-10-04
+
+- Add option to ignore tests
+
 ## 1.0.8 - 2022-10-04
 
 - Test for empty instrument PID
