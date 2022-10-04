@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.8 - 2022-10-04
+
+- Test for empty instrument PID
+
 ## 1.0.7 - 2022-10-01
 
 - Make checks more robust
