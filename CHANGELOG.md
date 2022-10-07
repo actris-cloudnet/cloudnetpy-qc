@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2 - 2022-10-07
+
+- Add sldr long_name and unit
+
 ## 1.1.1 - 2022-10-04
 
 - Change import location
