@@ -41,7 +41,6 @@ class Product(str, Enum):
 
 
 class ErrorLevel(str, Enum):
-    PASS = "pass"
     WARNING = "warning"
     ERROR = "error"
 
@@ -94,7 +93,6 @@ def run_tests(
                 for exception in test_instance.report.values()["exceptions"]:
                     assert exception["result"] in (
                         ErrorLevel.ERROR,
-                        ErrorLevel.PASS,
                         ErrorLevel.WARNING,
                     )
                 test_reports.append(test_instance.report.values())
