@@ -48,7 +48,6 @@ class ErrorLevel(str, Enum):
 @dataclass
 class TestReport:
     testId: str
-    description: str
     exceptions: List[dict]
 
     def values(self):
@@ -104,6 +103,7 @@ def run_tests(
 
 
 def test(
+    name: str,
     description: str,
     error_level: Optional[ErrorLevel] = None,
     products: Optional[List[Product]] = None,
@@ -113,6 +113,7 @@ def test(
 
     def fun(cls):
 
+        setattr(cls, "name", name)
         setattr(cls, "description", description)
         if error_level is not None:
             setattr(cls, "severity", error_level)
@@ -129,6 +130,7 @@ def test(
 class Test:
     """Test base class."""
 
+    name: str
     description: str
     severity = ErrorLevel.WARNING
     products: List[str] = [member.value for member in Product]  # All products by default
@@ -139,7 +141,6 @@ class Test:
         self.cloudnet_file_type = cloudnet_file_type
         self.report = TestReport(
             testId=self.__class__.__name__,
-            description=self.description,
             exceptions=[],
         )
 
@@ -173,14 +174,15 @@ class Test:
 # ---------------------- #
 
 
-@test("Test that unit attribute of variable matches expected value")
+@test("Units", "Check that variables have expected units.")
 class TestUnits(Test):
     def run(self):
         self._test_variable_attribute("units")
 
 
 @test(
-    "Test that long_name attribute of variable matches expected value",
+    "Long names",
+    "Check that variables have expected long names.",
     ignore_products=[Product.MODEL],
 )
 class TestLongNames(Test):
@@ -189,7 +191,8 @@ class TestLongNames(Test):
 
 
 @test(
-    "Test that standard_name attribute of variable matches CF convention",
+    "Standard names",
+    "Check that variable have expected standard names.",
     ignore_products=[Product.MODEL],
 )
 class TestStandardNames(Test):
@@ -197,7 +200,7 @@ class TestStandardNames(Test):
         self._test_variable_attribute("standard_name")
 
 
-@test("Find invalid data types")
+@test("Data types", "Check that variables have expected data types.")
 class TestDataTypes(Test):
     def run(self):
         for key in self.nc.variables:
@@ -214,7 +217,7 @@ class TestDataTypes(Test):
                 self._add_message(msg)
 
 
-@test("Find missing global attributes")
+@test("Global attributes", "Check that file contains required global attributes.")
 class TestGlobalAttributes(Test):
     def run(self):
         nc_keys = self.nc.ncattrs()
@@ -224,7 +227,12 @@ class TestGlobalAttributes(Test):
             self._add_message(f"'{key}' is missing.")
 
 
-@test("Test median LWP value", ErrorLevel.WARNING, [Product.MWR, Product.CATEGORIZE])
+@test(
+    "Median LWP",
+    "Test that median of LWP values is within a reasonable range.",
+    ErrorLevel.WARNING,
+    [Product.MWR, Product.CATEGORIZE],
+)
 class TestMedianLwp(Test):
     def run(self):
         key = "lwp"
@@ -239,7 +247,7 @@ class TestMedianLwp(Test):
             self._add_message(msg)
 
 
-@test("Find suspicious data values")
+@test("Variable outliers", "Find suspicious data values.")
 class FindVariableOutliers(Test):
     def run(self):
         for key, limits_str in DATA_CONFIG.items("limits"):
@@ -259,7 +267,7 @@ class FindVariableOutliers(Test):
                     self._add_message(msg)
 
 
-@test("Find suspicious global attribute values")
+@test("Attribute outliers", "Find suspicious values in global attributes.")
 class FindAttributeOutliers(Test):
     def run(self):
         for key, limits_str in METADATA_CONFIG.items("attribute_limits"):
@@ -271,7 +279,11 @@ class FindAttributeOutliers(Test):
                     self._add_message(msg)
 
 
-@test("Test that file contains data", ignore_products=[Product.MODEL])
+@test(
+    "Data coverage",
+    "Test that file contains enough data.",
+    ignore_products=[Product.MODEL],
+)
 class TestDataCoverage(Test):
     def run(self):
         grid = ma.array(np.linspace(0, 24, int(24 * (60 / 5)) + 1))
@@ -286,7 +298,9 @@ class TestDataCoverage(Test):
             self._add_message(f"{round(missing)}% of day's data is missing.")
 
 
-@test("Test that LDR values are proper", products=[Product.RADAR, Product.CATEGORIZE])
+@test(
+    "LDR values", "Test that LDR values are proper.", products=[Product.RADAR, Product.CATEGORIZE]
+)
 class TestLDR(Test):
     def run(self):
         if "ldr" in self.nc.variables:
@@ -295,7 +309,7 @@ class TestLDR(Test):
                 self._add_message("LDR exists but all the values are invalid.")
 
 
-@test("Test radar folding", products=[Product.RADAR, Product.CATEGORIZE])
+@test("Radar folding", "Test for radar folding.", products=[Product.RADAR, Product.CATEGORIZE])
 class FindFolding(Test):
     def run(self):
         key = "v"
@@ -312,7 +326,7 @@ class FindFolding(Test):
             self._add_message(f"{n_suspicious} suspicious range gates. Folding might be present.")
 
 
-@test("Test if beta not range-corrected", products=[Product.LIDAR])
+@test("Range correction", "Test that beta is range corrected.", products=[Product.LIDAR])
 class TestIfRangeCorrected(Test):
     def run(self):
         try:
@@ -331,7 +345,8 @@ class TestIfRangeCorrected(Test):
 
 
 @test(
-    "Test that valid instrument PID exists",
+    "Instrument PID",
+    "Test that valid instrument PID exists.",
     ErrorLevel.WARNING,
     [Product.MWR, Product.LIDAR, Product.RADAR, Product.DISDROMETER],
 )
@@ -351,7 +366,7 @@ class TestInstrumentPid(Test):
 # -------------------- #
 
 
-@test("Test that time vector is continuous", ErrorLevel.ERROR)
+@test("Time vector", "Test that time vector is continuous.", ErrorLevel.ERROR)
 class TestTimeVector(Test):
     def run(self):
         time = self.nc["time"][:]
@@ -377,7 +392,7 @@ class TestTimeVector(Test):
             self._add_message(msg)
 
 
-@test("Find missing variables", ErrorLevel.ERROR)
+@test("Variables", "Check that file contains required variables.", ErrorLevel.ERROR)
 class TestVariableNames(Test):
     def run(self):
         nc_keys = self.nc.variables.keys()
@@ -392,7 +407,7 @@ class TestVariableNames(Test):
 # ----------------------------- #
 
 
-@test("Test that file passes CF convention")
+@test("CF conventions", "Test compliance with the CF metadata conventions.")
 class TestCFConvention(Test):
     def run(self):
         from cfchecker import cfchecks  # pylint: disable=import-outside-toplevel
