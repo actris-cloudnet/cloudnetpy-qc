@@ -28,7 +28,6 @@ print(json_object)
 
 ### `Test`
 * `testId`: Unique name of the test
-* `description`: Free-form description of the test
 * `exceptions`: `Exception[]`
 
 ### `Exception`
@@ -45,12 +44,10 @@ print(json_object)
   "tests": [
     {
       "testId": "TestUnits",
-      "description": "Test that unit attribute of variable matches expected value",
       "exceptions": []
     },
     {
       "testId": "TestInstrumentPid",
-      "description": "Test that valid instrument PID exists",
       "exceptions": [
         {
           "message": "Instrument PID is missing.",
@@ -60,17 +57,14 @@ print(json_object)
     },
     {
       "testId": "TestTimeVector",
-      "description": "Test that time vector is continuous",
       "exceptions": []
     },
     {
       "testId": "TestVariableNames",
-      "description": "Find missing variables",
       "exceptions": []
     },
     {
       "testId": "TestCFConvention",
-      "description": "Test that file passes CF convention",
       "exceptions": []
     }
   ]
