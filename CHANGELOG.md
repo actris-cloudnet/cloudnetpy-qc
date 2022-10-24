@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0 - 2022-10-24
+
+- Add human-readable test names
+- Add height to required model variables
+
 ## 1.1.2 - 2022-10-07
 
 - Add sldr long_name and unit
