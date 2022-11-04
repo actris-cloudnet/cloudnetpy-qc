@@ -19,6 +19,9 @@ FILE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 METADATA_CONFIG = utils.read_config(f"{FILE_PATH}/metadata_config.ini")
 DATA_CONFIG = utils.read_config(f"{FILE_PATH}/data_quality_config.ini")
+CF_AREA_TYPES_XML = f"{FILE_PATH}/area-type-table.xml"
+CF_STANDARD_NAMES_XML = f"{FILE_PATH}/cf-standard-name-table.xml"
+CF_REGION_NAMES_XML = f"{FILE_PATH}/standardized-region-list.xml"
 
 
 class Product(str, Enum):
@@ -412,21 +415,14 @@ class TestCFConvention(Test):
     def run(self):
         from cfchecker import cfchecks  # pylint: disable=import-outside-toplevel
 
-        standard_names = "CF_STANDARD_NAMES_XML"
-        area_types = "CF_AREA_TYPES_XML"
-        region_names = "CF_REGION_NAMES_XML"
         cf_version = "1.8"
-        env = os.environ
-        if all(key in env for key in (standard_names, area_types, region_names)):
-            inst = cfchecks.CFChecker(
-                silent=True,
-                version=cf_version,
-                cfStandardNamesXML=env[standard_names],
-                cfAreaTypesXML=env[area_types],
-                cfRegionNamesXML=env[region_names],
-            )
-        else:
-            inst = cfchecks.CFChecker(silent=True, version=cf_version)
+        inst = cfchecks.CFChecker(
+            silent=True,
+            version=cf_version,
+            cfStandardNamesXML=CF_STANDARD_NAMES_XML,
+            cfAreaTypesXML=CF_AREA_TYPES_XML,
+            cfRegionNamesXML=CF_REGION_NAMES_XML,
+        )
         result = inst.checker(str(self.filename))
         for key in result["variables"]:
             for level, error_msg in result["variables"][key].items():
