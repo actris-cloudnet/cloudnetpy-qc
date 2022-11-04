@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1 - 2022-11-04
+
+- Embed XML files to Python package
+
 ## 1.2.0 - 2022-10-24
 
 - Add human-readable test names
