@@ -23,7 +23,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     setup_requires=["wheel"],
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     install_requires=["numpy", "netCDF4", "cfchecker"],
     extras_require={
         "test": [
@@ -33,7 +33,8 @@ setup(
         ],
     },
     classifiers=[
-        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Intended Audience :: Science/Research",
