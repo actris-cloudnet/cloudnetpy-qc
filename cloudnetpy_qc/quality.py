@@ -13,6 +13,7 @@ import numpy as np
 from numpy import ma
 
 from . import utils
+from .variables import Product, variables
 from .version import __version__
 
 FILE_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -22,25 +23,6 @@ DATA_CONFIG = utils.read_config(f"{FILE_PATH}/data_quality_config.ini")
 CF_AREA_TYPES_XML = f"{FILE_PATH}/area-type-table.xml"
 CF_STANDARD_NAMES_XML = f"{FILE_PATH}/cf-standard-name-table.xml"
 CF_REGION_NAMES_XML = f"{FILE_PATH}/standardized-region-list.xml"
-
-
-class Product(str, Enum):
-    # Level 1b
-    RADAR = "radar"
-    LIDAR = "lidar"
-    MWR = "mwr"
-    DISDROMETER = "disdrometer"
-    MODEL = "model"
-    # Level 1c
-    CATEGORIZE = "categorize"
-    # Level 2
-    CLASSIFICATION = "classification"
-    IWC = "iwc"
-    LWC = "lwc"
-    DRIZZLE = "drizzle"
-    # Experimental
-    DER = "der"
-    IER = "ier"
 
 
 class ErrorLevel(str, Enum):
@@ -136,7 +118,7 @@ class Test:
     name: str
     description: str
     severity = ErrorLevel.WARNING
-    products: List[str] = [member.value for member in Product]  # All products by default
+    products: List[str] = Product.all()
 
     def __init__(self, nc: netCDF4.Dataset, filename: Path, cloudnet_file_type: str):
         self.filename = filename
@@ -149,14 +131,6 @@ class Test:
 
     def run(self):
         raise NotImplementedError
-
-    def _test_variable_attribute(self, attribute: str):
-        for key, expected in METADATA_CONFIG.items(attribute):
-            if key in self.nc.variables:
-                value = getattr(self.nc.variables[key], attribute, "")
-                if value != expected:
-                    msg = utils.create_expected_received_msg(key, expected, value)
-                    self._add_message(msg)
 
     def _add_message(self, message: Union[str, list]):
         self.report.exceptions.append(
@@ -171,10 +145,42 @@ class Test:
         keys = METADATA_CONFIG[config_section][field].split(",")
         return np.char.strip(keys)
 
+    def _get_required_variables(self) -> list[dict]:
+        return [
+            {name: var}
+            for name, var in variables.items()
+            if var.required is not None and self.cloudnet_file_type in var.required
+        ]
+
+    def _get_required_variable_names(self) -> set:
+        required_variables = self._get_required_variables()
+        return set().union(*(d.keys() for d in required_variables))
+
+    def _test_variable_attribute(self, attribute: str):
+        for key in self.nc.variables.keys():
+            if key not in variables:
+                continue
+            expected = getattr(variables[key], attribute)
+            if expected is not None:
+                value = getattr(self.nc.variables[key], attribute, "")
+                if value != expected:
+                    msg = utils.create_expected_received_msg(key, expected, value)
+                    self._add_message(msg)
+
 
 # ---------------------- #
 # ------ Warnings ------ #
 # ---------------------- #
+
+
+@test(
+    "Variable names", "Check that variables have expected names.", ignore_products=[Product.MODEL]
+)
+class TestVariableNamesDefined(Test):
+    def run(self):
+        for key in self.nc.variables.keys():
+            if key not in variables:
+                self._add_message(f"'{key}' is not defined.")
 
 
 @test("Units", "Check that variables have expected units.")
@@ -207,12 +213,10 @@ class TestStandardNames(Test):
 class TestDataTypes(Test):
     def run(self):
         for key in self.nc.variables:
-            expected = "float32"
+            if key not in variables:
+                continue
+            expected = variables[key].dtype.value
             received = self.nc.variables[key].dtype.name
-            for config_key, custom_value in METADATA_CONFIG.items("data_types"):
-                if config_key == key:
-                    expected = custom_value
-                    break
             if received != expected:
                 if key == "time" and received in ("float32", "float64"):
                     continue
@@ -398,9 +402,9 @@ class TestTimeVector(Test):
 @test("Variables", "Check that file contains required variables.", ErrorLevel.ERROR)
 class TestVariableNames(Test):
     def run(self):
-        nc_keys = self.nc.variables.keys()
-        config_keys = self._read_config_keys("required_variables")
-        missing_keys = list(set(config_keys) - set(nc_keys))
+        keys_in_file = set(self.nc.variables.keys())
+        required_keys = self._get_required_variable_names()
+        missing_keys = list(required_keys - keys_in_file)
         for key in missing_keys:
             self._add_message(f"'{key}' is missing.")
 
