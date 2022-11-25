@@ -52,10 +52,12 @@ class FileReport:
 
 
 def run_tests(
-    filename: Path,
+    filename: Path | str,
     cloudnet_file_type: Optional[str] = None,
     ignore_tests: Optional[List[str]] = None,
 ) -> dict:
+    if isinstance(filename, str):
+        filename = Path(filename)
     with netCDF4.Dataset(filename) as nc:
         if cloudnet_file_type is None:
             try:
