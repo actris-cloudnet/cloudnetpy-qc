@@ -6,13 +6,13 @@ import os
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Union
 
 import netCDF4
 import numpy as np
 from numpy import ma
 
 from . import utils
+from .variables import VARIABLES, Product
 from .version import __version__
 
 FILE_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -24,34 +24,16 @@ CF_STANDARD_NAMES_XML = f"{FILE_PATH}/cf-standard-name-table.xml"
 CF_REGION_NAMES_XML = f"{FILE_PATH}/standardized-region-list.xml"
 
 
-class Product(str, Enum):
-    # Level 1b
-    RADAR = "radar"
-    LIDAR = "lidar"
-    MWR = "mwr"
-    DISDROMETER = "disdrometer"
-    MODEL = "model"
-    # Level 1c
-    CATEGORIZE = "categorize"
-    # Level 2
-    CLASSIFICATION = "classification"
-    IWC = "iwc"
-    LWC = "lwc"
-    DRIZZLE = "drizzle"
-    # Experimental
-    DER = "der"
-    IER = "ier"
-
-
 class ErrorLevel(str, Enum):
     WARNING = "warning"
     ERROR = "error"
+    INFO = "info"
 
 
 @dataclass
 class TestReport:
     testId: str
-    exceptions: List[dict]
+    exceptions: list[dict]
 
     def values(self):
         return {
@@ -65,14 +47,16 @@ class TestReport:
 class FileReport:
     timestamp: str
     qcVersion: str
-    tests: List[Dict]
+    tests: list[dict]
 
 
 def run_tests(
-    filename: Path,
-    cloudnet_file_type: Optional[str] = None,
-    ignore_tests: Optional[List[str]] = None,
+    filename: Path | str,
+    cloudnet_file_type: str | None = None,
+    ignore_tests: list[str] | None = None,
 ) -> dict:
+    if isinstance(filename, str):
+        filename = Path(filename)
     with netCDF4.Dataset(filename) as nc:
         if cloudnet_file_type is None:
             try:
@@ -85,7 +69,7 @@ def run_tests(
                 return {}
         logging.debug(f"Filename: {filename.stem}")
         logging.debug(f"File type: {cloudnet_file_type}")
-        test_reports: List[Dict] = []
+        test_reports: list[dict] = []
         for cls in Test.__subclasses__():
             if ignore_tests and cls.__name__ in ignore_tests:
                 continue
@@ -96,6 +80,7 @@ def run_tests(
                     assert exception["result"] in (
                         ErrorLevel.ERROR,
                         ErrorLevel.WARNING,
+                        ErrorLevel.INFO,
                     )
                 test_reports.append(test_instance.report.values())
     return FileReport(
@@ -108,9 +93,9 @@ def run_tests(
 def test(
     name: str,
     description: str,
-    error_level: Optional[ErrorLevel] = None,
-    products: Optional[List[Product]] = None,
-    ignore_products: Optional[List[Product]] = None,
+    error_level: ErrorLevel | None = None,
+    products: list[Product] | None = None,
+    ignore_products: list[Product] | None = None,
 ):
     """Decorator for the tests."""
 
@@ -136,7 +121,7 @@ class Test:
     name: str
     description: str
     severity = ErrorLevel.WARNING
-    products: List[str] = [member.value for member in Product]  # All products by default
+    products: list[str] = Product.all()
 
     def __init__(self, nc: netCDF4.Dataset, filename: Path, cloudnet_file_type: str):
         self.filename = filename
@@ -150,15 +135,7 @@ class Test:
     def run(self):
         raise NotImplementedError
 
-    def _test_variable_attribute(self, attribute: str):
-        for key, expected in METADATA_CONFIG.items(attribute):
-            if key in self.nc.variables:
-                value = getattr(self.nc.variables[key], attribute, "")
-                if value != expected:
-                    msg = utils.create_expected_received_msg(key, expected, value)
-                    self._add_message(msg)
-
-    def _add_message(self, message: Union[str, list]):
+    def _add_message(self, message: str | list):
         self.report.exceptions.append(
             {
                 "message": utils.format_msg(message),
@@ -170,6 +147,108 @@ class Test:
         field = "all" if "attr" in config_section else self.cloudnet_file_type
         keys = METADATA_CONFIG[config_section][field].split(",")
         return np.char.strip(keys)
+
+    def _get_required_variables(self) -> dict:
+        return {
+            name: var
+            for name, var in VARIABLES.items()
+            if var.required is not None and self.cloudnet_file_type in var.required
+        }
+
+    def _get_required_variable_names(self) -> set:
+        required_variables = self._get_required_variables()
+        return set(required_variables.keys())
+
+    def _test_variable_attribute(self, attribute: str):
+        for key in self.nc.variables.keys():
+            if key not in VARIABLES:
+                continue
+            expected = getattr(VARIABLES[key], attribute)
+            if expected is not None:
+                value = getattr(self.nc.variables[key], attribute, "")
+                if value != expected:
+                    msg = utils.create_expected_received_msg(key, expected, value)
+                    self._add_message(msg)
+
+
+# --------------------#
+# ------ Infos ------ #
+# --------------------#
+
+
+@test("Variable outliers", "Find suspicious data values.", error_level=ErrorLevel.INFO)
+class FindVariableOutliers(Test):
+    def run(self):
+        for key, limits_str in DATA_CONFIG.items("limits"):
+            limits = [float(x) for x in limits_str.split(",")]
+            if key in self.nc.variables:
+                data = self.nc.variables[key][:]
+                if data.ndim > 0 and len(data) == 0:
+                    self.severity = ErrorLevel.ERROR
+                    break
+                max_value = np.max(data)
+                min_value = np.min(data)
+                if min_value < limits[0]:
+                    msg = utils.create_out_of_bounds_msg(key, *limits, min_value)
+                    self._add_message(msg)
+                if max_value > limits[1]:
+                    msg = utils.create_out_of_bounds_msg(key, *limits, max_value)
+                    self._add_message(msg)
+
+
+@test(
+    "Radar folding",
+    "Test for radar folding.",
+    products=[Product.RADAR, Product.CATEGORIZE],
+    error_level=ErrorLevel.INFO,
+)
+class FindFolding(Test):
+    def run(self):
+        key = "v"
+        v_threshold = 8
+        try:
+            data = self.nc[key][:]
+        except IndexError:
+            self.severity = ErrorLevel.ERROR
+            self._add_message(f"Doppler velocity, '{key}', is missing.")
+            return
+        difference = np.abs(np.diff(data, axis=1))
+        n_suspicious = ma.sum(difference > v_threshold)
+        if n_suspicious > 20:
+            self._add_message(f"{n_suspicious} suspicious pixels. Folding might be present.")
+
+
+@test(
+    "Data coverage",
+    "Test that file contains enough data.",
+    ignore_products=[Product.MODEL],
+    error_level=ErrorLevel.INFO,
+)
+class TestDataCoverage(Test):
+    def run(self):
+        grid = ma.array(np.linspace(0, 24, int(24 * (60 / 5)) + 1))
+        time = self.nc["time"][:]
+        bins_with_no_data = 0
+        for ind, t in enumerate(grid[:-1]):
+            ind2 = np.where((time > t) & (time <= grid[ind + 1]))[0]
+            if len(ind2) == 0:
+                bins_with_no_data += 1
+        missing = bins_with_no_data / len(grid) * 100
+        if missing > 20:
+            self._add_message(f"{round(missing)}% of day's data is missing.")
+
+
+@test(
+    "Variable names",
+    "Check that variables have expected names.",
+    ignore_products=[Product.MODEL],
+    error_level=ErrorLevel.INFO,
+)
+class TestVariableNamesDefined(Test):
+    def run(self):
+        for key in self.nc.variables.keys():
+            if key not in VARIABLES:
+                self._add_message(f"'{key}' is not defined.")
 
 
 # ---------------------- #
@@ -207,12 +286,10 @@ class TestStandardNames(Test):
 class TestDataTypes(Test):
     def run(self):
         for key in self.nc.variables:
-            expected = "float32"
+            if key not in VARIABLES:
+                continue
+            expected = VARIABLES[key].dtype.value
             received = self.nc.variables[key].dtype.name
-            for config_key, custom_value in METADATA_CONFIG.items("data_types"):
-                if config_key == key:
-                    expected = custom_value
-                    break
             if received != expected:
                 if key == "time" and received in ("float32", "float64"):
                     continue
@@ -250,26 +327,6 @@ class TestMedianLwp(Test):
             self._add_message(msg)
 
 
-@test("Variable outliers", "Find suspicious data values.")
-class FindVariableOutliers(Test):
-    def run(self):
-        for key, limits_str in DATA_CONFIG.items("limits"):
-            limits = [float(x) for x in limits_str.split(",")]
-            if key in self.nc.variables:
-                data = self.nc.variables[key][:]
-                if data.ndim > 0 and len(data) == 0:
-                    self.severity = ErrorLevel.ERROR
-                    break
-                max_value = np.max(data)
-                min_value = np.min(data)
-                if min_value < limits[0]:
-                    msg = utils.create_out_of_bounds_msg(key, *limits, min_value)
-                    self._add_message(msg)
-                if max_value > limits[1]:
-                    msg = utils.create_out_of_bounds_msg(key, *limits, max_value)
-                    self._add_message(msg)
-
-
 @test("Attribute outliers", "Find suspicious values in global attributes.")
 class FindAttributeOutliers(Test):
     def run(self):
@@ -283,25 +340,6 @@ class FindAttributeOutliers(Test):
 
 
 @test(
-    "Data coverage",
-    "Test that file contains enough data.",
-    ignore_products=[Product.MODEL],
-)
-class TestDataCoverage(Test):
-    def run(self):
-        grid = ma.array(np.linspace(0, 24, int(24 * (60 / 5)) + 1))
-        time = self.nc["time"][:]
-        bins_with_no_data = 0
-        for ind, t in enumerate(grid[:-1]):
-            ind2 = np.where((time > t) & (time <= grid[ind + 1]))[0]
-            if len(ind2) == 0:
-                bins_with_no_data += 1
-        missing = bins_with_no_data / len(grid) * 100
-        if missing > 10:
-            self._add_message(f"{round(missing)}% of day's data is missing.")
-
-
-@test(
     "LDR values", "Test that LDR values are proper.", products=[Product.RADAR, Product.CATEGORIZE]
 )
 class TestLDR(Test):
@@ -310,23 +348,6 @@ class TestLDR(Test):
             ldr = self.nc["ldr"][:]
             if ldr.mask.all():
                 self._add_message("LDR exists but all the values are invalid.")
-
-
-@test("Radar folding", "Test for radar folding.", products=[Product.RADAR, Product.CATEGORIZE])
-class FindFolding(Test):
-    def run(self):
-        key = "v"
-        v_threshold = 8
-        try:
-            data = self.nc[key][:]
-        except IndexError:
-            self.severity = ErrorLevel.ERROR
-            self._add_message(f"Doppler velocity, '{key}', is missing.")
-            return
-        difference = np.abs(np.diff(data, axis=1))
-        n_suspicious = ma.sum(difference > v_threshold)
-        if n_suspicious > 20:
-            self._add_message(f"{n_suspicious} suspicious range gates. Folding might be present.")
 
 
 @test("Range correction", "Test that beta is range corrected.", products=[Product.LIDAR])
@@ -398,9 +419,9 @@ class TestTimeVector(Test):
 @test("Variables", "Check that file contains required variables.", ErrorLevel.ERROR)
 class TestVariableNames(Test):
     def run(self):
-        nc_keys = self.nc.variables.keys()
-        config_keys = self._read_config_keys("required_variables")
-        missing_keys = list(set(config_keys) - set(nc_keys))
+        keys_in_file = set(self.nc.variables.keys())
+        required_keys = self._get_required_variable_names()
+        missing_keys = list(required_keys - keys_in_file)
         for key in missing_keys:
             self._add_message(f"'{key}' is missing.")
 
