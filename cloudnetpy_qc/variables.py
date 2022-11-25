@@ -1,6 +1,6 @@
 """Variable definitions"""
 from enum import Enum
-from typing import List, NamedTuple
+from typing import NamedTuple
 
 
 class Product(str, Enum):
@@ -22,7 +22,7 @@ class Product(str, Enum):
     IER = "ier"
 
     @classmethod
-    def all(cls) -> List[str]:
+    def all(cls) -> list[str]:
         return [e.value for e in cls]
 
 
@@ -38,7 +38,7 @@ class Variable(NamedTuple):
     units: str | None = "1"
     dtype: str = Dtype.FLOAT
     standard_name: str | None = None
-    required: List[str] | None = None
+    required: list[str] | None = None
 
 
 VARIABLES = {

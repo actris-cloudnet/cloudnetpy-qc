@@ -1,7 +1,6 @@
 """cloudnetpy-qc tests."""
 from os import path
 from pathlib import Path
-from typing import Optional
 
 from cloudnetpy_qc import quality
 
@@ -76,7 +75,7 @@ def test_empty_instrument_pid():
 class Check:
     """Check class."""
 
-    def __init__(self, filename: str, file_type: Optional[str] = None):
+    def __init__(self, filename: str, file_type: str | None = None):
         self.report = quality.run_tests(Path(filename), cloudnet_file_type=file_type)
         self.tests = self.report["tests"]
 

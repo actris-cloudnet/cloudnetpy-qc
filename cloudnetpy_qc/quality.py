@@ -6,7 +6,6 @@ import os
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Union
 
 import netCDF4
 import numpy as np
@@ -34,7 +33,7 @@ class ErrorLevel(str, Enum):
 @dataclass
 class TestReport:
     testId: str
-    exceptions: List[dict]
+    exceptions: list[dict]
 
     def values(self):
         return {
@@ -48,13 +47,13 @@ class TestReport:
 class FileReport:
     timestamp: str
     qcVersion: str
-    tests: List[Dict]
+    tests: list[dict]
 
 
 def run_tests(
     filename: Path | str,
-    cloudnet_file_type: Optional[str] = None,
-    ignore_tests: Optional[List[str]] = None,
+    cloudnet_file_type: str | None = None,
+    ignore_tests: list[str] | None = None,
 ) -> dict:
     if isinstance(filename, str):
         filename = Path(filename)
@@ -70,7 +69,7 @@ def run_tests(
                 return {}
         logging.debug(f"Filename: {filename.stem}")
         logging.debug(f"File type: {cloudnet_file_type}")
-        test_reports: List[Dict] = []
+        test_reports: list[dict] = []
         for cls in Test.__subclasses__():
             if ignore_tests and cls.__name__ in ignore_tests:
                 continue
@@ -94,9 +93,9 @@ def run_tests(
 def test(
     name: str,
     description: str,
-    error_level: Optional[ErrorLevel] = None,
-    products: Optional[List[Product]] = None,
-    ignore_products: Optional[List[Product]] = None,
+    error_level: ErrorLevel | None = None,
+    products: list[Product] | None = None,
+    ignore_products: list[Product] | None = None,
 ):
     """Decorator for the tests."""
 
@@ -122,7 +121,7 @@ class Test:
     name: str
     description: str
     severity = ErrorLevel.WARNING
-    products: List[str] = Product.all()
+    products: list[str] = Product.all()
 
     def __init__(self, nc: netCDF4.Dataset, filename: Path, cloudnet_file_type: str):
         self.filename = filename
@@ -136,7 +135,7 @@ class Test:
     def run(self):
         raise NotImplementedError
 
-    def _add_message(self, message: Union[str, list]):
+    def _add_message(self, message: str | list):
         self.report.exceptions.append(
             {
                 "message": utils.format_msg(message),
