@@ -14,9 +14,8 @@ Usage
 -----
 ```python
 import json
-from pathlib import Path
 from cloudnetpy_qc import quality
-report = quality.run_tests(Path('cloudnet-file.nc'))
+report = quality.run_tests('cloudnet-file.nc')
 json_object = json.dumps(report, indent=2)
 print(json_object)
 ```
