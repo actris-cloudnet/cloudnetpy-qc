@@ -27,8 +27,8 @@ class Product(str, Enum):
 
 
 class Dtype(str, Enum):
-    FLOAT = ("float32",)
-    DOUBLE = ("float64",)
+    FLOAT = "float32"
+    DOUBLE = "float64"
     INT = "int32"
     SHORT = "int16"
 
@@ -41,7 +41,7 @@ class Variable(NamedTuple):
     required: List[str] | None = None
 
 
-variables = {
+VARIABLES = {
     # -------------------------------
     # Required in RADAR Level 1b file
     # -------------------------------

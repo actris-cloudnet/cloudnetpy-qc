@@ -13,7 +13,7 @@ import numpy as np
 from numpy import ma
 
 from . import utils
-from .variables import Product, variables
+from .variables import VARIABLES, Product
 from .version import __version__
 
 FILE_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -147,22 +147,22 @@ class Test:
         keys = METADATA_CONFIG[config_section][field].split(",")
         return np.char.strip(keys)
 
-    def _get_required_variables(self) -> list[dict]:
-        return [
-            {name: var}
-            for name, var in variables.items()
+    def _get_required_variables(self) -> dict:
+        return {
+            name: var
+            for name, var in VARIABLES.items()
             if var.required is not None and self.cloudnet_file_type in var.required
-        ]
+        }
 
     def _get_required_variable_names(self) -> set:
         required_variables = self._get_required_variables()
-        return set().union(*(d.keys() for d in required_variables))
+        return set(required_variables.keys())
 
     def _test_variable_attribute(self, attribute: str):
         for key in self.nc.variables.keys():
-            if key not in variables:
+            if key not in VARIABLES:
                 continue
-            expected = getattr(variables[key], attribute)
+            expected = getattr(VARIABLES[key], attribute)
             if expected is not None:
                 value = getattr(self.nc.variables[key], attribute, "")
                 if value != expected:
@@ -246,7 +246,7 @@ class TestDataCoverage(Test):
 class TestVariableNamesDefined(Test):
     def run(self):
         for key in self.nc.variables.keys():
-            if key not in variables:
+            if key not in VARIABLES:
                 self._add_message(f"'{key}' is not defined.")
 
 
@@ -285,9 +285,9 @@ class TestStandardNames(Test):
 class TestDataTypes(Test):
     def run(self):
         for key in self.nc.variables:
-            if key not in variables:
+            if key not in VARIABLES:
                 continue
-            expected = variables[key].dtype.value
+            expected = VARIABLES[key].dtype.value
             received = self.nc.variables[key].dtype.name
             if received != expected:
                 if key == "time" and received in ("float32", "float64"):
