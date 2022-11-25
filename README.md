@@ -32,7 +32,7 @@ print(json_object)
 
 ### `Exception`
 * `message`: Free-form message about the exception
-* `result`: `"error"` or `"warning"`
+* `result`: `"info"`, `"error"` or `"warning"`
 
 
 ### Example:

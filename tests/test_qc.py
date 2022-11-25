@@ -25,7 +25,6 @@ def test_legacy_file():
         "TestStandardNames",
         "TestDataTypes",
         "TestGlobalAttributes",
-        "TestDataCoverage",
         "TestVariableNames",
         "TestCFConvention",
     ]

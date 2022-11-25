@@ -28,6 +28,7 @@ CF_REGION_NAMES_XML = f"{FILE_PATH}/standardized-region-list.xml"
 class ErrorLevel(str, Enum):
     WARNING = "warning"
     ERROR = "error"
+    INFO = "info"
 
 
 @dataclass
@@ -78,6 +79,7 @@ def run_tests(
                     assert exception["result"] in (
                         ErrorLevel.ERROR,
                         ErrorLevel.WARNING,
+                        ErrorLevel.INFO,
                     )
                 test_reports.append(test_instance.report.values())
     return FileReport(
@@ -168,19 +170,89 @@ class Test:
                     self._add_message(msg)
 
 
-# ---------------------- #
-# ------ Warnings ------ #
-# ---------------------- #
+# --------------------#
+# ------ Infos ------ #
+# --------------------#
+
+
+@test("Variable outliers", "Find suspicious data values.", error_level=ErrorLevel.INFO)
+class FindVariableOutliers(Test):
+    def run(self):
+        for key, limits_str in DATA_CONFIG.items("limits"):
+            limits = [float(x) for x in limits_str.split(",")]
+            if key in self.nc.variables:
+                data = self.nc.variables[key][:]
+                if data.ndim > 0 and len(data) == 0:
+                    self.severity = ErrorLevel.ERROR
+                    break
+                max_value = np.max(data)
+                min_value = np.min(data)
+                if min_value < limits[0]:
+                    msg = utils.create_out_of_bounds_msg(key, *limits, min_value)
+                    self._add_message(msg)
+                if max_value > limits[1]:
+                    msg = utils.create_out_of_bounds_msg(key, *limits, max_value)
+                    self._add_message(msg)
 
 
 @test(
-    "Variable names", "Check that variables have expected names.", ignore_products=[Product.MODEL]
+    "Radar folding",
+    "Test for radar folding.",
+    products=[Product.RADAR, Product.CATEGORIZE],
+    error_level=ErrorLevel.INFO,
+)
+class FindFolding(Test):
+    def run(self):
+        key = "v"
+        v_threshold = 8
+        try:
+            data = self.nc[key][:]
+        except IndexError:
+            self.severity = ErrorLevel.ERROR
+            self._add_message(f"Doppler velocity, '{key}', is missing.")
+            return
+        difference = np.abs(np.diff(data, axis=1))
+        n_suspicious = ma.sum(difference > v_threshold)
+        if n_suspicious > 20:
+            self._add_message(f"{n_suspicious} suspicious pixels. Folding might be present.")
+
+
+@test(
+    "Data coverage",
+    "Test that file contains enough data.",
+    ignore_products=[Product.MODEL],
+    error_level=ErrorLevel.INFO,
+)
+class TestDataCoverage(Test):
+    def run(self):
+        grid = ma.array(np.linspace(0, 24, int(24 * (60 / 5)) + 1))
+        time = self.nc["time"][:]
+        bins_with_no_data = 0
+        for ind, t in enumerate(grid[:-1]):
+            ind2 = np.where((time > t) & (time <= grid[ind + 1]))[0]
+            if len(ind2) == 0:
+                bins_with_no_data += 1
+        missing = bins_with_no_data / len(grid) * 100
+        if missing > 20:
+            self._add_message(f"{round(missing)}% of day's data is missing.")
+
+
+@test(
+    "Variable names",
+    "Check that variables have expected names.",
+    ignore_products=[Product.MODEL],
+    error_level=ErrorLevel.INFO,
 )
 class TestVariableNamesDefined(Test):
     def run(self):
         for key in self.nc.variables.keys():
             if key not in variables:
                 self._add_message(f"'{key}' is not defined.")
+
+
+# ---------------------- #
+# ------ Warnings ------ #
+# ---------------------- #
 
 
 @test("Units", "Check that variables have expected units.")
@@ -254,26 +326,6 @@ class TestMedianLwp(Test):
             self._add_message(msg)
 
 
-@test("Variable outliers", "Find suspicious data values.")
-class FindVariableOutliers(Test):
-    def run(self):
-        for key, limits_str in DATA_CONFIG.items("limits"):
-            limits = [float(x) for x in limits_str.split(",")]
-            if key in self.nc.variables:
-                data = self.nc.variables[key][:]
-                if data.ndim > 0 and len(data) == 0:
-                    self.severity = ErrorLevel.ERROR
-                    break
-                max_value = np.max(data)
-                min_value = np.min(data)
-                if min_value < limits[0]:
-                    msg = utils.create_out_of_bounds_msg(key, *limits, min_value)
-                    self._add_message(msg)
-                if max_value > limits[1]:
-                    msg = utils.create_out_of_bounds_msg(key, *limits, max_value)
-                    self._add_message(msg)
-
-
 @test("Attribute outliers", "Find suspicious values in global attributes.")
 class FindAttributeOutliers(Test):
     def run(self):
@@ -287,25 +339,6 @@ class FindAttributeOutliers(Test):
 
 
 @test(
-    "Data coverage",
-    "Test that file contains enough data.",
-    ignore_products=[Product.MODEL],
-)
-class TestDataCoverage(Test):
-    def run(self):
-        grid = ma.array(np.linspace(0, 24, int(24 * (60 / 5)) + 1))
-        time = self.nc["time"][:]
-        bins_with_no_data = 0
-        for ind, t in enumerate(grid[:-1]):
-            ind2 = np.where((time > t) & (time <= grid[ind + 1]))[0]
-            if len(ind2) == 0:
-                bins_with_no_data += 1
-        missing = bins_with_no_data / len(grid) * 100
-        if missing > 10:
-            self._add_message(f"{round(missing)}% of day's data is missing.")
-
-
-@test(
     "LDR values", "Test that LDR values are proper.", products=[Product.RADAR, Product.CATEGORIZE]
 )
 class TestLDR(Test):
@@ -314,23 +347,6 @@ class TestLDR(Test):
             ldr = self.nc["ldr"][:]
             if ldr.mask.all():
                 self._add_message("LDR exists but all the values are invalid.")
-
-
-@test("Radar folding", "Test for radar folding.", products=[Product.RADAR, Product.CATEGORIZE])
-class FindFolding(Test):
-    def run(self):
-        key = "v"
-        v_threshold = 8
-        try:
-            data = self.nc[key][:]
-        except IndexError:
-            self.severity = ErrorLevel.ERROR
-            self._add_message(f"Doppler velocity, '{key}', is missing.")
-            return
-        difference = np.abs(np.diff(data, axis=1))
-        n_suspicious = ma.sum(difference > v_threshold)
-        if n_suspicious > 20:
-            self._add_message(f"{n_suspicious} suspicious range gates. Folding might be present.")
 
 
 @test("Range correction", "Test that beta is range corrected.", products=[Product.LIDAR])
