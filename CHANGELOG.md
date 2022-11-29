@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0 - 2022-11-29
+
+- Add `info` error level
+- Define expected variables in variables.py
+- Update Python to 3.10
+
 ## 1.2.1 - 2022-11-04
 
 - Embed XML files to Python package
