@@ -564,7 +564,7 @@ VARIABLES = {
     "sfc_categorical_freezing_rain": Variable(long_name="", dtype=Dtype.SHORT),
     "sfc_categorical_rain": Variable(long_name="", dtype=Dtype.SHORT),
     "sfc_albedo_sw_direct": Variable(
-        long_name="Surface albedo (shortwave direct)", 
+        long_name="Surface albedo (shortwave direct)",
         standard_name="surface_albedo_shortwave_direct",
     ),
     "sfc_albedo_sw_diffuse": Variable(
