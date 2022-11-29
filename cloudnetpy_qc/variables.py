@@ -596,4 +596,10 @@ VARIABLES = {
     "radar_roll": Variable(
         long_name="Radar roll angle", units="degree", standard_name="platform_roll"
     ),
+    "zdr": Variable(long_name="Differential reflectivity", units="dB"),
+    "rho_hv": Variable(long_name="Correlation coefficient"),
+    "phi_dp": Variable(long_name="Differential phase", units="rad"),
+    "srho_hv": Variable(long_name="Slanted correlation coefficient"),
+    "kdp": Variable(long_name="Specific differential phase shift", units="rad km-1"),
+    "differential_attenuation": Variable(long_name="Differential attenuation", units="dB km-1"),
 }

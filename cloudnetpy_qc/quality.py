@@ -172,13 +172,14 @@ class Test:
                     self._add_message(msg)
 
     def _get_date(self):
-        date_in_file = [int(getattr(self.nc, x)) for x in ('year', 'month', 'day')]
+        date_in_file = [int(getattr(self.nc, x)) for x in ("year", "month", "day")]
         return datetime.date(*date_in_file)
 
 
 # --------------------#
 # ------ Infos ------ #
 # --------------------#
+
 
 @test("Variable outliers", "Find suspicious data values.", error_level=ErrorLevel.INFO)
 class FindVariableOutliers(Test):
@@ -231,8 +232,10 @@ class FindFolding(Test):
 class TestDataCoverage(Test):
     def run(self):
         date_in_file = self._get_date()
-        now = datetime.datetime.now(tz=ZoneInfo('UTC'))
-        current_fraction_hour = now.hour + int(now.minute)/60 if now.date() == date_in_file else 24
+        now = datetime.datetime.now(tz=ZoneInfo("UTC"))
+        current_fraction_hour = (
+            now.hour + int(now.minute) / 60 if now.date() == date_in_file else 24
+        )
         grid = ma.array(np.linspace(0, current_fraction_hour, int(24 * (60 / 5)) + 1))
         time = self.nc["time"][:]
         bins_with_no_data = 0
