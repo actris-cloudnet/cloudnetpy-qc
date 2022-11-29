@@ -6,6 +6,7 @@ import os
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import netCDF4
 import numpy as np
@@ -170,11 +171,14 @@ class Test:
                     msg = utils.create_expected_received_msg(key, expected, value)
                     self._add_message(msg)
 
+    def _get_date(self):
+        date_in_file = [int(getattr(self.nc, x)) for x in ('year', 'month', 'day')]
+        return datetime.date(*date_in_file)
+
 
 # --------------------#
 # ------ Infos ------ #
 # --------------------#
-
 
 @test("Variable outliers", "Find suspicious data values.", error_level=ErrorLevel.INFO)
 class FindVariableOutliers(Test):
@@ -226,7 +230,10 @@ class FindFolding(Test):
 )
 class TestDataCoverage(Test):
     def run(self):
-        grid = ma.array(np.linspace(0, 24, int(24 * (60 / 5)) + 1))
+        date_in_file = self._get_date()
+        now = datetime.datetime.now(tz=ZoneInfo('UTC'))
+        current_fraction_hour = now.hour + int(now.minute)/60 if now.date() == date_in_file else 24
+        grid = ma.array(np.linspace(0, current_fraction_hour, int(24 * (60 / 5)) + 1))
         time = self.nc["time"][:]
         bins_with_no_data = 0
         for ind, t in enumerate(grid[:-1]):
@@ -235,6 +242,8 @@ class TestDataCoverage(Test):
                 bins_with_no_data += 1
         missing = bins_with_no_data / len(grid) * 100
         if missing > 20:
+            if missing > 60:
+                self.severity = ErrorLevel.WARNING
             self._add_message(f"{round(missing)}% of day's data is missing.")
 
 
@@ -248,7 +257,7 @@ class TestVariableNamesDefined(Test):
     def run(self):
         for key in self.nc.variables.keys():
             if key not in VARIABLES:
-                self._add_message(f"'{key}' is not defined.")
+                self._add_message(f"'{key}' is not defined in cloudnetpy-qc.")
 
 
 # ---------------------- #
