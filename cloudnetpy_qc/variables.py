@@ -565,19 +565,19 @@ VARIABLES = {
     "sfc_categorical_rain": Variable(long_name="", dtype=Dtype.SHORT),
     "sfc_albedo_sw_direct": Variable(
         long_name="Surface albedo (shortwave direct)",
-        standard_name="surface_albedo_shortwave_direct",
+        # standard_name="surface_albedo_shortwave_direct",
     ),
     "sfc_albedo_sw_diffuse": Variable(
         long_name="Surface albedo (shortwave diffuse)",
-        standard_name="surface_albedo_shortwave_diffuse",
+        # standard_name="surface_albedo_shortwave_diffuse",
     ),
     "sfc_albedo_lw_direct": Variable(
         long_name="Surface albedo (longwave direct)",
-        standard_name="surface_albedo_longwave_direct",
+        # standard_name="surface_albedo_longwave_direct",
     ),
     "sfc_albedo_lw_diffuse": Variable(
         long_name="Surface albedo (longwave diffuse)",
-        standard_name="surface_albedo_longwave_diffuse",
+        # standard_name="surface_albedo_longwave_diffuse",
     ),
     "nfft": Variable(long_name="Number of FFT points", dtype=Dtype.INT),
     "nave": Variable(
