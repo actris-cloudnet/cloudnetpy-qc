@@ -569,7 +569,7 @@ VARIABLES = {
     ),
     "sfc_albedo_sw_diffuse": Variable(
         long_name="Surface albedo (shortwave diffuse)",
-        standard_name="surface_albedo_shortwave_diffuse"
+        standard_name="surface_albedo_shortwave_diffuse",
     ),
     "sfc_albedo_lw_direct": Variable(
         long_name="Surface albedo (longwave direct)",
