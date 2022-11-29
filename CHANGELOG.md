@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.2 - 2022-11-29
+
+- Add more variables
+
 ## 1.3.1 - 2022-11-29
 
 - Adjust data coverage test for real time processing
