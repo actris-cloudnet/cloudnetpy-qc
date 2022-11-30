@@ -405,8 +405,12 @@ VARIABLES = {
     # --------------------------------------------
     # Variables included in some of Level 1b files
     # --------------------------------------------
-    "rainfall_rate_1min_total": Variable(long_name="Total precipitation rate", units="m s-1"),
-    "rainfall_rate_1min_solid": Variable(long_name="Solid precipitation rate", units="m s-1"),
+    "rainfall_rate_1min_total": Variable(
+        long_name="Total precipitation rate", units="m s-1", dtype=Dtype.INT
+    ),
+    "rainfall_rate_1min_solid": Variable(
+        long_name="Solid precipitation rate", units="m s-1", dtype=Dtype.INT
+    ),
     "velocity": Variable(
         long_name="Center fall velocity of precipitation particles", units="m s-1"
     ),
@@ -431,7 +435,7 @@ VARIABLES = {
     "T_sensor": Variable(long_name="Temperature in the sensor housing", units="K"),
     "I_heating": Variable(long_name="Heating current", units="A"),
     "V_power_supply": Variable(long_name="Power supply voltage", units="V"),
-    "V_sensor_supply": Variable(long_name="Sensor supply voltage", units="V"),
+    "V_sensor_supply": Variable(long_name="Sensor supply voltage", units="V", dtype=Dtype.INT),
     "state_sensor": Variable(
         long_name="State of the sensor",
         dtype=Dtype.INT,
@@ -603,4 +607,48 @@ VARIABLES = {
     "srho_hv": Variable(long_name="Slanted correlation coefficient"),
     "kdp": Variable(long_name="Specific differential phase shift", units="rad km-1"),
     "differential_attenuation": Variable(long_name="Differential attenuation", units="dB km-1"),
+    "synop_WW": Variable(long_name="Synop code WW", dtype=Dtype.INT),
+    "measurement_quality": Variable(long_name="Measurement quality", units="%", dtype=Dtype.INT),
+    "status_laser": Variable(long_name="Status of laser", dtype=Dtype.INT),
+    "static_signal": Variable(long_name="Static signal", dtype=Dtype.INT),
+    "status_T_laser_analogue": Variable(
+        long_name="Status of laser temperature (analogue)", dtype=Dtype.INT
+    ),
+    "status_T_laser_digital": Variable(
+        long_name="Status of laser temperature (digital)", dtype=Dtype.INT
+    ),
+    "status_I_laser_analogue": Variable(
+        long_name="Status of laser current (analogue)", dtype=Dtype.INT
+    ),
+    "status_I_laser_digital": Variable(
+        long_name="Status of laser current (digital)", dtype=Dtype.INT
+    ),
+    "status_sensor_supply": Variable(long_name="Status of sensor supply", dtype=Dtype.INT),
+    "status_laser_heating": Variable(long_name="Status of laser heating", dtype=Dtype.INT),
+    "status_receiver_heating": Variable(long_name="Status of receiver heating", dtype=Dtype.INT),
+    "status_temperature_sensor": Variable(
+        long_name="Status of temperature sensor", dtype=Dtype.INT
+    ),
+    "status_heating_supply": Variable(long_name="Status of heating supply", dtype=Dtype.INT),
+    "status_heating_housing": Variable(long_name="Status of heating housing", dtype=Dtype.INT),
+    "status_heating_heads": Variable(long_name="Status of heating heads", dtype=Dtype.INT),
+    "status_heating_carriers": Variable(long_name="Status of heating carriers", dtype=Dtype.INT),
+    "status_laser_power": Variable(long_name="Status of laser power", dtype=Dtype.INT),
+    "T_interior": Variable(long_name="Interior temperature", units="K"),
+    "T_laser_driver": Variable(long_name="Temperature of laser driver", units="K"),
+    "T_ambient": Variable(long_name="Ambient temperature", units="K"),
+    "I_mean_laser": Variable(long_name="Mean value of laser current", units="mA", dtype=Dtype.INT),
+    "V_control": Variable(long_name="Control voltage", units="mV", dtype=Dtype.INT),
+    "V_optical_output": Variable(
+        long_name="Voltage of optical control output", units="mV", dtype=Dtype.INT
+    ),
+    "I_heating_laser_head": Variable(
+        long_name="Laser head heating current", units="mA", dtype=Dtype.INT
+    ),
+    "I_heating_receiver_head": Variable(
+        long_name="Receiver head heating current", units="mA", dtype=Dtype.INT
+    ),
+    "maximum_hail_diameter": Variable(
+        long_name="Maximum hail diameter", units="mm", dtype=Dtype.INT
+    ),
 }
