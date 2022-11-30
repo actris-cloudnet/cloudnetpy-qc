@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0 - 2022-11-30
+
+- Add thies variables
+- Adjust disdrometer variables
+
 ## 1.3.2 - 2022-11-29
 
 - Add more variables
