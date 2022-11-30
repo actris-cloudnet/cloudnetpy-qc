@@ -430,7 +430,8 @@ VARIABLES = {
     ),
     "T_sensor": Variable(long_name="Temperature in the sensor housing", units="K"),
     "I_heating": Variable(long_name="Heating current", units="A"),
-    "V_power": Variable(long_name="Power supply voltage", units="V"),
+    "V_power_supply": Variable(long_name="Power supply voltage", units="V"),
+    "V_sensor_supply": Variable(long_name="Sensor supply voltage", units="V"),
     "state_sensor": Variable(
         long_name="State of the sensor",
         dtype=Dtype.INT,
