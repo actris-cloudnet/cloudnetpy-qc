@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.1 - 2022-12-01
+
+- Use datetime.timezone
+
 ## 1.4.0 - 2022-11-30
 
 - Add thies variables
