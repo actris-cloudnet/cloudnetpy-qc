@@ -6,7 +6,6 @@ import os
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from zoneinfo import ZoneInfo
 
 import netCDF4
 import numpy as np
@@ -232,7 +231,7 @@ class FindFolding(Test):
 class TestDataCoverage(Test):
     def run(self):
         date_in_file = self._get_date()
-        now = datetime.datetime.now(tz=ZoneInfo("UTC"))
+        now = datetime.datetime.now(tz=datetime.timezone.utc)
         current_fraction_hour = (
             now.hour + int(now.minute) / 60 if now.date() == date_in_file else 24
         )
