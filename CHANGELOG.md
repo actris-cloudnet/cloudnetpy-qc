@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.2 - 2022-12-20
+
+- Update `ier` units
+
 ## 1.4.1 - 2022-12-01
 
 - Use datetime.timezone
