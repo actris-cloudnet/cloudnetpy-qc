@@ -308,12 +308,12 @@ VARIABLES = {
     # ----------------------------
     # Required in IER Level 2 file
     # ----------------------------
-    "ier": Variable(long_name="Ice effective radius", units="m-6", required=[Product.IER]),
+    "ier": Variable(long_name="Ice effective radius", units="m", required=[Product.IER]),
     "ier_inc_rain": Variable(
-        long_name="Ice effective radius including rain", units="m-6", required=[Product.IER]
+        long_name="Ice effective radius including rain", units="m", required=[Product.IER]
     ),
     "ier_error": Variable(
-        long_name="Random error in ice effective radius", units="m-6", required=[Product.IER]
+        long_name="Random error in ice effective radius", units="m", required=[Product.IER]
     ),
     "ier_retrieval_status": Variable(
         long_name="Ice effective radius retrieval status", dtype=Dtype.INT, required=[Product.IER]
