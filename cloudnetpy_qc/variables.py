@@ -116,6 +116,11 @@ VARIABLES = {
     "quality_bits": Variable(
         long_name="Data quality bits", dtype=Dtype.INT, required=[Product.CATEGORIZE]
     ),
+    "beta": Variable(
+        long_name="Attenuated backscatter coefficient",
+        units="sr-1 m-1",
+        required=[Product.CATEGORIZE],
+    ),
     "beta_error": Variable(
         long_name="Error in attenuated backscatter coefficient",
         units="dB",
@@ -349,11 +354,6 @@ VARIABLES = {
         long_name="Doppler velocity",
         units="m s-1",
         required=[Product.RADAR, Product.CATEGORIZE],
-    ),
-    "beta": Variable(
-        long_name="Attenuated backscatter coefficient",
-        units="sr-1 m-1",
-        required=[Product.LIDAR, Product.CATEGORIZE],
     ),
     "temperature": Variable(
         long_name="Temperature", units="K", required=[Product.MODEL, Product.CATEGORIZE]

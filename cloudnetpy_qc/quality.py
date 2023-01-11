@@ -401,6 +401,21 @@ class TestInstrumentPid(Test):
 # -------------------- #
 
 
+@test(
+    "Beta presence",
+    "Test that one beta variable exists.",
+    error_level=ErrorLevel.ERROR,
+    products=[Product.LIDAR],
+)
+class TestLidarBeta(Test):
+    def run(self):
+        valid_keys = {"beta", "beta_1064", "beta_532", "beta_355"}
+        for key in valid_keys:
+            if key in self.nc.variables:
+                return
+        self._add_message("No valid beta variable found.")
+
+
 @test("Time vector", "Test that time vector is continuous.", ErrorLevel.ERROR)
 class TestTimeVector(Test):
     def run(self):
