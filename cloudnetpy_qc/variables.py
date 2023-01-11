@@ -651,4 +651,63 @@ VARIABLES = {
     "maximum_hail_diameter": Variable(
         long_name="Maximum hail diameter", units="mm", dtype=Dtype.INT
     ),
+    # rv-polarstern specific
+    "beta_1064_raw": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
+    "beta_1064": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
+    "beta_532_raw": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
+    "beta_532": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
+    "beta_355_raw": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
+    "beta_355": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
+    "beta_355_nr": Variable(long_name="", units="sr-1 m-1"),
+    "beta_355_nr_raw": Variable(long_name="", units="sr-1 m-1"),
+    "beta_532_nr": Variable(long_name="", units="sr-1 m-1"),
+    "beta_532_nr_raw": Variable(long_name="", units="sr-1 m-1"),
+    "calibration_factor_1064": Variable(
+        long_name="Attenuated backscatter at 1064 calibration factor",
+    ),
+    "calibration_factor_532": Variable(
+        long_name="Attenuated backscatter at 532 calibration factor",
+    ),
+    "calibration_factor_355": Variable(
+        long_name="Attenuated backscatter at 355 calibration factor",
+    ),
+    "calibration_factor_355_nr": Variable(
+        long_name="Attenuated backscatter at 355 near range calibration factor",
+    ),
+    "calibration_factor_532_nr": Variable(
+        long_name="Attenuated backscatter at 532 near range calibration factor",
+    ),
+    "depolarisation_355_raw": Variable(
+        long_name="Lidar volume linear depolarisation ratio",
+    ),
+    "depolarisation_355": Variable(
+        long_name="Lidar volume linear depolarisation ratio",
+    ),
+    "depolarisation_532_raw": Variable(
+        long_name="Lidar volume linear depolarisation ratio",
+    ),
+    "depolarisation_532": Variable(
+        long_name="Lidar volume linear depolarisation ratio",
+    ),
+    "depolarisation_1064": Variable(
+        long_name="Lidar volume linear depolarisation ratio",
+    ),
+    "depolarisation_1064_raw": Variable(
+        long_name="Lidar volume linear depolarisation ratio",
+    ),
+    "snr_1064": Variable(
+        long_name="Signal-to-Noise Ratio (1064 nm)",
+    ),
+    "snr_532": Variable(
+        long_name="Signal-to-Noise Ratio (532 nm)",
+    ),
+    "snr_355": Variable(
+        long_name="Signal-to-Noise Ratio (355 nm)",
+    ),
+    "snr_532_nr": Variable(
+        long_name="Signal-to-Noise Ratio (532 nm near range)",
+    ),
+    "snr_355_nr": Variable(
+        long_name="Signal-to-Noise Ratio (355 nm near range)",
+    ),
 }
