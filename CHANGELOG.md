@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.0 - 2023-01-12
+
+- Add rv-polarstern varibles
+- Allow several options for lidar beta
+- Fix copyright
+- Update `setup-python`
+
 ## 1.4.2 - 2022-12-20
 
 - Update `ier` units
