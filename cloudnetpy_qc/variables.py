@@ -658,10 +658,18 @@ VARIABLES = {
     "beta_532": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
     "beta_355_raw": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
     "beta_355": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
-    "beta_355_nr": Variable(long_name="", units="sr-1 m-1"),
-    "beta_355_nr_raw": Variable(long_name="", units="sr-1 m-1"),
-    "beta_532_nr": Variable(long_name="", units="sr-1 m-1"),
-    "beta_532_nr_raw": Variable(long_name="", units="sr-1 m-1"),
+    "beta_355_nr": Variable(
+        long_name="Attenuated backscatter coefficient (near range)", units="sr-1 m-1"
+    ),
+    "beta_355_nr_raw": Variable(
+        long_name="Attenuated backscatter coefficient (near range)", units="sr-1 m-1"
+    ),
+    "beta_532_nr": Variable(
+        long_name="Attenuated backscatter coefficient (near range)", units="sr-1 m-1"
+    ),
+    "beta_532_nr_raw": Variable(
+        long_name="Attenuated backscatter coefficient (near range)", units="sr-1 m-1"
+    ),
     "calibration_factor_1064": Variable(
         long_name="Attenuated backscatter at 1064 calibration factor",
     ),
