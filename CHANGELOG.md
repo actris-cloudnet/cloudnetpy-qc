@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.1 - 2023-01-26
+
+- Add more rv-polarstern long_names
+
 ## 1.5.0 - 2023-01-12
 
 - Add rv-polarstern varibles
