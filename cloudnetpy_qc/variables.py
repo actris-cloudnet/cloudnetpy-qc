@@ -718,4 +718,7 @@ VARIABLES = {
     "snr_355_nr": Variable(
         long_name="Signal-to-Noise Ratio (355 nm near range)",
     ),
+    "lidar_depolarisation": Variable(
+        long_name="Calibrated volume depolarisation (532 nm)"  # in rv-polarstern categorize files
+    ),
 }
