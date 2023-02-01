@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.2 - 2023-02-01
+
+- Add `lidar_depolarisation` definition
+
 ## 1.5.1 - 2023-01-26
 
 - Add more rv-polarstern long_names

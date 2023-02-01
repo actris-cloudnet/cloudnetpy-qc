@@ -1,5 +1,5 @@
 """Cloudnetpy-QC version."""
 MAJOR = 1
 MINOR = 5
-PATCH = 1
+PATCH = 2
 __version__ = f"{MAJOR}.{MINOR}.{PATCH}"
