@@ -1,1 +1,2 @@
 graft cloudnetpy_qc/data
+include cloudnetpy_qc/py.typed
