@@ -15,13 +15,13 @@ from . import utils
 from .variables import VARIABLES, Product
 from .version import __version__
 
-FILE_PATH = os.path.dirname(os.path.realpath(__file__))
+DATA_PATH = os.path.join(os.path.dirname(__file__), "data")
 
-METADATA_CONFIG = utils.read_config(f"{FILE_PATH}/metadata_config.ini")
-DATA_CONFIG = utils.read_config(f"{FILE_PATH}/data_quality_config.ini")
-CF_AREA_TYPES_XML = f"{FILE_PATH}/area-type-table.xml"
-CF_STANDARD_NAMES_XML = f"{FILE_PATH}/cf-standard-name-table.xml"
-CF_REGION_NAMES_XML = f"{FILE_PATH}/standardized-region-list.xml"
+METADATA_CONFIG = utils.read_config(os.path.join(DATA_PATH, "metadata_config.ini"))
+DATA_CONFIG = utils.read_config(os.path.join(DATA_PATH, "data_quality_config.ini"))
+CF_AREA_TYPES_XML = os.path.join(DATA_PATH, "area-type-table.xml")
+CF_STANDARD_NAMES_XML = os.path.join(DATA_PATH, "cf-standard-name-table.xml")
+CF_REGION_NAMES_XML = os.path.join(DATA_PATH, "standardized-region-list.xml")
 
 
 class ErrorLevel(str, Enum):

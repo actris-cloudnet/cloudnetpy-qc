@@ -1,5 +1,1 @@
-include cloudnetpy_qc/data_quality_config.ini
-include cloudnetpy_qc/metadata_config.ini
-include cloudnetpy_qc/area-type-table.xml
-include cloudnetpy_qc/cf-standard-name-table.xml
-include cloudnetpy_qc/standardized-region-list.xml
+graft cloudnetpy_qc/data
