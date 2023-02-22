@@ -1,0 +1,5 @@
+#!/bin/sh
+cd $(dirname "$0")/../cloudnetpy_qc/data
+curl -O http://cfconventions.org/Data/cf-standard-names/current/src/cf-standard-name-table.xml
+curl -O http://cfconventions.org/Data/area-type-table/current/src/area-type-table.xml
+curl -O http://cfconventions.org/Data/standardized-region-list/standardized-region-list.xml
