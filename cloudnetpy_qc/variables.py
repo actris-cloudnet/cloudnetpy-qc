@@ -574,8 +574,7 @@ VARIABLES = {
         units="m s-1",
     ),
     "wind_direction": Variable(
-        long_name="Wind direction",
-        units="degrees",
+        long_name="Wind direction", units="degrees", standard_name="wind_from_direction"
     ),
     "voltage": Variable(
         long_name="Voltage",
