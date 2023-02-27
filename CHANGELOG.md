@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.6.0 - 2023-02-27
+
+- Add weather-station
+- Add py.typed
+- Update CF tables
+- Add script for updating CF tables
+- Move data files to own directory
+
 ## 1.5.2 - 2023-02-01
 
 - Add `lidar_depolarisation` definition
