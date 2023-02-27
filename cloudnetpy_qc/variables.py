@@ -10,6 +10,7 @@ class Product(str, Enum):
     MWR = "mwr"
     DISDROMETER = "disdrometer"
     MODEL = "model"
+    WEATHER_STATION = "weather-station"
     # Level 1c
     CATEGORIZE = "categorize"
     # Level 2
@@ -65,12 +66,6 @@ VARIABLES = {
     # -------------------------------------
     # Required in DISDROMETER Level 1b file
     # -------------------------------------
-    "rainfall_rate": Variable(
-        long_name="Rainfall rate",
-        units="m s-1",
-        standard_name="rainfall_rate",
-        required=[Product.DISDROMETER],
-    ),
     "radar_reflectivity": Variable(
         long_name="Equivalent radar reflectivity factor",
         units="dBZ",
@@ -88,6 +83,27 @@ VARIABLES = {
         long_name="Number of particles in time interval",
         dtype=Dtype.INT,
         required=[Product.DISDROMETER],
+    ),
+    # -----------------------------------------
+    # Required in WEATHER STATION Level 1b file
+    # -----------------------------------------
+    "air_temperature": Variable(
+        long_name="Air temperature",
+        standard_name="air_temperature",
+        units="K",
+        required=[Product.WEATHER_STATION],
+    ),
+    "air_pressure": Variable(
+        long_name="Air pressure",
+        units="Pa",
+        standard_name="air_pressure",
+        required=[Product.WEATHER_STATION],
+    ),
+    "rainfall_amount": Variable(
+        long_name="Rainfall amount",
+        units="m",
+        standard_name="thickness_of_rainfall_amount",
+        required=[Product.WEATHER_STATION],
     ),
     # ------------------------------------
     # Required in CATEGORIZE Level 1c file
@@ -347,6 +363,12 @@ VARIABLES = {
     # -------------------------
     # Required in several files
     # -------------------------
+    "rainfall_rate": Variable(
+        long_name="Rainfall rate",
+        units="m s-1",
+        standard_name="rainfall_rate",
+        required=[Product.DISDROMETER, Product.WEATHER_STATION],
+    ),
     "range": Variable(
         long_name="Range from instrument", units="m", required=[Product.RADAR, Product.LIDAR]
     ),
@@ -376,7 +398,11 @@ VARIABLES = {
         long_name="Height above mean sea level",
         units="m",
         standard_name="height_above_mean_sea_level",
-        required=[p for p in Product.all() if p not in (Product.MWR, Product.DISDROMETER)],
+        required=[
+            p
+            for p in Product.all()
+            if p not in (Product.MWR, Product.DISDROMETER, Product.WEATHER_STATION)
+        ],
     ),
     "time": Variable(
         long_name="Time UTC",
@@ -540,10 +566,11 @@ VARIABLES = {
     ),
     "relative_humidity": Variable(
         long_name="Relative humidity",
-        units="%",
+        standard_name="relative_humidity",
     ),
     "wind_speed": Variable(
         long_name="Wind speed",
+        standard_name="wind_speed",
         units="m s-1",
     ),
     "wind_direction": Variable(
