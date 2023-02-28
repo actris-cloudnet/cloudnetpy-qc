@@ -174,7 +174,6 @@ VARIABLES = {
         units="m",
         required=[Product.CATEGORIZE],
     ),
-    "rain_rate": Variable(long_name="Rain rate", units="mm h-1", required=[Product.CATEGORIZE]),
     # ---------------------------------------
     # Required in CLASSIFICATION Level 2 file
     # ---------------------------------------
@@ -367,7 +366,7 @@ VARIABLES = {
         long_name="Rainfall rate",
         units="m s-1",
         standard_name="rainfall_rate",
-        required=[Product.DISDROMETER, Product.WEATHER_STATION],
+        required=[Product.CATEGORIZE, Product.DISDROMETER, Product.WEATHER_STATION],
     ),
     "range": Variable(
         long_name="Range from instrument", units="m", required=[Product.RADAR, Product.LIDAR]
