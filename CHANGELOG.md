@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.1 - 2023-02-28
+
+- Harmonize degree unit
+- Add standard name to wind_direction
+
 ## 1.6.0 - 2023-02-27
 
 - Add weather-station
