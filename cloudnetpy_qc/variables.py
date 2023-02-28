@@ -524,7 +524,7 @@ VARIABLES = {
     "antenna_separation": Variable(long_name="Antenna separation", units="m"),
     "antenna_diameter": Variable(long_name="Antenna diameter", units="m"),
     "antenna_gain": Variable(long_name="Antenna gain", units="dB"),
-    "half_power_beam_width": Variable(long_name="Half power beam width", units="degrees"),
+    "half_power_beam_width": Variable(long_name="Half power beam width", units="degree"),
     "dual_polarization": Variable(long_name="Dual polarisation type", dtype=Dtype.INT),
     "sample_duration": Variable(long_name="Sample duration", units="s"),
     "calibration_interval": Variable(long_name="Calibration interval in samples", dtype=Dtype.INT),
@@ -574,7 +574,7 @@ VARIABLES = {
         units="m s-1",
     ),
     "wind_direction": Variable(
-        long_name="Wind direction", units="degrees", standard_name="wind_from_direction"
+        long_name="Wind direction", units="degree", standard_name="wind_from_direction"
     ),
     "voltage": Variable(
         long_name="Voltage",
