@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.1 - 2023-03-03
+
+- Add more parsivel specifications
+
 ## 1.7.0 - 2023-02-28
 
 - Change rain_rate to rainfall_rate
