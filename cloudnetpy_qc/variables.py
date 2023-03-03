@@ -459,6 +459,7 @@ VARIABLES = {
     ),
     "T_sensor": Variable(long_name="Temperature in the sensor housing", units="K"),
     "I_heating": Variable(long_name="Heating current", units="A"),
+    "kinetic_energy": Variable(long_name="Kinetic energy of the hydrometeors", units="J m-2 h-1"),
     "V_power_supply": Variable(long_name="Power supply voltage", units="V"),
     "V_sensor_supply": Variable(long_name="Sensor supply voltage", units="V", dtype=Dtype.INT),
     "state_sensor": Variable(
