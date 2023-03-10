@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.2 - 2023-03-10
+
+- Add `galileo` specific variables
+
 ## 1.7.1 - 2023-03-03
 
 - Add more parsivel specifications
