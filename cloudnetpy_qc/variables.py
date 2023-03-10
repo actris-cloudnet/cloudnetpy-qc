@@ -747,4 +747,6 @@ VARIABLES = {
     "lidar_depolarisation": Variable(
         long_name="Calibrated volume depolarisation (532 nm)"  # in rv-polarstern categorize files
     ),
+    "beamwidthV": Variable(long_name="Vertical angular beamwidth", units="degree"),
+    "beamwidthH": Variable(long_name="Horizontal angular beamwidth", units="degree"),
 }
