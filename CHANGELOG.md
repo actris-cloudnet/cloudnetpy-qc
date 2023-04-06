@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.8.1 - 2023-04-06
+
+- Fix exception type in range correction test
+
 ## 1.8.0 - 2023-04-06
 
 - Make range correction test more robust
