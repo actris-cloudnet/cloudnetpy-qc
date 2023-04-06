@@ -24,7 +24,7 @@ setup(
     include_package_data=True,
     setup_requires=["wheel"],
     python_requires=">=3.10",
-    install_requires=["numpy", "netCDF4", "cfchecker"],
+    install_requires=["numpy", "scipy", "netCDF4", "cfchecker"],
     extras_require={
         "test": [
             "pytest-flakefinder",

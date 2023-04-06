@@ -9,6 +9,7 @@ from pathlib import Path
 
 import netCDF4
 import numpy as np
+import scipy.stats
 from numpy import ma
 
 from . import utils
@@ -365,18 +366,16 @@ class TestLDR(Test):
 class TestIfRangeCorrected(Test):
     def run(self):
         try:
-            data = self.nc["beta_raw"][:]
-        except IndexError:
+            range_var = self.nc["range"]
+            beta_raw = self.nc["beta_raw"]
+        except KeyError:
             return
-        noise_threshold = 2e-6
-        std_threshold = 1e-6
-        noise_ind = np.where(data < noise_threshold)
-        noise_std = float(np.std(data[noise_ind]))
-        if noise_std < std_threshold:
-            self._add_message(
-                f"Suspiciously low noise std ({utils.format_value(noise_std)}). "
-                f"Data might not be range-corrected."
-            )
+        n_top_ranges = 200
+        x = range_var[-n_top_ranges:] ** 2
+        y = np.std(beta_raw[:, -n_top_ranges:], axis=0)
+        res = scipy.stats.pearsonr(x, y)
+        if res.statistic < 0.5:
+            self._add_message("Data might not be range corrected.")
 
 
 @test(
