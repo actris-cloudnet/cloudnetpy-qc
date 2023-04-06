@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.8.0 - 2023-04-06
+
+- Make range correction test more robust
+
 ## 1.7.2 - 2023-03-10
 
 - Add `galileo` specific variables
