@@ -368,7 +368,7 @@ class TestIfRangeCorrected(Test):
         try:
             range_var = self.nc["range"]
             beta_raw = self.nc["beta_raw"]
-        except KeyError:
+        except IndexError:
             return
         n_top_ranges = 200
         x = range_var[-n_top_ranges:] ** 2
