@@ -11,6 +11,7 @@ class Product(str, Enum):
     DISDROMETER = "disdrometer"
     MODEL = "model"
     WEATHER_STATION = "weather-station"
+    DOPPLER_LIDAR = "doppler-lidar"
     # Level 1c
     CATEGORIZE = "categorize"
     # Level 2
@@ -135,7 +136,8 @@ VARIABLES = {
     "beta": Variable(
         long_name="Attenuated backscatter coefficient",
         units="sr-1 m-1",
-        required=[Product.CATEGORIZE],
+        # Lidar has its own beta test
+        required=[Product.CATEGORIZE, Product.DOPPLER_LIDAR],
     ),
     "beta_error": Variable(
         long_name="Error in attenuated backscatter coefficient",
@@ -374,7 +376,7 @@ VARIABLES = {
     "v": Variable(
         long_name="Doppler velocity",
         units="m s-1",
-        required=[Product.RADAR, Product.CATEGORIZE],
+        required=[Product.RADAR, Product.CATEGORIZE, Product.DOPPLER_LIDAR],
     ),
     "temperature": Variable(
         long_name="Temperature", units="K", required=[Product.MODEL, Product.CATEGORIZE]
