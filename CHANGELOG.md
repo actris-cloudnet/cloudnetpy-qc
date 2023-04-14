@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.0 - 2023-04-14
+
+- Add doppler lidar tests
+
 ## 1.8.1 - 2023-04-06
 
 - Fix exception type in range correction test
