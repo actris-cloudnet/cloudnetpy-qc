@@ -374,7 +374,7 @@ class TestIfRangeCorrected(Test):
         x = range_var[-n_top_ranges:] ** 2
         y = np.std(beta_raw[:, -n_top_ranges:], axis=0)
         res = scipy.stats.pearsonr(x, y)
-        if res.statistic < 0.5:
+        if res.statistic < 0.75:
             self._add_message("Data might not be range corrected.")
 
 
