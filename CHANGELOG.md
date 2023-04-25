@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.1 - 2023-04-25
+
+- Increase range correction threshold
+
 ## 1.9.0 - 2023-04-14
 
 - Add doppler lidar tests
