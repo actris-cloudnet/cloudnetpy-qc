@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.2 - 2023-05-04
+
+- Add snowfall rate
+
 ## 1.9.1 - 2023-04-25
 
 - Increase range correction threshold
