@@ -438,6 +438,7 @@ VARIABLES = {
     "rainfall_rate_1min_solid": Variable(
         long_name="Solid precipitation rate", units="m s-1", dtype=Dtype.INT
     ),
+    "snowfall_rate": Variable(long_name="Snowfall rate", units="m s-1"),
     "velocity": Variable(
         long_name="Center fall velocity of precipitation particles", units="m s-1"
     ),
