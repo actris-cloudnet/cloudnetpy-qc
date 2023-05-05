@@ -479,6 +479,8 @@ VARIABLES = {
     "fall_velocity": Variable(long_name="Average velocity of each diameter class", units="m s-1"),
     "data_raw": Variable(
         long_name="Raw data as a function of particle diameter and velocity",
+        units="1",
+        dtype=Dtype.SHORT,
     ),
     "phi_cx": Variable(
         long_name="Co-cross-channel differential phase",
