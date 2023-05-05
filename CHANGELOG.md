@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.3 - 2023-05-05
+
+- Specify `data_raw` units and dtype
+
 ## 1.9.2 - 2023-05-04
 
 - Add snowfall rate
