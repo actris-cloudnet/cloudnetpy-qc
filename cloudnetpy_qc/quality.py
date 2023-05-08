@@ -1,8 +1,10 @@
 """Cloudnet product quality checks."""
 import dataclasses
 import datetime
+import json
 import logging
 import os
+import re
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -168,7 +170,7 @@ class Test:
             if expected is not None:
                 value = getattr(self.nc.variables[key], attribute, "")
                 if value != expected:
-                    msg = utils.create_expected_received_msg(key, expected, value)
+                    msg = utils.create_expected_received_msg(expected, value, variable=key)
                     self._add_message(msg)
 
     def _get_date(self):
@@ -305,7 +307,7 @@ class TestDataTypes(Test):
             if received != expected:
                 if key == "time" and received in ("float32", "float64"):
                     continue
-                msg = utils.create_expected_received_msg(key, expected, received)
+                msg = utils.create_expected_received_msg(expected, received, variable=key)
                 self._add_message(msg)
 
 
@@ -376,23 +378,6 @@ class TestIfRangeCorrected(Test):
         res = scipy.stats.pearsonr(x, y)
         if res.statistic < 0.75:
             self._add_message("Data might not be range corrected.")
-
-
-@test(
-    "Instrument PID",
-    "Test that valid instrument PID exists.",
-    ErrorLevel.WARNING,
-    [Product.MWR, Product.LIDAR, Product.RADAR, Product.DISDROMETER],
-)
-class TestInstrumentPid(Test):
-    def run(self):
-        key = "instrument_pid"
-        try:
-            pid = getattr(self.nc, key)
-            if pid == "":
-                self._add_message("Instrument PID is empty.")
-        except AttributeError:
-            self._add_message("Instrument PID is missing.")
 
 
 # ---------------------#
@@ -483,3 +468,146 @@ class TestCFConvention(Test):
                 msg = utils.format_msg(error_msg)
                 msg = f"Variable '{key}': {msg}"
                 self._add_message(msg)
+
+
+@test(
+    "Instrument PID",
+    "Test that valid instrument PID exists.",
+    ErrorLevel.ERROR,
+    [
+        Product.MWR,
+        Product.LIDAR,
+        Product.RADAR,
+        Product.DISDROMETER,
+        Product.DOPPLER_LIDAR,
+        Product.WEATHER_STATION,
+    ],
+)
+class TestInstrumentPid(Test):
+    data: dict = {}
+
+    def run(self):
+        if self._check_exists():
+            self.data = utils.fetch_pid(self.nc.instrument_pid)
+            self._check_serial()
+            self._check_model_name()
+            self._check_model_identifier()
+
+    def _check_exists(self) -> bool:
+        key = "instrument_pid"
+        try:
+            pid = getattr(self.nc, key)
+            if pid == "":
+                self.severity = ErrorLevel.ERROR
+                self._add_message("Instrument PID is empty.")
+                return False
+            if re.fullmatch(utils.PID_FORMAT, pid) is None:
+                self.severity = ErrorLevel.ERROR
+                self._add_message("Instrument PID has invalid format.")
+                return False
+        except AttributeError:
+            self.severity = ErrorLevel.WARNING
+            self._add_message("Instrument PID is missing.")
+            return False
+        return True
+
+    def _get_value(self, kind: str) -> dict | list | None:
+        try:
+            item = next(item for item in self.data["values"] if item["type"] == kind)
+            return json.loads(item["data"]["value"])
+        except StopIteration:
+            return None
+
+    def _check_serial(self):
+        key = "serial_number"
+        try:
+            received = str(getattr(self.nc, key))
+        except AttributeError:
+            return
+        for alt in self._get_value("21.T11148/eb3c713572f681e6c4c3"):
+            if alt["alternateIdentifier"]["alternateIdentifierType"] == "SerialNumber":
+                expected = alt["alternateIdentifier"]["alternateIdentifierValue"]
+                if received != expected:
+                    msg = utils.create_expected_received_msg(expected, received)
+                    self.severity = ErrorLevel.ERROR
+                    self._add_message(msg)
+                return
+        self.severity = ErrorLevel.WARNING
+        self._add_message(
+            f"No serial number was defined in instrument PID but found '{received}' in the file."
+        )
+
+    def _check_model_name(self):
+        key = "source"
+        try:
+            source = getattr(self.nc, key)
+            allowed_values = self.SOURCE_TO_NAME[source]
+        except (AttributeError, KeyError):
+            return
+        model = self._get_value("21.T11148/c1a0ec5ad347427f25d6")
+        if model is None:
+            return
+        received = model["modelName"]
+        if received not in allowed_values:
+            msg = utils.create_expected_received_msg(allowed_values, received)
+            self.severity = ErrorLevel.ERROR
+            self._add_message(msg)
+
+    def _check_model_identifier(self):
+        key = "source"
+        try:
+            source = getattr(self.nc, key)
+            allowed_values = self.SOURCE_TO_IDENTIFIER[source]
+        except (AttributeError, KeyError):
+            return
+        model = self._get_value("21.T11148/c1a0ec5ad347427f25d6")
+        if model is None:
+            return
+        if "modelIdentifier" not in model:
+            return
+        received = model["modelIdentifier"]["modelIdentifierValue"]
+        if received not in allowed_values:
+            msg = utils.create_expected_received_msg(allowed_values, received)
+            self.severity = ErrorLevel.ERROR
+            self._add_message(msg)
+
+    SOURCE_TO_NAME = {
+        "Lufft CHM15k": ["Lufft CHM 15k"],
+        "Lufft CHM15kx": ["Lufft CHM 15k-x"],
+        "TROPOS PollyXT": ["PollyXT"],
+        "Vaisala CL31": ["Vaisala CL31"],
+        "Vaisala CL51": ["Vaisala CL51"],
+        "Vaisala CL61d": ["Vaisala CL61"],
+        "Vaisala CT25k": ["Vaisala CT25K"],
+        "HALO Photonics StreamLine": [
+            "StreamLine",
+            "StreamLine Pro",
+            "StreamLine XR",
+            "StreamLine XR+",
+        ],
+    }
+
+    SOURCE_TO_IDENTIFIER = {
+        "BASTA": ["https://vocabulary.actris.nilu.no/actris_vocab/BASTA"],
+        "METEK MIRA-35": [
+            "https://vocabulary.actris.nilu.no/actris_vocab/METEKMIRA35",
+            "https://vocabulary.actris.nilu.no/actris_vocab/METEKMIRA35S",
+        ],
+        "OTT HydroMet Parsivel2": ["https://vocabulary.actris.nilu.no/actris_vocab/OTTParsivel2"],
+        "RAL Space Copernicus": ["https://vocabulary.actris.nilu.no/actris_vocab/UFAMCopernicus"],
+        "RAL Space Galileo": ["https://vocabulary.actris.nilu.no/actris_vocab/UFAMGalileo"],
+        "RPG-Radiometer Physics HATPRO": [
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPGHATPRO"
+        ],
+        "RPG-Radiometer Physics RPG-FMCW-35": [
+            "https://vocabulary.actris.nilu.no/skosmos/actris_vocab/en/page/RPG-FMCW-35-DP"
+            "https://vocabulary.actris.nilu.no/skosmos/actris_vocab/en/page/RPG-FMCW-35-SP"
+            "https://vocabulary.actris.nilu.no/skosmos/actris_vocab/en/page/RPG-FMCW-35S"
+        ],
+        "RPG-Radiometer Physics RPG-FMCW-94": [
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-94-DP",
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-94-SP",
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-94S",
+        ],
+        "Thies Clima LNM": ["https://vocabulary.actris.nilu.no/actris_vocab/ThiesLNM"],
+    }

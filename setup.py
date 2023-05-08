@@ -24,11 +24,13 @@ setup(
     include_package_data=True,
     setup_requires=["wheel"],
     python_requires=">=3.10",
-    install_requires=["numpy", "scipy", "netCDF4", "cfchecker"],
+    install_requires=["numpy", "scipy", "netCDF4", "cfchecker", "requests"],
     extras_require={
         "test": [
             "pytest-flakefinder",
             "pylint",
+            "mypy",
+            "types-requests",
             "mypy",
         ],
     },

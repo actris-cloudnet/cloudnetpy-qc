@@ -1,6 +1,11 @@
 """ Helper functions. """
 import configparser
 import re
+from functools import lru_cache
+
+import requests
+
+PID_FORMAT = r"https?://hdl\.handle\.net/(.+)"
 
 
 def read_config(filename: str) -> configparser.ConfigParser:
@@ -23,8 +28,25 @@ def format_msg(msg_in: str | list) -> str:
     return msg
 
 
-def create_expected_received_msg(variable: str, expected: str, received: str) -> str:
-    return f"Expected '{expected}' but received '{received}' with variable '{variable}'"
+def _format_list(values: list[str]):
+    if len(values) == 0:
+        return ""
+    if len(values) == 1:
+        return "'" + values[0] + "'"
+    return "'" + "', '".join(values[:-1]) + "' or '" + values[-1] + "'"
+
+
+def create_expected_received_msg(
+    expected: str | list[str],
+    received: str,
+    variable: str | None = None,
+) -> str:
+    if isinstance(expected, str):
+        expected = [expected]
+    msg = f"Expected {_format_list(expected)} but received '{received}'"
+    if variable is not None:
+        return f"{msg} with variable '{variable}'"
+    return msg
 
 
 def create_out_of_bounds_msg(
@@ -41,3 +63,14 @@ def create_out_of_bounds_msg(
 
 def format_value(value: str | int | float) -> str:
     return "{:,g}".format(float(value))
+
+
+@lru_cache
+def fetch_pid(pid: str) -> dict:
+    match = re.fullmatch(PID_FORMAT, pid)
+    if match is None:
+        raise ValueError("Invalid PID format")
+    url = "https://hdl.handle.net/api/handles/" + match[1]
+    res = requests.get(url)
+    res.raise_for_status()
+    return res.json()
