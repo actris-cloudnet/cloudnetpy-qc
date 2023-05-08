@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.5 - 2023-05-08
+
+- Set HTTP timeout
+
 ## 1.9.4 - 2023-05-08
 
 - Extend instrument PID test
