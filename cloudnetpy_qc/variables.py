@@ -14,11 +14,14 @@ class Product(str, Enum):
     DOPPLER_LIDAR = "doppler-lidar"
     # Level 1c
     CATEGORIZE = "categorize"
+    MWR_L1C = "mwr-l1c"
     # Level 2
     CLASSIFICATION = "classification"
     IWC = "iwc"
     LWC = "lwc"
     DRIZZLE = "drizzle"
+    MWR_SINGLE = "mwr-single"
+    MWR_MULTI = "mwr-multi"
     # Experimental
     DER = "der"
     IER = "ier"
@@ -361,6 +364,82 @@ VARIABLES = {
         dtype=Dtype.INT,
         required=[Product.DER],
     ),
+    # ------------------------
+    # Required in MWR L1C file
+    # ------------------------
+    "frequency": Variable(
+        long_name="Nominal centre frequency of microwave channels",
+        units="GHz",
+        standard_name="radiation_frequency",
+        required=[Product.MWR_L1C],
+    ),
+    "receiver": Variable(
+        long_name="Corresponding microwave receiver for each channel",
+        dtype=Dtype.INT,
+        required=[Product.MWR_L1C],
+    ),
+    "bandwidth": Variable(
+        long_name="Bandwidth of microwave channels", units="GHz", required=[Product.MWR_L1C]
+    ),
+    "sideband_IF_separation": Variable(
+        long_name="Sideband IF separation", units="GHz", required=[Product.MWR_L1C]
+    ),
+    "freq_shift": Variable(
+        long_name="Frequency shift of the microwave channels",
+        units="GHz",
+        required=[Product.MWR_L1C],
+    ),
+    "tb": Variable(
+        long_name="Microwave brightness temperature",
+        units="K",
+        standard_name="brightness_temperature",
+        required=[Product.MWR_L1C],
+    ),
+    "receiver_nb": Variable(
+        long_name="Microwave receiver number", dtype=Dtype.INT, required=[Product.MWR_L1C]
+    ),
+    "met_quality_flag": Variable(
+        long_name="Meterological data quality flag", dtype=Dtype.INT, required=[Product.MWR_L1C]
+    ),
+    "ir_beamwidth": Variable(
+        long_name="Beam width of the infrared radiometer",
+        units="degree",
+        required=[Product.MWR_L1C],
+    ),
+    "n_sidebands": Variable(
+        long_name="Number of sidebands", dtype=Dtype.INT, required=[Product.MWR_L1C]
+    ),
+    "pointing_flag": Variable(
+        long_name="Pointing flag", dtype=Dtype.INT, required=[Product.MWR_L1C]
+    ),
+    "t_amb": Variable(
+        long_name="Ambient target temperature", units="K", required=[Product.MWR_L1C]
+    ),
+    "t_rec": Variable(
+        long_name="Receiver physical temperature", units="K", required=[Product.MWR_L1C]
+    ),
+    "t_sta": Variable(
+        long_name="Receiver temperature stability", units="K", required=[Product.MWR_L1C]
+    ),
+    "quality_flag_status": Variable(
+        long_name="Quality flag status", dtype=Dtype.INT, required=[Product.MWR_L1C]
+    ),
+    "liquid_cloud_flag": Variable(
+        long_name="Liquid cloud flag", dtype=Dtype.INT, required=[Product.MWR_L1C]
+    ),
+    "liquid_cloud_flag_status": Variable(
+        long_name="Liquid cloud flag status", dtype=Dtype.INT, required=[Product.MWR_L1C]
+    ),
+    "ir_wavelength": Variable(long_name="Wavelength of infrared channels", units="m"),
+    "ir_bandwidth": Variable(long_name="Bandwidth of infrared channels", units="m"),
+    "irt": Variable(long_name="Infrared brightness temperatures", units="K"),
+    "ir_azimuth_angle": Variable(long_name="Infrared sensor azimuth angle", units="degree"),
+    "ir_zenith_angle": Variable(long_name="Infrared sensor zenith angle", units="degree"),
+    "absolute_humidity": Variable(long_name="Absolute humidity", units="kg m-3"),
+    "potential_temperature": Variable(long_name="Potential temperature", units="K"),
+    "equivalent_potential_temperature": Variable(
+        long_name="Equivalent potential temperature", units="K"
+    ),
     # -------------------------
     # Required in several files
     # -------------------------
@@ -386,14 +465,19 @@ VARIABLES = {
     ),
     "lwp": Variable(
         long_name="Liquid water path",
-        units="g m-2",
+        units="kg m-2",
         standard_name="atmosphere_cloud_liquid_water_content",
-        required=[Product.MWR, Product.CATEGORIZE, Product.LWC],
+        required=[Product.MWR, Product.CATEGORIZE, Product.LWC, Product.MWR_SINGLE],
     ),
     "lwp_error": Variable(
         long_name="Error in liquid water path",
-        units="g m-2",
+        units="kg m-2",
         required=[Product.CATEGORIZE, Product.LWC],
+    ),
+    "lwp_offset": Variable(
+        long_name="Subtracted offset correction of liquid water path",
+        units="kg m-2",
+        required=[Product.MWR_SINGLE],
     ),
     "height": Variable(
         long_name="Height above mean sea level",
@@ -402,7 +486,7 @@ VARIABLES = {
         required=[
             p
             for p in Product.all()
-            if p not in (Product.MWR, Product.DISDROMETER, Product.WEATHER_STATION)
+            if p not in (Product.MWR, Product.DISDROMETER, Product.WEATHER_STATION, Product.MWR_L1C)
         ],
     ),
     "time": Variable(

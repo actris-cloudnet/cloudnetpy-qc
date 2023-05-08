@@ -8,12 +8,13 @@ SCRIPT_PATH = path.dirname(path.realpath(__file__))
 
 
 def test_valid_file():
+    # TODO: update this file
     filename = f"{SCRIPT_PATH}/data/20211129_juelich_hatpro.nc"
     check = Check(filename)
     check.errors()
     for test in check.tests:
         exps = test["exceptions"]
-        assert exps if test["testId"] == "TestInstrumentPid" else not exps
+        assert exps if test["testId"] in ("TestInstrumentPid", "TestUnits") else not exps
 
 
 def test_legacy_file():
