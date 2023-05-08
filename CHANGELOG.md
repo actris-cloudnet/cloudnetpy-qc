@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.4 - 2023-05-08
+
+- Extend instrument PID test
+
 ## 1.9.3 - 2023-05-05
 
 - Specify `data_raw` units and dtype
