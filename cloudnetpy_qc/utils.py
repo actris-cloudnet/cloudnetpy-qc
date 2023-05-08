@@ -71,6 +71,6 @@ def fetch_pid(pid: str) -> dict:
     if match is None:
         raise ValueError("Invalid PID format")
     url = "https://hdl.handle.net/api/handles/" + match[1]
-    res = requests.get(url)
+    res = requests.get(url, timeout=30)
     res.raise_for_status()
     return res.json()
