@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.10.1 - 2023-05-09
+
+- Update `lwp` limits
+
 ## 1.10.0 - 2023-05-09
 
 - Add mwrpy variables
