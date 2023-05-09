@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.10.2 - 2023-05-09
+
+- Skip time vector data type test
+
 ## 1.10.1 - 2023-05-09
 
 - Update `lwp` limits
