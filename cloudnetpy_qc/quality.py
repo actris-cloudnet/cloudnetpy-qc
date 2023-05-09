@@ -103,7 +103,6 @@ def test(
     """Decorator for the tests."""
 
     def fun(cls):
-
         setattr(cls, "name", name)
         setattr(cls, "description", description)
         if error_level is not None:

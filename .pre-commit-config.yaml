@@ -12,20 +12,15 @@ repos:
         args: ["--fix", "lf"]
       - id: trailing-whitespace
   - repo: https://github.com/pycqa/isort
-    rev: v5.11.3
+    rev: 5.12.0
     hooks:
       - id: isort
         args: ["--profile", "black"]
   - repo: https://github.com/psf/black
-    rev: 22.12.0
+    rev: 23.3.0
     hooks:
       - id: black
         args: ["--line-length", "100"]
-  - repo: https://github.com/pycqa/pylint
-    rev: v2.15.9
-    hooks:
-      - id: pylint
-        args: []
   - repo: local
     hooks:
       - id: mypy
@@ -34,3 +29,10 @@ repos:
         language: system
         types: [python]
         require_serial: true
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [ python ]
+        require_serial: true
+        args: [ "--jobs=4" ]
