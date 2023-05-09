@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.0 - 2023-05-09
+
+- Add mwrpy variables
+- Change `lwp` unit to `kg m-2`
+
 ## 1.9.5 - 2023-05-08
 
 - Set HTTP timeout
