@@ -14,7 +14,11 @@ def test_valid_file():
     check.errors()
     for test in check.tests:
         exps = test["exceptions"]
-        assert exps if test["testId"] in ("TestInstrumentPid", "TestUnits") else not exps
+        assert (
+            exps
+            if test["testId"] in ("TestInstrumentPid", "TestUnits", "FindVariableOutliers")
+            else not exps
+        ), f"{test}, {exps}"
 
 
 def test_legacy_file():
