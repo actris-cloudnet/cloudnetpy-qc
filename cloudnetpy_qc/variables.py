@@ -1,6 +1,9 @@
 """Variable definitions"""
+from collections.abc import Callable
 from enum import Enum
 from typing import NamedTuple
+
+import netCDF4
 
 
 class Product(str, Enum):
@@ -40,10 +43,14 @@ class Dtype(str, Enum):
 
 class Variable(NamedTuple):
     long_name: str
-    units: str | None = "1"
+    units: str | Callable[[netCDF4.Dataset], str] | None = "1"
     dtype: str = Dtype.FLOAT
     standard_name: str | None = None
     required: list[str] | None = None
+
+
+def time_units(nc: netCDF4.Dataset) -> str:
+    return f"hours since {nc.year}-{nc.month}-{nc.day} 00:00:00 +00:00"
 
 
 VARIABLES = {
@@ -173,7 +180,9 @@ VARIABLES = {
         units="dBZ",
         required=[Product.CATEGORIZE],
     ),
-    "model_time": Variable(long_name="Model time UTC", units=None, required=[Product.CATEGORIZE]),
+    "model_time": Variable(
+        long_name="Model time UTC", units=time_units, required=[Product.CATEGORIZE]
+    ),
     "model_height": Variable(
         long_name="Height of model variables above mean sea level",
         units="m",
@@ -491,7 +500,7 @@ VARIABLES = {
     ),
     "time": Variable(
         long_name="Time UTC",
-        units=None,
+        units=time_units,
         standard_name="time",
         required=Product.all(),
     ),

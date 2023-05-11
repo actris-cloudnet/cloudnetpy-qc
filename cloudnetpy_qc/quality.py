@@ -166,6 +166,8 @@ class Test:
             if key not in VARIABLES:
                 continue
             expected = getattr(VARIABLES[key], attribute)
+            if callable(expected):
+                expected = expected(self.nc)
             if expected is not None:
                 value = getattr(self.nc.variables[key], attribute, "")
                 if value != expected:
