@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.3 - 2023-05-11
+
+- Ignore zenith angle check for mwrpy files
+- Check `time` and `model_time` units
+
 ## 1.10.2 - 2023-05-09
 
 - Skip time vector data type test
