@@ -188,6 +188,8 @@ class Test:
 class FindVariableOutliers(Test):
     def run(self):
         for key, limits_str in DATA_CONFIG.items("limits"):
+            if key == "zenith_angle" and self.cloudnet_file_type.startswith("mwr-"):
+                continue
             limits = [float(x) for x in limits_str.split(",")]
             if key in self.nc.variables:
                 data = self.nc.variables[key][:]
