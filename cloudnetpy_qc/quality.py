@@ -240,13 +240,8 @@ class FindFolding(Test):
 )
 class TestDataCoverage(Test):
     def run(self):
-        date_in_file = self._get_date()
-        now = datetime.datetime.now(tz=datetime.timezone.utc)
-        current_fraction_hour = (
-            now.hour + int(now.minute) / 60 if now.date() == date_in_file else 24
-        )
-        grid = ma.array(np.linspace(0, current_fraction_hour, int(24 * (60 / 5)) + 1))
         time = self.nc["time"][:]
+        grid = self._create_grid()
         bins_with_no_data = 0
         for ind, t in enumerate(grid[:-1]):
             ind2 = np.where((time > t) & (time <= grid[ind + 1]))[0]
@@ -257,6 +252,16 @@ class TestDataCoverage(Test):
             if missing > 60:
                 self.severity = ErrorLevel.WARNING
             self._add_message(f"{round(missing)}% of day's data is missing.")
+
+    def _create_grid(self) -> np.ndarray:
+        resolution = 10 if self.cloudnet_file_type == "mwr-multi" else 5
+        now = datetime.datetime.now(tz=datetime.timezone.utc)
+        current_fraction_hour = (
+            now.hour + int(now.minute) / 60 if now.date() == self._get_date() else 24
+        )
+        return ma.array(
+            np.linspace(0, current_fraction_hour, int(24 * (60 / resolution)) + 1)
+        )
 
 
 @test(
