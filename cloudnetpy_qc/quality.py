@@ -171,7 +171,9 @@ class Test:
             if expected is not None:
                 value = getattr(self.nc.variables[key], attribute, "")
                 if value != expected:
-                    msg = utils.create_expected_received_msg(expected, value, variable=key)
+                    msg = utils.create_expected_received_msg(
+                        expected, value, variable=key
+                    )
                     self._add_message(msg)
 
     def _get_date(self):
@@ -225,7 +227,9 @@ class FindFolding(Test):
         difference = np.abs(np.diff(data, axis=1))
         n_suspicious = ma.sum(difference > v_threshold)
         if n_suspicious > 20:
-            self._add_message(f"{n_suspicious} suspicious pixels. Folding might be present.")
+            self._add_message(
+                f"{n_suspicious} suspicious pixels. Folding might be present."
+            )
 
 
 @test(
@@ -310,7 +314,9 @@ class TestDataTypes(Test):
             if received != expected:
                 if key == "time" and received in ("float32", "float64"):
                     continue
-                msg = utils.create_expected_received_msg(expected, received, variable=key)
+                msg = utils.create_expected_received_msg(
+                    expected, received, variable=key
+                )
                 self._add_message(msg)
 
 
@@ -378,7 +384,9 @@ class FindAttributeOutliers(Test):
 
 
 @test(
-    "LDR values", "Test that LDR values are proper.", products=[Product.RADAR, Product.CATEGORIZE]
+    "LDR values",
+    "Test that LDR values are proper.",
+    products=[Product.RADAR, Product.CATEGORIZE],
 )
 class TestLDR(Test):
     def run(self):
@@ -388,7 +396,9 @@ class TestLDR(Test):
                 self._add_message("LDR exists but all the values are invalid.")
 
 
-@test("Range correction", "Test that beta is range corrected.", products=[Product.LIDAR])
+@test(
+    "Range correction", "Test that beta is range corrected.", products=[Product.LIDAR]
+)
 class TestIfRangeCorrected(Test):
     def run(self):
         try:
@@ -617,9 +627,15 @@ class TestInstrumentPid(Test):
             "https://vocabulary.actris.nilu.no/actris_vocab/METEKMIRA35",
             "https://vocabulary.actris.nilu.no/actris_vocab/METEKMIRA35S",
         ],
-        "OTT HydroMet Parsivel2": ["https://vocabulary.actris.nilu.no/actris_vocab/OTTParsivel2"],
-        "RAL Space Copernicus": ["https://vocabulary.actris.nilu.no/actris_vocab/UFAMCopernicus"],
-        "RAL Space Galileo": ["https://vocabulary.actris.nilu.no/actris_vocab/UFAMGalileo"],
+        "OTT HydroMet Parsivel2": [
+            "https://vocabulary.actris.nilu.no/actris_vocab/OTTParsivel2"
+        ],
+        "RAL Space Copernicus": [
+            "https://vocabulary.actris.nilu.no/actris_vocab/UFAMCopernicus"
+        ],
+        "RAL Space Galileo": [
+            "https://vocabulary.actris.nilu.no/actris_vocab/UFAMGalileo"
+        ],
         "RPG-Radiometer Physics HATPRO": [
             "https://vocabulary.actris.nilu.no/actris_vocab/RPGHATPRO"
         ],

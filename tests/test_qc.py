@@ -16,7 +16,8 @@ def test_valid_file():
         exps = test["exceptions"]
         assert (
             exps
-            if test["testId"] in ("TestInstrumentPid", "TestUnits", "FindVariableOutliers")
+            if test["testId"]
+            in ("TestInstrumentPid", "TestUnits", "FindVariableOutliers")
             else not exps
         ), f"{test}, {exps}"
 

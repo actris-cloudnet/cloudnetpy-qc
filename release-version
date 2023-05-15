@@ -27,7 +27,9 @@ def main(component: str):
     elif component == "minor":
         new_version = Version(old_version.major, old_version.minor + 1, 0)
     else:
-        new_version = Version(old_version.major, old_version.minor, old_version.patch + 1)
+        new_version = Version(
+            old_version.major, old_version.minor, old_version.patch + 1
+        )
     entry = _read_changelog(old_version)
     if not _confirm(f"Updating version {old_version} -> {new_version}. Continue?"):
         return
@@ -75,7 +77,7 @@ def _read_int(text: str, key: str) -> int:
 
 
 def _write_int(text: str, key: str, value: int) -> str:
-    return re.sub(f"^{key} = \d+$", f"{key} = {value}", text, flags=re.M)  # pylint: disable=W1401
+    return re.sub(rf"^{key} = \d+$", f"{key} = {value}", text, flags=re.M)
 
 
 def _read_version() -> Version:
@@ -144,7 +146,9 @@ def _update_changelog(version: Version):
     today = date.today().isoformat()
     path = Path(CHANGELOG_FILE)
     old_content = path.read_text(encoding="utf-8")
-    new_content = re.sub("^## Unpublished$", f"## {version} - {today}", old_content, flags=re.M)
+    new_content = re.sub(
+        "^## Unpublished$", f"## {version} - {today}", old_content, flags=re.M
+    )
     assert new_content != old_content, f"Failed to update {CHANGELOG_FILE}"
     path.write_text(new_content, encoding="utf-8")
 

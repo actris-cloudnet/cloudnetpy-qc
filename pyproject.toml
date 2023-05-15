@@ -1,3 +1,53 @@
+[project]
+name = "cloudnetpy_qc"
+description = "Quality control routines for CloudnetPy products"
+readme = "README.md"
+authors = [{name = "Finnish Meteorological Institute", email = "actris-cloudnet@fmi.fi"}]
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+classifiers = [
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering",
+]
+dependencies = ["cfchecker", "netCDF4", "numpy", "requests", "scipy"]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+test = [
+  "mypy",
+  "pylint",
+  "pytest-flakefinder",
+  "types-requests",
+]
+
+[project.urls]
+homepage = "https://github.com/actris-cloudnet/cloudnetpy-qc"
+repository = "https://github.com/actris-cloudnet/cloudnetpy-qc"
+changelog = "https://github.com/actris-cloudnet/cloudnetpy-qc/blob/main/CHANGELOG.md"
+
 [[tool.mypy.overrides]]
-module = ["netCDF4", "scipy.*", "cfchecker", "setuptools"]
+module = ["cfchecker.*", "netCDF4.*", "scipy.*"]
 ignore_missing_imports = true
+
+[tool.pylint]
+ignored-modules = ["netCDF4", "numpy", "scipy"]
+disable = [
+  "consider-using-f-string",
+  "fixme",
+  "invalid-name",
+  "logging-fstring-interpolation",
+  "missing-class-docstring",
+  "missing-function-docstring",
+  "too-few-public-methods",
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "cloudnetpy_qc.version.__version__"}
+
+[tool.tomlsort]
+trailing_comma_inline_array = true
+sort_inline_arrays = true

@@ -60,14 +60,18 @@ VARIABLES = {
     "radar_frequency": Variable(
         long_name="Radar transmit frequency", units="GHz", required=[Product.RADAR]
     ),
-    "Zh": Variable(long_name="Radar reflectivity factor", units="dBZ", required=[Product.RADAR]),
+    "Zh": Variable(
+        long_name="Radar reflectivity factor", units="dBZ", required=[Product.RADAR]
+    ),
     "nyquist_velocity": Variable(
         long_name="Nyquist velocity", units="m s-1", required=[Product.RADAR]
     ),
     # -------------------------------
     # Required in LIDAR Level 1b file
     # -------------------------------
-    "wavelength": Variable(long_name="Laser wavelength", units="nm", required=[Product.LIDAR]),
+    "wavelength": Variable(
+        long_name="Laser wavelength", units="nm", required=[Product.LIDAR]
+    ),
     "zenith_angle": Variable(
         long_name="Zenith angle",
         units="degree",
@@ -122,13 +126,23 @@ VARIABLES = {
     "lidar_wavelength": Variable(
         long_name="Laser wavelength", units="nm", required=[Product.CATEGORIZE]
     ),
-    "insect_prob": Variable(long_name="Insect probability", required=[Product.CATEGORIZE]),
-    "uwind": Variable(long_name="Zonal wind", units="m s-1", required=[Product.CATEGORIZE]),
-    "vwind": Variable(long_name="Meridional wind", units="m s-1", required=[Product.CATEGORIZE]),
+    "insect_prob": Variable(
+        long_name="Insect probability", required=[Product.CATEGORIZE]
+    ),
+    "uwind": Variable(
+        long_name="Zonal wind", units="m s-1", required=[Product.CATEGORIZE]
+    ),
+    "vwind": Variable(
+        long_name="Meridional wind", units="m s-1", required=[Product.CATEGORIZE]
+    ),
     "q": Variable(long_name="Specific humidity", required=[Product.CATEGORIZE]),
-    "Tw": Variable(long_name="Wet-bulb temperature", units="K", required=[Product.CATEGORIZE]),
+    "Tw": Variable(
+        long_name="Wet-bulb temperature", units="K", required=[Product.CATEGORIZE]
+    ),
     "category_bits": Variable(
-        long_name="Target categorization bits", dtype=Dtype.INT, required=[Product.CATEGORIZE]
+        long_name="Target categorization bits",
+        dtype=Dtype.INT,
+        required=[Product.CATEGORIZE],
     ),
     "radar_liquid_atten": Variable(
         long_name="Two-way radar attenuation due to liquid water",
@@ -165,7 +179,9 @@ VARIABLES = {
         required=[Product.CATEGORIZE],
     ),
     "Z": Variable(
-        long_name="Radar reflectivity factor", units="dBZ", required=[Product.CATEGORIZE]
+        long_name="Radar reflectivity factor",
+        units="dBZ",
+        required=[Product.CATEGORIZE],
     ),
     "Z_bias": Variable(
         long_name="Bias in radar reflectivity factor",
@@ -173,7 +189,9 @@ VARIABLES = {
         required=[Product.CATEGORIZE],
     ),
     "Z_error": Variable(
-        long_name="Error in radar reflectivity factor", units="dB", required=[Product.CATEGORIZE]
+        long_name="Error in radar reflectivity factor",
+        units="dB",
+        required=[Product.CATEGORIZE],
     ),
     "Z_sensitivity": Variable(
         long_name="Minimum detectable radar reflectivity",
@@ -192,7 +210,9 @@ VARIABLES = {
     # Required in CLASSIFICATION Level 2 file
     # ---------------------------------------
     "target_classification": Variable(
-        long_name="Target classification", required=[Product.CLASSIFICATION], dtype=Dtype.INT
+        long_name="Target classification",
+        required=[Product.CLASSIFICATION],
+        dtype=Dtype.INT,
     ),
     "detection_status": Variable(
         long_name="Radar and lidar detection status",
@@ -222,14 +242,18 @@ VARIABLES = {
     # ----------------------------
     # Required in LWC Level 2 file
     # ----------------------------
-    "lwc": Variable(long_name="Liquid water content", units="kg m-3", required=[Product.LWC]),
+    "lwc": Variable(
+        long_name="Liquid water content", units="kg m-3", required=[Product.LWC]
+    ),
     "lwc_error": Variable(
         long_name="Random error in liquid water content, one standard deviation",
         units="dB",
         required=[Product.LWC],
     ),
     "lwc_retrieval_status": Variable(
-        long_name="Liquid water content retrieval status", dtype=Dtype.INT, required=[Product.LWC]
+        long_name="Liquid water content retrieval status",
+        dtype=Dtype.INT,
+        required=[Product.LWC],
     ),
     # ----------------------------
     # Required in IWC Level 2 file
@@ -240,48 +264,75 @@ VARIABLES = {
         required=[Product.IWC],
     ),
     "iwc_error": Variable(
-        long_name="Random error in ice water content", units="dB", required=[Product.IWC]
+        long_name="Random error in ice water content",
+        units="dB",
+        required=[Product.IWC],
     ),
     "iwc_bias": Variable(
-        long_name="Possible bias in ice water content", units="dB", required=[Product.IWC]
+        long_name="Possible bias in ice water content",
+        units="dB",
+        required=[Product.IWC],
     ),
     "iwc_sensitivity": Variable(
-        long_name="Minimum detectable ice water content", units="kg m-3", required=[Product.IWC]
+        long_name="Minimum detectable ice water content",
+        units="kg m-3",
+        required=[Product.IWC],
     ),
     "iwc_inc_rain": Variable(
-        long_name="Ice water content including rain", units="kg m-3", required=[Product.IWC]
+        long_name="Ice water content including rain",
+        units="kg m-3",
+        required=[Product.IWC],
     ),
     "iwc_retrieval_status": Variable(
-        long_name="Ice water content retrieval status", dtype=Dtype.INT, required=[Product.IWC]
+        long_name="Ice water content retrieval status",
+        dtype=Dtype.INT,
+        required=[Product.IWC],
     ),
     # --------------------------------
     # Required in DRIZZLE Level 2 file
     # --------------------------------
-    "Do": Variable(long_name="Drizzle median diameter", units="m", required=[Product.DRIZZLE]),
+    "Do": Variable(
+        long_name="Drizzle median diameter", units="m", required=[Product.DRIZZLE]
+    ),
     "mu": Variable(
-        long_name="Drizzle droplet size distribution shape parameter", required=[Product.DRIZZLE]
+        long_name="Drizzle droplet size distribution shape parameter",
+        required=[Product.DRIZZLE],
     ),
     "S": Variable(
-        long_name="Lidar backscatter-to-extinction ratio", units="sr", required=[Product.DRIZZLE]
+        long_name="Lidar backscatter-to-extinction ratio",
+        units="sr",
+        required=[Product.DRIZZLE],
     ),
     "beta_corr": Variable(
         long_name="Lidar backscatter correction factor", required=[Product.DRIZZLE]
     ),
     "drizzle_N": Variable(
-        long_name="Drizzle number concentration", units="m-3", required=[Product.DRIZZLE]
+        long_name="Drizzle number concentration",
+        units="m-3",
+        required=[Product.DRIZZLE],
     ),
     "drizzle_lwc": Variable(
-        long_name="Drizzle liquid water content", units="kg m-3", required=[Product.DRIZZLE]
+        long_name="Drizzle liquid water content",
+        units="kg m-3",
+        required=[Product.DRIZZLE],
     ),
     "drizzle_lwf": Variable(
-        long_name="Drizzle liquid water flux", units="kg m-2 s-1", required=[Product.DRIZZLE]
+        long_name="Drizzle liquid water flux",
+        units="kg m-2 s-1",
+        required=[Product.DRIZZLE],
     ),
     "v_drizzle": Variable(
-        long_name="Drizzle droplet fall velocity", units="m s-1", required=[Product.DRIZZLE]
+        long_name="Drizzle droplet fall velocity",
+        units="m s-1",
+        required=[Product.DRIZZLE],
     ),
-    "v_air": Variable(long_name="Vertical air velocity", units="m s-1", required=[Product.DRIZZLE]),
+    "v_air": Variable(
+        long_name="Vertical air velocity", units="m s-1", required=[Product.DRIZZLE]
+    ),
     "Do_error": Variable(
-        units="dB", long_name="Random error in drizzle median diameter", required=[Product.DRIZZLE]
+        units="dB",
+        long_name="Random error in drizzle median diameter",
+        required=[Product.DRIZZLE],
     ),
     "drizzle_lwc_error": Variable(
         units="dB",
@@ -299,7 +350,9 @@ VARIABLES = {
         required=[Product.DRIZZLE],
     ),
     "Do_bias": Variable(
-        long_name="Possible bias in drizzle median diameter", units="dB", required=[Product.DRIZZLE]
+        long_name="Possible bias in drizzle median diameter",
+        units="dB",
+        required=[Product.DRIZZLE],
     ),
     "drizzle_lwc_bias": Variable(
         long_name="Possible bias in drizzle liquid water content",
@@ -337,37 +390,55 @@ VARIABLES = {
         required=[Product.DRIZZLE],
     ),
     "drizzle_retrieval_status": Variable(
-        long_name="Drizzle parameter retrieval status", required=[Product.DRIZZLE], dtype=Dtype.INT
+        long_name="Drizzle parameter retrieval status",
+        required=[Product.DRIZZLE],
+        dtype=Dtype.INT,
     ),
     # ----------------------------
     # Required in IER Level 2 file
     # ----------------------------
-    "ier": Variable(long_name="Ice effective radius", units="m", required=[Product.IER]),
+    "ier": Variable(
+        long_name="Ice effective radius", units="m", required=[Product.IER]
+    ),
     "ier_inc_rain": Variable(
-        long_name="Ice effective radius including rain", units="m", required=[Product.IER]
+        long_name="Ice effective radius including rain",
+        units="m",
+        required=[Product.IER],
     ),
     "ier_error": Variable(
-        long_name="Random error in ice effective radius", units="m", required=[Product.IER]
+        long_name="Random error in ice effective radius",
+        units="m",
+        required=[Product.IER],
     ),
     "ier_retrieval_status": Variable(
-        long_name="Ice effective radius retrieval status", dtype=Dtype.INT, required=[Product.IER]
+        long_name="Ice effective radius retrieval status",
+        dtype=Dtype.INT,
+        required=[Product.IER],
     ),
     # ----------------------------
     # Required in DER Level 2 file
     # ----------------------------
-    "der": Variable(long_name="Droplet effective radius", units="m", required=[Product.DER]),
+    "der": Variable(
+        long_name="Droplet effective radius", units="m", required=[Product.DER]
+    ),
     "der_error": Variable(
-        long_name="Absolute error in droplet effective radius", units="m", required=[Product.DER]
+        long_name="Absolute error in droplet effective radius",
+        units="m",
+        required=[Product.DER],
     ),
     "der_scaled": Variable(
-        long_name="Droplet effective radius (scaled to LWP)", units="m", required=[Product.DER]
+        long_name="Droplet effective radius (scaled to LWP)",
+        units="m",
+        required=[Product.DER],
     ),
     "der_scaled_error": Variable(
         long_name="Absolute error in droplet effective radius (scaled to LWP)",
         units="m",
         required=[Product.DER],
     ),
-    "N_scaled": Variable(long_name="Cloud droplet number concentration", required=[Product.DER]),
+    "N_scaled": Variable(
+        long_name="Cloud droplet number concentration", required=[Product.DER]
+    ),
     "der_retrieval_status": Variable(
         long_name="Droplet effective radius retrieval status",
         dtype=Dtype.INT,
@@ -388,7 +459,9 @@ VARIABLES = {
         required=[Product.MWR_L1C],
     ),
     "bandwidth": Variable(
-        long_name="Bandwidth of microwave channels", units="GHz", required=[Product.MWR_L1C]
+        long_name="Bandwidth of microwave channels",
+        units="GHz",
+        required=[Product.MWR_L1C],
     ),
     "sideband_IF_separation": Variable(
         long_name="Sideband IF separation", units="GHz", required=[Product.MWR_L1C]
@@ -405,10 +478,14 @@ VARIABLES = {
         required=[Product.MWR_L1C],
     ),
     "receiver_nb": Variable(
-        long_name="Microwave receiver number", dtype=Dtype.INT, required=[Product.MWR_L1C]
+        long_name="Microwave receiver number",
+        dtype=Dtype.INT,
+        required=[Product.MWR_L1C],
     ),
     "met_quality_flag": Variable(
-        long_name="Meterological data quality flag", dtype=Dtype.INT, required=[Product.MWR_L1C]
+        long_name="Meterological data quality flag",
+        dtype=Dtype.INT,
+        required=[Product.MWR_L1C],
     ),
     "ir_beamwidth": Variable(
         long_name="Beam width of the infrared radiometer",
@@ -428,7 +505,9 @@ VARIABLES = {
         long_name="Receiver physical temperature", units="K", required=[Product.MWR_L1C]
     ),
     "t_sta": Variable(
-        long_name="Receiver temperature stability", units="K", required=[Product.MWR_L1C]
+        long_name="Receiver temperature stability",
+        units="K",
+        required=[Product.MWR_L1C],
     ),
     "quality_flag_status": Variable(
         long_name="Quality flag status", dtype=Dtype.INT, required=[Product.MWR_L1C]
@@ -437,13 +516,19 @@ VARIABLES = {
         long_name="Liquid cloud flag", dtype=Dtype.INT, required=[Product.MWR_L1C]
     ),
     "liquid_cloud_flag_status": Variable(
-        long_name="Liquid cloud flag status", dtype=Dtype.INT, required=[Product.MWR_L1C]
+        long_name="Liquid cloud flag status",
+        dtype=Dtype.INT,
+        required=[Product.MWR_L1C],
     ),
     "ir_wavelength": Variable(long_name="Wavelength of infrared channels", units="m"),
     "ir_bandwidth": Variable(long_name="Bandwidth of infrared channels", units="m"),
     "irt": Variable(long_name="Infrared brightness temperatures", units="K"),
-    "ir_azimuth_angle": Variable(long_name="Infrared sensor azimuth angle", units="degree"),
-    "ir_zenith_angle": Variable(long_name="Infrared sensor zenith angle", units="degree"),
+    "ir_azimuth_angle": Variable(
+        long_name="Infrared sensor azimuth angle", units="degree"
+    ),
+    "ir_zenith_angle": Variable(
+        long_name="Infrared sensor zenith angle", units="degree"
+    ),
     "absolute_humidity": Variable(long_name="Absolute humidity", units="kg m-3"),
     "potential_temperature": Variable(long_name="Potential temperature", units="K"),
     "equivalent_potential_temperature": Variable(
@@ -459,7 +544,9 @@ VARIABLES = {
         required=[Product.CATEGORIZE, Product.DISDROMETER, Product.WEATHER_STATION],
     ),
     "range": Variable(
-        long_name="Range from instrument", units="m", required=[Product.RADAR, Product.LIDAR]
+        long_name="Range from instrument",
+        units="m",
+        required=[Product.RADAR, Product.LIDAR],
     ),
     "v": Variable(
         long_name="Doppler velocity",
@@ -495,7 +582,13 @@ VARIABLES = {
         required=[
             p
             for p in Product.all()
-            if p not in (Product.MWR, Product.DISDROMETER, Product.WEATHER_STATION, Product.MWR_L1C)
+            if p
+            not in (
+                Product.MWR,
+                Product.DISDROMETER,
+                Product.WEATHER_STATION,
+                Product.MWR_L1C,
+            )
         ],
     ),
     "time": Variable(
@@ -537,7 +630,9 @@ VARIABLES = {
     ),
     "velocity_spread": Variable(long_name="Width of velocity interval", units="m s-1"),
     "velocity_bnds": Variable(long_name="Velocity bounds", units="m s-1"),
-    "diameter": Variable(long_name="Center diameter of precipitation particles", units="m"),
+    "diameter": Variable(
+        long_name="Center diameter of precipitation particles", units="m"
+    ),
     "diameter_spread": Variable(long_name="Width of diameter interval", units="m"),
     "diameter_bnds": Variable(long_name="Diameter bounds", units="m"),
     "synop_WaWa": Variable(
@@ -555,9 +650,13 @@ VARIABLES = {
     ),
     "T_sensor": Variable(long_name="Temperature in the sensor housing", units="K"),
     "I_heating": Variable(long_name="Heating current", units="A"),
-    "kinetic_energy": Variable(long_name="Kinetic energy of the hydrometeors", units="J m-2 h-1"),
+    "kinetic_energy": Variable(
+        long_name="Kinetic energy of the hydrometeors", units="J m-2 h-1"
+    ),
     "V_power_supply": Variable(long_name="Power supply voltage", units="V"),
-    "V_sensor_supply": Variable(long_name="Sensor supply voltage", units="V", dtype=Dtype.INT),
+    "V_sensor_supply": Variable(
+        long_name="Sensor supply voltage", units="V", dtype=Dtype.INT
+    ),
     "state_sensor": Variable(
         long_name="State of the sensor",
         dtype=Dtype.INT,
@@ -569,7 +668,9 @@ VARIABLES = {
     "number_concentration": Variable(
         long_name="Number of particles per diameter class", units="m-3 mm-1"
     ),
-    "fall_velocity": Variable(long_name="Average velocity of each diameter class", units="m s-1"),
+    "fall_velocity": Variable(
+        long_name="Average velocity of each diameter class", units="m s-1"
+    ),
     "data_raw": Variable(
         long_name="Raw data as a function of particle diameter and velocity",
         units="1",
@@ -591,7 +692,9 @@ VARIABLES = {
     "azimuth_angle": Variable(
         long_name="Azimuth angle", units="degree", standard_name="sensor_azimuth_angle"
     ),
-    "beta_raw": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
+    "beta_raw": Variable(
+        long_name="Attenuated backscatter coefficient", units="sr-1 m-1"
+    ),
     "iwv": Variable(
         long_name="Integrated water vapour",
         units="kg m-2",
@@ -609,7 +712,9 @@ VARIABLES = {
     "calibration_factor": Variable(
         long_name="Attenuated backscatter calibration factor",
     ),
-    "beta_smooth": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
+    "beta_smooth": Variable(
+        long_name="Attenuated backscatter coefficient", units="sr-1 m-1"
+    ),
     "depolarisation": Variable(
         long_name="Lidar volume linear depolarisation ratio",
     ),
@@ -622,14 +727,20 @@ VARIABLES = {
     "antenna_separation": Variable(long_name="Antenna separation", units="m"),
     "antenna_diameter": Variable(long_name="Antenna diameter", units="m"),
     "antenna_gain": Variable(long_name="Antenna gain", units="dB"),
-    "half_power_beam_width": Variable(long_name="Half power beam width", units="degree"),
+    "half_power_beam_width": Variable(
+        long_name="Half power beam width", units="degree"
+    ),
     "dual_polarization": Variable(long_name="Dual polarisation type", dtype=Dtype.INT),
     "sample_duration": Variable(long_name="Sample duration", units="s"),
-    "calibration_interval": Variable(long_name="Calibration interval in samples", dtype=Dtype.INT),
+    "calibration_interval": Variable(
+        long_name="Calibration interval in samples", dtype=Dtype.INT
+    ),
     "number_of_spectral_samples": Variable(
         long_name="Number of spectral samples in each chirp sequence", dtype=Dtype.INT
     ),
-    "chirp_start_indices": Variable(long_name="Chirp sequences start indices", dtype=Dtype.INT),
+    "chirp_start_indices": Variable(
+        long_name="Chirp sequences start indices", dtype=Dtype.INT
+    ),
     "number_of_averaged_chirps": Variable(
         long_name="Number of averaged chirps in sequence",
         dtype=Dtype.INT,
@@ -713,7 +824,9 @@ VARIABLES = {
         long_name="Number of spectral averages (not accounting for overlapping FFTs)",
         dtype=Dtype.INT,
     ),
-    "prf": Variable(long_name="Pulse Repetition Frequency", units="Hz", dtype=Dtype.INT),
+    "prf": Variable(
+        long_name="Pulse Repetition Frequency", units="Hz", dtype=Dtype.INT
+    ),
     "rg0": Variable(long_name="Number of lowest range gates", dtype=Dtype.INT),
     "SNR": Variable(long_name="Signal-to-noise ratio", units="dB"),
     "radar_pitch": Variable(
@@ -730,9 +843,13 @@ VARIABLES = {
     "phi_dp": Variable(long_name="Differential phase", units="rad"),
     "srho_hv": Variable(long_name="Slanted correlation coefficient"),
     "kdp": Variable(long_name="Specific differential phase shift", units="rad km-1"),
-    "differential_attenuation": Variable(long_name="Differential attenuation", units="dB km-1"),
+    "differential_attenuation": Variable(
+        long_name="Differential attenuation", units="dB km-1"
+    ),
     "synop_WW": Variable(long_name="Synop code WW", dtype=Dtype.INT),
-    "measurement_quality": Variable(long_name="Measurement quality", units="%", dtype=Dtype.INT),
+    "measurement_quality": Variable(
+        long_name="Measurement quality", units="%", dtype=Dtype.INT
+    ),
     "status_laser": Variable(long_name="Status of laser", dtype=Dtype.INT),
     "static_signal": Variable(long_name="Static signal", dtype=Dtype.INT),
     "status_T_laser_analogue": Variable(
@@ -747,21 +864,37 @@ VARIABLES = {
     "status_I_laser_digital": Variable(
         long_name="Status of laser current (digital)", dtype=Dtype.INT
     ),
-    "status_sensor_supply": Variable(long_name="Status of sensor supply", dtype=Dtype.INT),
-    "status_laser_heating": Variable(long_name="Status of laser heating", dtype=Dtype.INT),
-    "status_receiver_heating": Variable(long_name="Status of receiver heating", dtype=Dtype.INT),
+    "status_sensor_supply": Variable(
+        long_name="Status of sensor supply", dtype=Dtype.INT
+    ),
+    "status_laser_heating": Variable(
+        long_name="Status of laser heating", dtype=Dtype.INT
+    ),
+    "status_receiver_heating": Variable(
+        long_name="Status of receiver heating", dtype=Dtype.INT
+    ),
     "status_temperature_sensor": Variable(
         long_name="Status of temperature sensor", dtype=Dtype.INT
     ),
-    "status_heating_supply": Variable(long_name="Status of heating supply", dtype=Dtype.INT),
-    "status_heating_housing": Variable(long_name="Status of heating housing", dtype=Dtype.INT),
-    "status_heating_heads": Variable(long_name="Status of heating heads", dtype=Dtype.INT),
-    "status_heating_carriers": Variable(long_name="Status of heating carriers", dtype=Dtype.INT),
+    "status_heating_supply": Variable(
+        long_name="Status of heating supply", dtype=Dtype.INT
+    ),
+    "status_heating_housing": Variable(
+        long_name="Status of heating housing", dtype=Dtype.INT
+    ),
+    "status_heating_heads": Variable(
+        long_name="Status of heating heads", dtype=Dtype.INT
+    ),
+    "status_heating_carriers": Variable(
+        long_name="Status of heating carriers", dtype=Dtype.INT
+    ),
     "status_laser_power": Variable(long_name="Status of laser power", dtype=Dtype.INT),
     "T_interior": Variable(long_name="Interior temperature", units="K"),
     "T_laser_driver": Variable(long_name="Temperature of laser driver", units="K"),
     "T_ambient": Variable(long_name="Ambient temperature", units="K"),
-    "I_mean_laser": Variable(long_name="Mean value of laser current", units="mA", dtype=Dtype.INT),
+    "I_mean_laser": Variable(
+        long_name="Mean value of laser current", units="mA", dtype=Dtype.INT
+    ),
     "V_control": Variable(long_name="Control voltage", units="mV", dtype=Dtype.INT),
     "V_optical_output": Variable(
         long_name="Voltage of optical control output", units="mV", dtype=Dtype.INT
@@ -776,12 +909,24 @@ VARIABLES = {
         long_name="Maximum hail diameter", units="mm", dtype=Dtype.INT
     ),
     # rv-polarstern specific
-    "beta_1064_raw": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
-    "beta_1064": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
-    "beta_532_raw": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
-    "beta_532": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
-    "beta_355_raw": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
-    "beta_355": Variable(long_name="Attenuated backscatter coefficient", units="sr-1 m-1"),
+    "beta_1064_raw": Variable(
+        long_name="Attenuated backscatter coefficient", units="sr-1 m-1"
+    ),
+    "beta_1064": Variable(
+        long_name="Attenuated backscatter coefficient", units="sr-1 m-1"
+    ),
+    "beta_532_raw": Variable(
+        long_name="Attenuated backscatter coefficient", units="sr-1 m-1"
+    ),
+    "beta_532": Variable(
+        long_name="Attenuated backscatter coefficient", units="sr-1 m-1"
+    ),
+    "beta_355_raw": Variable(
+        long_name="Attenuated backscatter coefficient", units="sr-1 m-1"
+    ),
+    "beta_355": Variable(
+        long_name="Attenuated backscatter coefficient", units="sr-1 m-1"
+    ),
     "beta_355_nr": Variable(
         long_name="Attenuated backscatter coefficient (near range)", units="sr-1 m-1"
     ),

@@ -4,14 +4,14 @@
 
 Software for evaluating quality of [ACTRIS-Cloudnet](https://cloudnet.fmi.fi) data products.
 
-Installation
-------------
+## Installation
+
 ```shell
 $ pip3 install cloudnetpy-qc
 ```
 
-Usage
------
+## Usage
+
 ```python
 import json
 from cloudnetpy_qc import quality
@@ -21,18 +21,20 @@ print(json_object)
 ```
 
 ## Format of the report
-* `timestamp`: UTC timestamp of the test
-* `qcVersion`: `cloudnetpy-qc` version
-* `tests`: `Test[]`
+
+- `timestamp`: UTC timestamp of the test
+- `qcVersion`: `cloudnetpy-qc` version
+- `tests`: `Test[]`
 
 ### `Test`
-* `testId`: Unique name of the test
-* `exceptions`: `Exception[]`
+
+- `testId`: Unique name of the test
+- `exceptions`: `Exception[]`
 
 ### `Exception`
-* `message`: Free-form message about the exception
-* `result`: `"info"`, `"error"` or `"warning"`
 
+- `message`: Free-form message about the exception
+- `result`: `"info"`, `"error"` or `"warning"`
 
 ### Example:
 
@@ -71,4 +73,5 @@ print(json_object)
 ```
 
 ## License
+
 MIT
