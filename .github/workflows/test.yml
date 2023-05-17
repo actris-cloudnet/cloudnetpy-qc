@@ -14,15 +14,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libudunits2-dev
+          version: 1.0
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+          cache: "pip"
       - name: Install dependencies
-        run: |
-          sudo apt-get install libudunits2-dev
-          pip install --upgrade pip
-          pip install .[test]
+        run: pip install .[test]
       - name: Lint with pylint
         run: |
           pylint cloudnetpy_qc
