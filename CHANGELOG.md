@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.10.5 - 2023-05-17
+
+- Update CF standard name table
+
 ## 1.10.4 - 2023-05-17
 
 - Allow sparser sampling resolution with mwr-multi
