@@ -9,6 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
+      contents: write
       id-token: write
     steps:
       - uses: actions/checkout@v3
@@ -26,7 +27,7 @@ jobs:
         run: |
           version=${GITHUB_REF#refs/tags/v}
           sed "0,/^## ${version//./\\.}/d;/^## /,\$d" CHANGELOG.md > ${{ github.workspace }}-CHANGELOG.txt
-          echo "::set-output name=name::CloudnetPy-QC $version"
+          echo "name=CloudnetPy-QC $version" >> $GITHUB_OUTPUT
         id: changelog
       - name: Create release
         uses: softprops/action-gh-release@v1
