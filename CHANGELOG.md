@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.10.4 - 2023-05-17
+
+- Allow sparser sampling resolution with mwr-multi
+
 ## 1.10.3 - 2023-05-11
 
 - Ignore zenith angle check for mwrpy files
