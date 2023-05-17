@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.10.6 - 2023-05-17
+
+- Re-release package
+
 ## 1.10.5 - 2023-05-17
 
 - Update CF standard name table
