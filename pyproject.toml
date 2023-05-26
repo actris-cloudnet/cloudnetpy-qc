@@ -25,9 +25,9 @@ test = [
 ]
 
 [project.urls]
-homepage = "https://github.com/actris-cloudnet/cloudnetpy-qc"
-repository = "https://github.com/actris-cloudnet/cloudnetpy-qc"
-changelog = "https://github.com/actris-cloudnet/cloudnetpy-qc/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/actris-cloudnet/cloudnetpy-qc"
+Repository = "https://github.com/actris-cloudnet/cloudnetpy-qc"
+Changelog = "https://github.com/actris-cloudnet/cloudnetpy-qc/blob/main/CHANGELOG.md"
 
 [[tool.mypy.overrides]]
 module = ["cfchecker.*", "netCDF4.*", "scipy.*"]
