@@ -563,9 +563,12 @@ class TestInstrumentPid(Test):
             received = str(getattr(self.nc, key))
         except AttributeError:
             return
-        for alt in self._get_value("21.T11148/eb3c713572f681e6c4c3"):
-            if alt["alternateIdentifier"]["alternateIdentifierType"] == "SerialNumber":
-                expected = alt["alternateIdentifier"]["alternateIdentifierValue"]
+        items = self._get_value("21.T11148/eb3c713572f681e6c4c3")
+        if not isinstance(items, list):
+            return
+        for item in items:
+            if item["alternateIdentifier"]["alternateIdentifierType"] == "SerialNumber":
+                expected = item["alternateIdentifier"]["alternateIdentifierValue"]
                 if received != expected:
                     msg = utils.create_expected_received_msg(expected, received)
                     self.severity = ErrorLevel.ERROR
