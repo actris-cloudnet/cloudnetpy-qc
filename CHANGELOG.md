@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.10.7 - 2023-05-26
+
+- Handle missing value in instrument PID test
+
 ## 1.10.6 - 2023-05-17
 
 - Re-release package
