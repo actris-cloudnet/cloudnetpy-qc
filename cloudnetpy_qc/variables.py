@@ -477,6 +477,10 @@ VARIABLES = {
         standard_name="brightness_temperature",
         required=[Product.MWR_L1C],
     ),
+    "tb_spectrum": Variable(
+        long_name="Brightness temperature spectrum",
+        units="K",
+    ),
     "receiver_nb": Variable(
         long_name="Microwave receiver number",
         dtype=Dtype.INT,
