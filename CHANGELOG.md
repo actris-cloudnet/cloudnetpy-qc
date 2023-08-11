@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.8 - 2023-08-11
+
+- Add tb_spectrum
+- Fix URL names
+
 ## 1.10.7 - 2023-05-26
 
 - Handle missing value in instrument PID test
