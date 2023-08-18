@@ -576,9 +576,12 @@ class TestInstrumentPid(Test):
         items = self._get_value("21.T11148/eb3c713572f681e6c4c3")
         if not isinstance(items, list):
             return
+        model_name = self._get_value("21.T11148/c1a0ec5ad347427f25d6")["modelName"]
         for item in items:
             if item["alternateIdentifier"]["alternateIdentifierType"] == "SerialNumber":
                 expected = item["alternateIdentifier"]["alternateIdentifierValue"]
+                if "StreamLine" in model_name:
+                    expected = expected.split("-")[-1]
                 if received != expected:
                     msg = utils.create_expected_received_msg(expected, received)
                     self._add_error(msg)
