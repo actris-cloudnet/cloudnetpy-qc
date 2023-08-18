@@ -96,7 +96,6 @@ def run_tests(
 def test(
     name: str,
     description: str,
-    error_level: ErrorLevel | None = None,
     products: list[Product] | None = None,
     ignore_products: list[Product] | None = None,
 ):
@@ -105,8 +104,6 @@ def test(
     def fun(cls):
         setattr(cls, "name", name)
         setattr(cls, "description", description)
-        if error_level is not None:
-            setattr(cls, "severity", error_level)
         if products is not None:
             setattr(cls, "products", [member.value for member in products])
         if ignore_products is not None:
@@ -122,7 +119,6 @@ class Test:
 
     name: str
     description: str
-    severity = ErrorLevel.WARNING
     products: list[str] = Product.all()
 
     def __init__(self, nc: netCDF4.Dataset, filename: Path, cloudnet_file_type: str):
@@ -137,13 +133,22 @@ class Test:
     def run(self):
         raise NotImplementedError
 
-    def _add_message(self, message: str | list):
+    def _add_message(self, message: str | list, severity: ErrorLevel):
         self.report.exceptions.append(
             {
                 "message": utils.format_msg(message),
-                "result": self.severity,
+                "result": severity,
             }
         )
+
+    def _add_info(self, message: str | list):
+        self._add_message(message, ErrorLevel.INFO)
+
+    def _add_warning(self, message: str | list):
+        self._add_message(message, ErrorLevel.WARNING)
+
+    def _add_error(self, message: str | list):
+        self._add_message(message, ErrorLevel.ERROR)
 
     def _read_config_keys(self, config_section: str) -> np.ndarray:
         field = "all" if "attr" in config_section else self.cloudnet_file_type
@@ -174,7 +179,7 @@ class Test:
                     msg = utils.create_expected_received_msg(
                         expected, value, variable=key
                     )
-                    self._add_message(msg)
+                    self._add_warning(msg)
 
     def _get_date(self):
         date_in_file = [int(getattr(self.nc, x)) for x in ("year", "month", "day")]
@@ -186,7 +191,7 @@ class Test:
 # --------------------#
 
 
-@test("Variable outliers", "Find suspicious data values.", error_level=ErrorLevel.INFO)
+@test("Variable outliers", "Find suspicious data values.")
 class FindVariableOutliers(Test):
     def run(self):
         for key, limits_str in DATA_CONFIG.items("limits"):
@@ -196,23 +201,21 @@ class FindVariableOutliers(Test):
             if key in self.nc.variables:
                 data = self.nc.variables[key][:]
                 if data.ndim > 0 and len(data) == 0:
-                    self.severity = ErrorLevel.ERROR
                     break
                 max_value = np.max(data)
                 min_value = np.min(data)
                 if min_value < limits[0]:
                     msg = utils.create_out_of_bounds_msg(key, *limits, min_value)
-                    self._add_message(msg)
+                    self._add_info(msg)
                 if max_value > limits[1]:
                     msg = utils.create_out_of_bounds_msg(key, *limits, max_value)
-                    self._add_message(msg)
+                    self._add_info(msg)
 
 
 @test(
     "Radar folding",
     "Test for radar folding.",
     products=[Product.RADAR, Product.CATEGORIZE],
-    error_level=ErrorLevel.INFO,
 )
 class FindFolding(Test):
     def run(self):
@@ -221,13 +224,12 @@ class FindFolding(Test):
         try:
             data = self.nc[key][:]
         except IndexError:
-            self.severity = ErrorLevel.ERROR
-            self._add_message(f"Doppler velocity, '{key}', is missing.")
+            self._add_error(f"Doppler velocity, '{key}', is missing.")
             return
         difference = np.abs(np.diff(data, axis=1))
         n_suspicious = ma.sum(difference > v_threshold)
         if n_suspicious > 20:
-            self._add_message(
+            self._add_info(
                 f"{n_suspicious} suspicious pixels. Folding might be present."
             )
 
@@ -235,7 +237,6 @@ class FindFolding(Test):
 @test(
     "Data coverage",
     "Test that file contains enough data.",
-    error_level=ErrorLevel.INFO,
 )
 class TestDataCoverage(Test):
     RESOLUTIONS = {
@@ -269,12 +270,13 @@ class TestDataCoverage(Test):
         )
         missing = np.count_nonzero(hist == 0) / len(hist) * 100
         if missing > 20:
+            message = f"{round(missing)}% of day's data is missing."
             if missing > 60:
-                self.severity = ErrorLevel.WARNING
-            self._add_message(f"{round(missing)}% of day's data is missing.")
+                self._add_warning(message)
+            else:
+                self._add_info(message)
         if actual_res > expected_res * 1.05:
-            self.severity = ErrorLevel.WARNING
-            self._add_message(
+            self._add_warning(
                 f"Expected a measurement with interval at least {expected_res},"
                 f" got {actual_res} instead"
             )
@@ -284,13 +286,12 @@ class TestDataCoverage(Test):
     "Variable names",
     "Check that variables have expected names.",
     ignore_products=[Product.MODEL],
-    error_level=ErrorLevel.INFO,
 )
 class TestVariableNamesDefined(Test):
     def run(self):
         for key in self.nc.variables.keys():
             if key not in VARIABLES:
-                self._add_message(f"'{key}' is not defined in cloudnetpy-qc.")
+                self._add_info(f"'{key}' is not defined in cloudnetpy-qc.")
 
 
 # ---------------------- #
@@ -338,7 +339,7 @@ class TestDataTypes(Test):
                 msg = utils.create_expected_received_msg(
                     expected, received, variable=key
                 )
-                self._add_message(msg)
+                self._add_warning(msg)
 
 
 # @test(
@@ -359,7 +360,7 @@ class TestDataTypes(Test):
 #         expected = "float64"
 #         if received != expected:
 #             msg = utils.create_expected_received_msg(key, expected, received)
-#             self._add_message(msg)
+#             self._add_warning(msg)
 
 
 @test("Global attributes", "Check that file contains required global attributes.")
@@ -369,27 +370,25 @@ class TestGlobalAttributes(Test):
         config_keys = self._read_config_keys("required_global_attributes")
         missing_keys = list(set(config_keys) - set(nc_keys))
         for key in missing_keys:
-            self._add_message(f"'{key}' is missing.")
+            self._add_warning(f"'{key}' is missing.")
 
 
 @test(
     "Median LWP",
     "Test that median of LWP values is within a reasonable range.",
-    ErrorLevel.WARNING,
     [Product.MWR, Product.CATEGORIZE],
 )
 class TestMedianLwp(Test):
     def run(self):
         key = "lwp"
         if key not in self.nc.variables:
-            self.severity = ErrorLevel.ERROR
-            self._add_message(f"'{key}' is missing.")
+            self._add_error(f"'{key}' is missing.")
             return
         limits = [-0.5, 10]
         median_lwp = ma.median(self.nc.variables[key][:]) / 1000  # g -> kg
         if median_lwp < limits[0] or median_lwp > limits[1]:
             msg = utils.create_out_of_bounds_msg(key, *limits, median_lwp)
-            self._add_message(msg)
+            self._add_warning(msg)
 
 
 @test("Attribute outliers", "Find suspicious values in global attributes.")
@@ -401,7 +400,7 @@ class FindAttributeOutliers(Test):
                 value = float(self.nc.getncattr(key))
                 if value < limits[0] or value > limits[1]:
                     msg = utils.create_out_of_bounds_msg(key, *limits, value)
-                    self._add_message(msg)
+                    self._add_warning(msg)
 
 
 @test(
@@ -414,7 +413,7 @@ class TestLDR(Test):
         if "ldr" in self.nc.variables:
             ldr = self.nc["ldr"][:]
             if ldr.mask.all():
-                self._add_message("LDR exists but all the values are invalid.")
+                self._add_warning("LDR exists but all the values are invalid.")
 
 
 @test(
@@ -432,7 +431,7 @@ class TestIfRangeCorrected(Test):
         y = np.std(beta_raw[:, -n_top_ranges:], axis=0)
         res = scipy.stats.pearsonr(x, y)
         if res.statistic < 0.75:
-            self._add_message("Data might not be range corrected.")
+            self._add_warning("Data might not be range corrected.")
 
 
 # ---------------------#
@@ -443,7 +442,6 @@ class TestIfRangeCorrected(Test):
 @test(
     "Beta presence",
     "Test that one beta variable exists.",
-    error_level=ErrorLevel.ERROR,
     products=[Product.LIDAR],
 )
 class TestLidarBeta(Test):
@@ -452,43 +450,43 @@ class TestLidarBeta(Test):
         for key in valid_keys:
             if key in self.nc.variables:
                 return
-        self._add_message("No valid beta variable found.")
+        self._add_error("No valid beta variable found.")
 
 
-@test("Time vector", "Test that time vector is continuous.", ErrorLevel.ERROR)
+@test("Time vector", "Test that time vector is continuous.")
 class TestTimeVector(Test):
     def run(self):
         time = self.nc["time"][:]
         try:
             n_time = len(time)
         except (TypeError, ValueError):
-            self._add_message("Time vector is empty.")
+            self._add_error("Time vector is empty.")
             return
         if n_time == 0:
-            self._add_message("Time vector is empty.")
+            self._add_error("Time vector is empty.")
             return
         if n_time == 1:
-            self._add_message("One time step only.")
+            self._add_error("One time step only.")
             return
         differences = np.diff(time)
         min_difference = np.min(differences)
         max_difference = np.max(differences)
         if min_difference <= 0:
             msg = utils.create_out_of_bounds_msg("time", 0, 24, min_difference)
-            self._add_message(msg)
+            self._add_error(msg)
         if max_difference >= 24:
             msg = utils.create_out_of_bounds_msg("time", 0, 24, max_difference)
-            self._add_message(msg)
+            self._add_error(msg)
 
 
-@test("Variables", "Check that file contains required variables.", ErrorLevel.ERROR)
+@test("Variables", "Check that file contains required variables.")
 class TestVariableNames(Test):
     def run(self):
         keys_in_file = set(self.nc.variables.keys())
         required_keys = self._get_required_variable_names()
         missing_keys = list(required_keys - keys_in_file)
         for key in missing_keys:
-            self._add_message(f"'{key}' is missing.")
+            self._add_error(f"'{key}' is missing.")
 
 
 # ------------------------------#
@@ -515,20 +513,19 @@ class TestCFConvention(Test):
                 if not error_msg:
                     continue
                 if level in ("FATAL", "ERROR"):
-                    self.severity = ErrorLevel.ERROR
+                    severity = ErrorLevel.ERROR
                 elif level == "WARN":
-                    self.severity = ErrorLevel.WARNING
+                    severity = ErrorLevel.WARNING
                 else:
                     continue
                 msg = utils.format_msg(error_msg)
                 msg = f"Variable '{key}': {msg}"
-                self._add_message(msg)
+                self._add_message(msg, severity)
 
 
 @test(
     "Instrument PID",
     "Test that valid instrument PID exists.",
-    ErrorLevel.ERROR,
     [
         Product.MWR,
         Product.LIDAR,
@@ -553,16 +550,13 @@ class TestInstrumentPid(Test):
         try:
             pid = getattr(self.nc, key)
             if pid == "":
-                self.severity = ErrorLevel.ERROR
-                self._add_message("Instrument PID is empty.")
+                self._add_error("Instrument PID is empty.")
                 return False
             if re.fullmatch(utils.PID_FORMAT, pid) is None:
-                self.severity = ErrorLevel.ERROR
-                self._add_message("Instrument PID has invalid format.")
+                self._add_error("Instrument PID has invalid format.")
                 return False
         except AttributeError:
-            self.severity = ErrorLevel.WARNING
-            self._add_message("Instrument PID is missing.")
+            self._add_warning("Instrument PID is missing.")
             return False
         return True
 
@@ -587,11 +581,9 @@ class TestInstrumentPid(Test):
                 expected = item["alternateIdentifier"]["alternateIdentifierValue"]
                 if received != expected:
                     msg = utils.create_expected_received_msg(expected, received)
-                    self.severity = ErrorLevel.ERROR
-                    self._add_message(msg)
+                    self._add_error(msg)
                 return
-        self.severity = ErrorLevel.WARNING
-        self._add_message(
+        self._add_warning(
             f"No serial number was defined in instrument PID but found '{received}' in the file."
         )
 
@@ -608,8 +600,7 @@ class TestInstrumentPid(Test):
         received = model["modelName"]
         if received not in allowed_values:
             msg = utils.create_expected_received_msg(allowed_values, received)
-            self.severity = ErrorLevel.ERROR
-            self._add_message(msg)
+            self._add_error(msg)
 
     def _check_model_identifier(self):
         key = "source"
@@ -626,8 +617,7 @@ class TestInstrumentPid(Test):
         received = model["modelIdentifier"]["modelIdentifierValue"]
         if received not in allowed_values:
             msg = utils.create_expected_received_msg(allowed_values, received)
-            self.severity = ErrorLevel.ERROR
-            self._add_message(msg)
+            self._add_error(msg)
 
     SOURCE_TO_NAME = {
         "Lufft CHM15k": ["Lufft CHM 15k"],
