@@ -235,33 +235,49 @@ class FindFolding(Test):
 @test(
     "Data coverage",
     "Test that file contains enough data.",
-    ignore_products=[Product.MODEL],
     error_level=ErrorLevel.INFO,
 )
 class TestDataCoverage(Test):
+    RESOLUTIONS = {
+        Product.MODEL: datetime.timedelta(hours=1),
+        Product.MWR_MULTI: datetime.timedelta(minutes=20),
+        Product.WEATHER_STATION: datetime.timedelta(minutes=1),
+    }
+    DEFAULT_RESOLUTION = datetime.timedelta(seconds=30)
+
     def run(self):
         time = self.nc["time"][:]
-        grid = self._create_grid()
-        bins_with_no_data = 0
-        for ind, t in enumerate(grid[:-1]):
-            ind2 = np.where((time > t) & (time <= grid[ind + 1]))[0]
-            if len(ind2) == 0:
-                bins_with_no_data += 1
-        missing = bins_with_no_data / len(grid) * 100
+        time_unit = datetime.timedelta(hours=1)
+        try:
+            n_time = len(time)
+        except (TypeError, ValueError):
+            return
+        if n_time == 0:
+            return
+        expected_res = self.RESOLUTIONS.get(
+            self.cloudnet_file_type, self.DEFAULT_RESOLUTION
+        )
+        now = datetime.datetime.now(tz=datetime.timezone.utc)
+        if now.date() == self._get_date():
+            midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            duration = now - midnight
+        else:
+            duration = datetime.timedelta(days=1)
+        actual_res = np.median(np.diff(time)) * time_unit
+        hist, _bin_edges = np.histogram(
+            time, bins=duration // (10 * actual_res), range=(0, duration / time_unit)
+        )
+        missing = np.count_nonzero(hist == 0) / len(hist) * 100
         if missing > 20:
             if missing > 60:
                 self.severity = ErrorLevel.WARNING
             self._add_message(f"{round(missing)}% of day's data is missing.")
-
-    def _create_grid(self) -> np.ndarray:
-        resolution = 10 if self.cloudnet_file_type == "mwr-multi" else 5
-        now = datetime.datetime.now(tz=datetime.timezone.utc)
-        current_fraction_hour = (
-            now.hour + int(now.minute) / 60 if now.date() == self._get_date() else 24
-        )
-        return ma.array(
-            np.linspace(0, current_fraction_hour, int(24 * (60 / resolution)) + 1)
-        )
+        if actual_res > expected_res * 1.05:
+            self.severity = ErrorLevel.WARNING
+            self._add_message(
+                f"Expected a measurement with interval at least {expected_res},"
+                f" got {actual_res} instead"
+            )
 
 
 @test(
