@@ -1,8 +1,13 @@
 # Changelog
 
+## 1.11.0 - 2023-08-18
+
+- Test if data matches the expected resolution
+- Support HALO serial number format
+
 ## 1.10.8 - 2023-08-11
 
-- Add tb_spectrum
+- Add `tb_spectrum`
 - Fix URL names
 
 ## 1.10.7 - 2023-05-26
