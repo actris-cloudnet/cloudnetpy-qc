@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.11.1 - 2023-08-21
+
+- Fix data coverage test on file with little data
+
 ## 1.11.0 - 2023-08-18
 
 - Test if data matches the expected resolution
