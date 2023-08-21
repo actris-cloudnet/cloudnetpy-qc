@@ -265,8 +265,9 @@ class TestDataCoverage(Test):
         else:
             duration = datetime.timedelta(days=1)
         actual_res = np.median(np.diff(time)) * time_unit
+        bins = max(1, duration // (10 * actual_res))
         hist, _bin_edges = np.histogram(
-            time, bins=duration // (10 * actual_res), range=(0, duration / time_unit)
+            time, bins=bins, range=(0, duration / time_unit)
         )
         missing = np.count_nonzero(hist == 0) / len(hist) * 100
         if missing > 20:
