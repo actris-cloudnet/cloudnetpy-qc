@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.11.2 - 2023-09-12
+
+- Add support for MRR-PRO
+
 ## 1.11.1 - 2023-08-21
 
 - Fix data coverage test on file with little data
