@@ -1,4 +1,5 @@
 """Variable definitions"""
+# pylint: disable=too-many-lines
 from collections.abc import Callable
 from enum import Enum
 from typing import NamedTuple
@@ -15,6 +16,7 @@ class Product(str, Enum):
     MODEL = "model"
     WEATHER_STATION = "weather-station"
     DOPPLER_LIDAR = "doppler-lidar"
+    RAIN_RADAR = "rain-radar"
     # Level 1c
     CATEGORIZE = "categorize"
     MWR_L1C = "mwr-l1c"
@@ -61,7 +63,9 @@ VARIABLES = {
         long_name="Radar transmit frequency", units="GHz", required=[Product.RADAR]
     ),
     "Zh": Variable(
-        long_name="Radar reflectivity factor", units="dBZ", required=[Product.RADAR]
+        long_name="Radar reflectivity factor",
+        units="dBZ",
+        required=[Product.RADAR, Product.RAIN_RADAR],
     ),
     "nyquist_velocity": Variable(
         long_name="Nyquist velocity", units="m s-1", required=[Product.RADAR]
@@ -119,6 +123,14 @@ VARIABLES = {
         units="m",
         standard_name="thickness_of_rainfall_amount",
         required=[Product.WEATHER_STATION],
+    ),
+    # ------------------------------------
+    # Required in RAIN RADAR Level 1b file
+    # ------------------------------------
+    "pia": Variable(
+        long_name="Path integrated rain attenuation",
+        units="dB",
+        required=[Product.RAIN_RADAR],
     ),
     # ------------------------------------
     # Required in CATEGORIZE Level 1c file
@@ -243,7 +255,9 @@ VARIABLES = {
     # Required in LWC Level 2 file
     # ----------------------------
     "lwc": Variable(
-        long_name="Liquid water content", units="kg m-3", required=[Product.LWC]
+        long_name="Liquid water content",
+        units="kg m-3",
+        required=[Product.LWC, Product.RAIN_RADAR],
     ),
     "lwc_error": Variable(
         long_name="Random error in liquid water content, one standard deviation",
@@ -545,7 +559,12 @@ VARIABLES = {
         long_name="Rainfall rate",
         units="m s-1",
         standard_name="rainfall_rate",
-        required=[Product.CATEGORIZE, Product.DISDROMETER, Product.WEATHER_STATION],
+        required=[
+            Product.CATEGORIZE,
+            Product.DISDROMETER,
+            Product.WEATHER_STATION,
+            Product.RAIN_RADAR,
+        ],
     ),
     "range": Variable(
         long_name="Range from instrument",
@@ -555,7 +574,12 @@ VARIABLES = {
     "v": Variable(
         long_name="Doppler velocity",
         units="m s-1",
-        required=[Product.RADAR, Product.CATEGORIZE, Product.DOPPLER_LIDAR],
+        required=[
+            Product.RADAR,
+            Product.CATEGORIZE,
+            Product.DOPPLER_LIDAR,
+            Product.RAIN_RADAR,
+        ],
     ),
     "temperature": Variable(
         long_name="Temperature", units="K", required=[Product.MODEL, Product.CATEGORIZE]
@@ -710,8 +734,7 @@ VARIABLES = {
     ),
     "sldr": Variable(long_name="Slanted linear depolarisation ratio", units="dB"),
     "width": Variable(
-        long_name="Spectral width",
-        units="m s-1",
+        long_name="Spectral width", units="m s-1", required=[Product.RAIN_RADAR]
     ),
     "calibration_factor": Variable(
         long_name="Attenuated backscatter calibration factor",
