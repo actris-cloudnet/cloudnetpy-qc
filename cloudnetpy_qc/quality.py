@@ -243,6 +243,7 @@ class TestDataCoverage(Test):
         Product.MODEL: datetime.timedelta(hours=1),
         Product.MWR_MULTI: datetime.timedelta(minutes=20),
         Product.WEATHER_STATION: datetime.timedelta(minutes=1),
+        Product.DISDROMETER: datetime.timedelta(minutes=1),
     }
     DEFAULT_RESOLUTION = datetime.timedelta(seconds=30)
 
