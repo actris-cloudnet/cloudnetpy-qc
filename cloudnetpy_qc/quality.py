@@ -385,8 +385,9 @@ class TestGlobalAttributes(Test):
             "source_file_uuids",
             "references",
             "serial_number",
+            "instrument_pid",
             "mwrpy_coefficients",
-        ) or name.startswith("version_")
+        ) or name.endswith("_version")
 
     def run(self):
         nc_keys = set(self.nc.ncattrs())
