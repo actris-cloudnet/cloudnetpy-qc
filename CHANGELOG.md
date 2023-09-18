@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.12.1 - 2023-09-18
+
+- Fix global attribute test
+
 ## 1.12.0 - 2023-09-18
 
 - Set expected resolution of disdrometer to 1 min
