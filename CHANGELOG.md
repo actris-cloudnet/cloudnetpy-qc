@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.12.0 - 2023-09-18
+
+- Set expected resolution of disdrometer to 1 min
+- Improve global attribute tests
+
 ## 1.11.2 - 2023-09-12
 
 - Add support for MRR-PRO
