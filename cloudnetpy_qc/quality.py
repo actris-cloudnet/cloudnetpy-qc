@@ -367,12 +367,36 @@ class TestDataTypes(Test):
 
 @test("Global attributes", "Check that file contains required global attributes.")
 class TestGlobalAttributes(Test):
+    REQUIRED_ATTRS = {
+        "year",
+        "month",
+        "day",
+        "file_uuid",
+        "Conventions",
+        "location",
+        "history",
+        "title",
+        "cloudnet_file_type",
+        "source",
+    }
+
+    def _is_optional_attr(self, name: str) -> bool:
+        return name in (
+            "source_file_uuids",
+            "references",
+            "serial_number",
+            "mwrpy_coefficients",
+        ) or name.startswith("version_")
+
     def run(self):
-        nc_keys = self.nc.ncattrs()
-        config_keys = self._read_config_keys("required_global_attributes")
-        missing_keys = list(set(config_keys) - set(nc_keys))
+        nc_keys = set(self.nc.ncattrs())
+        missing_keys = self.REQUIRED_ATTRS - nc_keys
         for key in missing_keys:
-            self._add_warning(f"'{key}' is missing.")
+            self._add_warning(f"Attribute '{key}' is missing.")
+        extra_keys = nc_keys - self.REQUIRED_ATTRS
+        for key in extra_keys:
+            if not self._is_optional_attr(key):
+                self._add_warning(f"Unknown attribute '{key}' found.")
 
 
 @test(
@@ -396,13 +420,15 @@ class TestMedianLwp(Test):
 @test("Attribute outliers", "Find suspicious values in global attributes.")
 class FindAttributeOutliers(Test):
     def run(self):
-        for key, limits_str in METADATA_CONFIG.items("attribute_limits"):
-            limits = [float(x) for x in limits_str.split(",")]
-            if hasattr(self.nc, key):
-                value = float(self.nc.getncattr(key))
-                if value < limits[0] or value > limits[1]:
-                    msg = utils.create_out_of_bounds_msg(key, *limits, value)
-                    self._add_warning(msg)
+        try:
+            year = int(self.nc.year)
+            month = int(self.nc.month)
+            day = int(self.nc.day)
+            datetime.date(year, month, day)
+        except AttributeError:
+            self._add_warning("Missing some date attributes.")
+        except ValueError:
+            self._add_warning("Invalid date attributes.")
 
 
 @test(
