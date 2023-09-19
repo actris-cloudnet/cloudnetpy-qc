@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.13.1 - 2023-09-19
+
+- Fix data coverage test
+
 ## 1.13.0 - 2023-09-19
 
 - Add test for floating-point values
