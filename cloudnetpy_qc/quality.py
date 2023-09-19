@@ -15,7 +15,7 @@ import scipy.stats
 from numpy import ma
 
 from . import utils
-from .variables import VARIABLES, Product
+from .variables import LEVELS, VARIABLES, Product
 from .version import __version__
 
 DATA_PATH = os.path.join(os.path.dirname(__file__), "data")
@@ -380,23 +380,43 @@ class TestGlobalAttributes(Test):
         "source",
     }
 
-    def _is_optional_attr(self, name: str) -> bool:
-        return name in (
-            "source_file_uuids",
-            "references",
-            "serial_number",
-            "instrument_pid",
-            "mwrpy_coefficients",
-        ) or name.endswith("_version")
+    def _instrument_product(self, product: Product):
+        return (
+            LEVELS[product] == "1b" and product != Product.MODEL
+        ) or product == Product.MWR_L1C
+
+    def _required_attrs(self, product: Product):
+        attrs = set(self.REQUIRED_ATTRS)
+        if product == Product.MWR_L1C:
+            attrs.add("mwrpy_coefficients")
+        if product != Product.MODEL:
+            attrs.add(
+                "instrument_pid"
+                if self._instrument_product(product)
+                else "source_file_uuids"
+            )
+        return attrs
+
+    def _optional_attr(self, name: str, product: Product) -> bool:
+        return (
+            name == "references"
+            or name.endswith("_version")
+            or (
+                product == Product.MODEL
+                and name in ("initialization_time", "institution")
+            )
+            or (self._instrument_product(product) and name == "serial_number")
+        )
 
     def run(self):
         nc_keys = set(self.nc.ncattrs())
-        missing_keys = self.REQUIRED_ATTRS - nc_keys
+        required_attrs = self._required_attrs(self.cloudnet_file_type)
+        missing_keys = required_attrs - nc_keys
         for key in missing_keys:
             self._add_warning(f"Attribute '{key}' is missing.")
-        extra_keys = nc_keys - self.REQUIRED_ATTRS
+        extra_keys = nc_keys - required_attrs
         for key in extra_keys:
-            if not self._is_optional_attr(key):
+            if not self._optional_attr(key, self.cloudnet_file_type):
                 self._add_warning(f"Unknown attribute '{key}' found.")
 
 

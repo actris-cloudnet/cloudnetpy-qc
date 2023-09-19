@@ -17,7 +17,12 @@ def test_valid_file():
         assert (
             exps
             if test["testId"]
-            in ("TestInstrumentPid", "TestUnits", "FindVariableOutliers")
+            in (
+                "TestGlobalAttributes",
+                "TestInstrumentPid",
+                "TestUnits",
+                "FindVariableOutliers",
+            )
             else not exps
         ), f"{test}, {exps}"
 

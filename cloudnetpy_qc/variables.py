@@ -2,7 +2,7 @@
 # pylint: disable=too-many-lines
 from collections.abc import Callable
 from enum import Enum
-from typing import NamedTuple
+from typing import Literal, NamedTuple
 
 import netCDF4
 
@@ -24,16 +24,39 @@ class Product(str, Enum):
     CLASSIFICATION = "classification"
     IWC = "iwc"
     LWC = "lwc"
+    DER = "der"
+    IER = "ier"
     DRIZZLE = "drizzle"
     MWR_SINGLE = "mwr-single"
     MWR_MULTI = "mwr-multi"
-    # Experimental
-    DER = "der"
-    IER = "ier"
 
     @classmethod
     def all(cls) -> list[str]:
         return [e.value for e in cls]
+
+
+Level = Literal["1b", "1c", "2", "3"]
+
+LEVELS: dict[Product, Level] = {
+    Product.RADAR: "1b",
+    Product.LIDAR: "1b",
+    Product.MWR: "1b",
+    Product.DISDROMETER: "1b",
+    Product.MODEL: "1b",
+    Product.WEATHER_STATION: "1b",
+    Product.DOPPLER_LIDAR: "1b",
+    Product.RAIN_RADAR: "1b",
+    Product.CATEGORIZE: "1c",
+    Product.MWR_L1C: "1c",
+    Product.CLASSIFICATION: "2",
+    Product.IWC: "2",
+    Product.LWC: "2",
+    Product.DER: "2",
+    Product.IER: "2",
+    Product.DRIZZLE: "2",
+    Product.MWR_SINGLE: "2",
+    Product.MWR_MULTI: "2",
+}
 
 
 class Dtype(str, Enum):
