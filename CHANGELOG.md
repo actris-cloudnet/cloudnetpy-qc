@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.13.0 - 2023-09-19
+
+- Add test for floating-point values
+- Test global attributes by product
+
 ## 1.12.1 - 2023-09-18
 
 - Fix global attribute test
