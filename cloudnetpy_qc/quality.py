@@ -242,6 +242,7 @@ class TestDataCoverage(Test):
     RESOLUTIONS = {
         Product.MODEL: datetime.timedelta(hours=1),
         Product.MWR_MULTI: datetime.timedelta(minutes=20),
+        Product.MWR_SINGLE: datetime.timedelta(minutes=4),
         Product.WEATHER_STATION: datetime.timedelta(minutes=1),
         Product.DISDROMETER: datetime.timedelta(minutes=1),
     }
