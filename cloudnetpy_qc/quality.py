@@ -265,8 +265,7 @@ class TestDataCoverage(Test):
             duration = now - midnight
         else:
             duration = datetime.timedelta(days=1)
-        actual_res = np.median(np.diff(time)) * time_unit
-        bins = max(1, duration // (10 * actual_res))
+        bins = max(1, duration // expected_res)
         hist, _bin_edges = np.histogram(
             time, bins=bins, range=(0, duration / time_unit)
         )
@@ -277,6 +276,8 @@ class TestDataCoverage(Test):
                 self._add_warning(message)
             else:
                 self._add_info(message)
+
+        actual_res = np.median(np.diff(time)) * time_unit
         if actual_res > expected_res * 1.05:
             self._add_warning(
                 f"Expected a measurement with interval at least {expected_res},"
