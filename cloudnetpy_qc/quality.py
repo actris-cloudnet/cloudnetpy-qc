@@ -483,6 +483,21 @@ class TestIfRangeCorrected(Test):
             self._add_warning("Data might not be range corrected.")
 
 
+@test(
+    "Floating-point values",
+    "Test for special floating-point values which may indicate problems with the processing.",
+)
+class TestFloatingPointValues(Test):
+    def run(self):
+        for name, variable in self.nc.variables.items():
+            if variable.dtype.kind != "f":
+                continue
+            if np.isnan(variable[:]).any():
+                self._add_warning(f"Variable '{name}' contains NaN value(s).")
+            if np.isinf(variable[:]).any():
+                self._add_warning(f"Variable '{name}' contains infinite value(s).")
+
+
 # ---------------------#
 # ------ Errors ------ #
 # -------------------- #
