@@ -401,7 +401,7 @@ class TestGlobalAttributes(Test):
 
     def _optional_attr(self, name: str, product: Product) -> bool:
         return (
-            name == "references"
+            name in ("references", "pid")
             or name.endswith("_version")
             or (
                 product == Product.MODEL
