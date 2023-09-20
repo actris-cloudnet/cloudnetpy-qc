@@ -669,6 +669,9 @@ VARIABLES = {
     # --------------------------------------------
     # Variables included in some of Level 1b files
     # --------------------------------------------
+    "calibration_offset": Variable(
+        long_name="Radar reflectivity calibration offset",
+    ),
     "rainfall_rate_1min_total": Variable(
         long_name="Total precipitation rate", units="m s-1", dtype=Dtype.INT
     ),
