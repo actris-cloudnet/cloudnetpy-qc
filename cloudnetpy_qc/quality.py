@@ -249,7 +249,7 @@ class TestDataCoverage(Test):
     DEFAULT_RESOLUTION = datetime.timedelta(seconds=30)
 
     def run(self):
-        time = self.nc["time"][:]
+        time = np.array(self.nc["time"][:])
         time_unit = datetime.timedelta(hours=1)
         try:
             n_time = len(time)
