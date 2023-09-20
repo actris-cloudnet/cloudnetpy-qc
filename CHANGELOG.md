@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.13.2 - 2023-09-20
+
+- Adjust HATPRO stare resolutions
+- Add `calibration_offset` to optional variables
+- Allow `pid` as optional global attribute
+
 ## 1.13.1 - 2023-09-19
 
 - Fix data coverage test
