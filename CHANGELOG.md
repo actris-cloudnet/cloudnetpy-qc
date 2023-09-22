@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.13.3 - 2023-09-22
+
+- Improve range correction test for CT25K and PollyXT
+
 ## 1.13.2 - 2023-09-20
 
 - Adjust HATPRO stare resolutions
