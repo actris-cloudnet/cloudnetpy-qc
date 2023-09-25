@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.13.4 - 2023-09-25
+
+- Filter outliers in range correction test
+
 ## 1.13.3 - 2023-09-22
 
 - Improve range correction test for CT25K and PollyXT
