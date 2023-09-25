@@ -482,13 +482,12 @@ class TestIfRangeCorrected(Test):
         n_top_ranges = len(range_var) // 2
         x = range_var[-n_top_ranges:] ** 2
         y = np.std(beta_raw[:, -n_top_ranges:], axis=0)
-
-        # CT25K seems to write zeros to the top gates but, unlike CS135, it's
-        # not documented whether these are always zero or not.
-        y = np.trim_zeros(y, "b")
-        x = x[: len(y)]
-
-        res = scipy.stats.pearsonr(x, y)
+        sgl_res = scipy.stats.siegelslopes(y, x)
+        residuals = np.abs(y - (sgl_res.intercept + sgl_res.slope * x))
+        outliers = residuals > 20 * np.percentile(
+            residuals, 25
+        )  # Ad hoc outlier detection
+        res = scipy.stats.pearsonr(x[~outliers], y[~outliers])
         if res.statistic < 0.75:
             self._add_warning("Data might not be range corrected.")
 
