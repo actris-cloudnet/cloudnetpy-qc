@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.13.6 - 2023-09-26
+
+- Avoid division by zero
+
 ## 1.13.5 - 2023-09-26
 
 - Improve bad-LDR test
