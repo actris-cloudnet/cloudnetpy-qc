@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.13.5 - 2023-09-26
+
+- Improve bad-LDR test
+
 ## 1.13.4 - 2023-09-25
 
 - Filter outliers in range correction test
