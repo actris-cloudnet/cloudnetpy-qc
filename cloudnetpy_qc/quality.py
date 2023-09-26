@@ -462,10 +462,16 @@ class FindAttributeOutliers(Test):
 )
 class TestLDR(Test):
     def run(self):
-        if "ldr" in self.nc.variables:
-            ldr = self.nc["ldr"][:]
-            if ldr.mask.all():
-                self._add_warning("LDR exists but all the values are invalid.")
+        has_ldr = "ldr" in self.nc.variables or "sldr" in self.nc.variables
+        has_v = "v" in self.nc.variables
+        if has_v and has_ldr:
+            v = self.nc["v"][:]
+            ldr = (
+                self.nc["ldr"][:] if "ldr" in self.nc.variables else self.nc["sldr"][:]
+            )
+            ratio = ma.count(ldr) / ma.count(v) * 100
+            if ratio < 0.1:
+                self._add_warning("LDR exists in less than 0.1 % of pixels.")
 
 
 @test(
