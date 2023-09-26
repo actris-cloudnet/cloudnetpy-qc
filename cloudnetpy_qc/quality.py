@@ -469,8 +469,9 @@ class TestLDR(Test):
             ldr = (
                 self.nc["ldr"][:] if "ldr" in self.nc.variables else self.nc["sldr"][:]
             )
-            ratio = ma.count(ldr) / ma.count(v) * 100
-            if ratio < 0.1:
+            v_count = ma.count(v)
+            ldr_count = ma.count(ldr)
+            if v_count > 0 and (ldr_count / v_count * 100) < 0.1:
                 self._add_warning("LDR exists in less than 0.1 % of pixels.")
 
 
