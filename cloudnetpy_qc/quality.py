@@ -425,7 +425,7 @@ class TestGlobalAttributes(Test):
 
 @test(
     "Median LWP",
-    "Test that median of LWP values is within a reasonable range.",
+    "Test that LWP data are valid.",
     [Product.MWR, Product.CATEGORIZE],
 )
 class TestMedianLwp(Test):
@@ -434,8 +434,19 @@ class TestMedianLwp(Test):
         if key not in self.nc.variables:
             self._add_error(f"'{key}' is missing.")
             return
+        data = self.nc.variables[key][:]
+        mask_percentage = ma.count_masked(data) / len(data) * 100
+        if mask_percentage > 20:
+            msg = (
+                f"{round(mask_percentage,1)} % of '{key}' data points are masked "
+                f"due to low quality data."
+            )
+            if mask_percentage > 60:
+                self._add_warning(msg)
+            else:
+                self._add_info(msg)
         limits = [-0.5, 10]
-        median_lwp = ma.median(self.nc.variables[key][:]) / 1000  # g -> kg
+        median_lwp = ma.median(data) / 1000  # g -> kg
         if median_lwp < limits[0] or median_lwp > limits[1]:
             msg = utils.create_out_of_bounds_msg(key, *limits, median_lwp)
             self._add_warning(msg)
