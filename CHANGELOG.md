@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.13.7 - 2023-09-28
+
+- Test relative amount of masked lwp data points
+
 ## 1.13.6 - 2023-09-26
 
 - Avoid division by zero
