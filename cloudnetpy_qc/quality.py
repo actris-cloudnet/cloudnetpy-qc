@@ -435,7 +435,7 @@ class TestMedianLwp(Test):
             self._add_error(f"'{key}' is missing.")
             return
         data = self.nc.variables[key][:]
-        mask_percentage = ma.count_masked(data) / len(data) * 100
+        mask_percentage = ma.count_masked(data) / data.size * 100
         if mask_percentage > 20:
             msg = (
                 f"{round(mask_percentage,1)} % of '{key}' data points are masked "
