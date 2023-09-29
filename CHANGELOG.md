@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.13.8 - 2023-09-29
+
+- Adjust Copernicus variables
+
 ## 1.13.7 - 2023-09-28
 
 - Test relative amount of masked lwp data points
