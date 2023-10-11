@@ -240,12 +240,15 @@ class FindFolding(Test):
 )
 class TestDataCoverage(Test):
     RESOLUTIONS = {
+        Product.DISDROMETER: datetime.timedelta(minutes=1),
+        Product.L3_CF: datetime.timedelta(hours=1),
+        Product.L3_IWC: datetime.timedelta(hours=1),
+        Product.L3_LWC: datetime.timedelta(hours=1),
         Product.MODEL: datetime.timedelta(hours=1),
+        Product.MWR: datetime.timedelta(minutes=2),
         Product.MWR_MULTI: datetime.timedelta(minutes=20),
         Product.MWR_SINGLE: datetime.timedelta(minutes=2),
-        Product.MWR: datetime.timedelta(minutes=2),
         Product.WEATHER_STATION: datetime.timedelta(minutes=1),
-        Product.DISDROMETER: datetime.timedelta(minutes=1),
     }
     DEFAULT_RESOLUTION = datetime.timedelta(seconds=30)
 
@@ -290,7 +293,7 @@ class TestDataCoverage(Test):
 @test(
     "Variable names",
     "Check that variables have expected names.",
-    ignore_products=[Product.MODEL],
+    ignore_products=[Product.MODEL, Product.L3_CF, Product.L3_IWC, Product.L3_LWC],
 )
 class TestVariableNamesDefined(Test):
     def run(self):
@@ -313,7 +316,7 @@ class TestUnits(Test):
 @test(
     "Long names",
     "Check that variables have expected long names.",
-    ignore_products=[Product.MODEL],
+    ignore_products=[Product.MODEL, Product.L3_CF, Product.L3_IWC, Product.L3_LWC],
 )
 class TestLongNames(Test):
     def run(self):
@@ -323,7 +326,7 @@ class TestLongNames(Test):
 @test(
     "Standard names",
     "Check that variable have expected standard names.",
-    ignore_products=[Product.MODEL],
+    ignore_products=[Product.MODEL, Product.L3_CF, Product.L3_IWC, Product.L3_LWC],
 )
 class TestStandardNames(Test):
     def run(self):

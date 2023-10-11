@@ -29,6 +29,10 @@ class Product(str, Enum):
     DRIZZLE = "drizzle"
     MWR_SINGLE = "mwr-single"
     MWR_MULTI = "mwr-multi"
+    # Level 3
+    L3_CF = "l3-cf"
+    L3_IWC = "l3-iwc"
+    L3_LWC = "l3-lwc"
 
     @classmethod
     def all(cls) -> list[str]:
@@ -56,6 +60,9 @@ LEVELS: dict[Product, Level] = {
     Product.DRIZZLE: "2",
     Product.MWR_SINGLE: "2",
     Product.MWR_MULTI: "2",
+    Product.L3_CF: "3",
+    Product.L3_IWC: "3",
+    Product.L3_LWC: "3",
 }
 
 
@@ -639,6 +646,9 @@ VARIABLES = {
                 Product.DISDROMETER,
                 Product.WEATHER_STATION,
                 Product.MWR_L1C,
+                Product.L3_CF,
+                Product.L3_IWC,
+                Product.L3_LWC,
             )
         ],
     ),
@@ -652,7 +662,11 @@ VARIABLES = {
         long_name="Altitude of site",
         units="m",
         standard_name="altitude",
-        required=[p for p in Product.all() if p != Product.MODEL],
+        required=[
+            p
+            for p in Product.all()
+            if p not in (Product.MODEL, Product.L3_CF, Product.L3_IWC, Product.L3_LWC)
+        ],
     ),
     "latitude": Variable(
         long_name="Latitude of site",
@@ -851,7 +865,12 @@ VARIABLES = {
         long_name="IF power at ACD",
         units="uW",
     ),
-    "level": Variable(long_name="Model level", units=None, dtype=Dtype.SHORT),
+    "level": Variable(
+        long_name="Model level",
+        units=None,
+        dtype=Dtype.SHORT,
+        required=[Product.MODEL, Product.L3_CF, Product.L3_IWC, Product.L3_LWC],
+    ),
     "flux_level": Variable(long_name="Model flux level", units=None, dtype=Dtype.SHORT),
     "sfc_categorical_snow": Variable(long_name="", dtype=Dtype.SHORT),
     "sfc_categorical_ice": Variable(long_name="", dtype=Dtype.SHORT),
