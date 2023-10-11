@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.14.0 - 2023-10-11
+
+- Check L3 products
+
 ## 1.13.8 - 2023-09-29
 
 - Adjust Copernicus variables
