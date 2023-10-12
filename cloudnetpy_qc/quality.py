@@ -259,7 +259,7 @@ class TestDataCoverage(Test):
             n_time = len(time)
         except (TypeError, ValueError):
             return
-        if n_time == 0:
+        if n_time < 2:
             return
         expected_res = self.RESOLUTIONS.get(
             self.cloudnet_file_type, self.DEFAULT_RESOLUTION
