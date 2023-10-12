@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.14.1 - 2023-10-12
+
+- Fix data coverage test with single timestamp
+
 ## 1.14.0 - 2023-10-11
 
 - Check L3 products
