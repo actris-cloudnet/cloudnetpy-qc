@@ -185,6 +185,15 @@ class Test:
         date_in_file = [int(getattr(self.nc, x)) for x in ("year", "month", "day")]
         return datetime.date(*date_in_file)
 
+    def _get_duration(self) -> datetime.timedelta:
+        now = datetime.datetime.now(tz=datetime.timezone.utc)
+        if now.date() == self._get_date():
+            midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            duration = now - midnight
+        else:
+            duration = datetime.timedelta(days=1)
+        return duration
+
 
 # --------------------#
 # ------ Infos ------ #
@@ -264,12 +273,7 @@ class TestDataCoverage(Test):
         expected_res = self.RESOLUTIONS.get(
             self.cloudnet_file_type, self.DEFAULT_RESOLUTION
         )
-        now = datetime.datetime.now(tz=datetime.timezone.utc)
-        if now.date() == self._get_date():
-            midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
-            duration = now - midnight
-        else:
-            duration = datetime.timedelta(days=1)
+        duration = self._get_duration()
         bins = max(1, duration // expected_res)
         hist, _bin_edges = np.histogram(
             time, bins=bins, range=(0, duration / time_unit)
@@ -581,6 +585,40 @@ class TestVariableNames(Test):
         missing_keys = list(required_keys - keys_in_file)
         for key in missing_keys:
             self._add_error(f"'{key}' is missing.")
+
+
+@test("Model data", "Test that model data are valid.", [Product.MODEL])
+class TestModelData(Test):
+    def run(self):
+        time = np.array(self.nc["time"][:])
+        time_unit = datetime.timedelta(hours=1)
+
+        try:
+            n_time = len(time)
+        except (TypeError, ValueError):
+            return
+        if n_time < 2:
+            return
+
+        duration = self._get_duration()
+        should_be_data_until = duration / time_unit
+
+        for key in ("temperature", "pressure", "q"):
+            data = self.nc[key][:]
+            missing_hours = [
+                int(hour)
+                for ind, hour in enumerate(time)
+                if hour < should_be_data_until
+                and ma.count_masked(data[ind, :]) == data.shape[1]
+            ]
+
+            if missing_hours:
+                plural = "" if len(missing_hours) == 1 else "s"
+                hours_str = ", ".join(map(str, missing_hours))
+                self._add_error(
+                    f"Model {key} is missing for {len(missing_hours)} hour{plural}: {hours_str}."
+                )
+                break
 
 
 # ------------------------------#
