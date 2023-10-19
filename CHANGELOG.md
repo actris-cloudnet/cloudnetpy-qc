@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.14.2 - 2023-10-19
+
+- Add check for masked model profiles
+
 ## 1.14.1 - 2023-10-12
 
 - Fix data coverage test with single timestamp
