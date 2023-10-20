@@ -494,6 +494,17 @@ class TestLDR(Test):
 
 
 @test(
+    "Data mask",
+    "Test that data are not completely masked.",
+    products=[Product.RADAR],
+)
+class TestMask(Test):
+    def run(self):
+        if not np.any(~self.nc["v"][:].mask):
+            self._add_error("All data are masked.")
+
+
+@test(
     "Range correction", "Test that beta is range corrected.", products=[Product.LIDAR]
 )
 class TestIfRangeCorrected(Test):
