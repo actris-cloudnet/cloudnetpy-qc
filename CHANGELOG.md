@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.14.3 - 2023-10-23
+
+- Check if radar data is completely masked
+
 ## 1.14.2 - 2023-10-19
 
 - Add check for masked model profiles
