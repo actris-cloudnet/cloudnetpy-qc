@@ -615,6 +615,8 @@ class TestModelData(Test):
         should_be_data_until = duration / time_unit
 
         for key in ("temperature", "pressure", "q"):
+            if key not in self.nc.variables:
+                continue
             data = self.nc[key][:]
             missing_hours = [
                 int(hour)
