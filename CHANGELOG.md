@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.14.4 - 2023-10-25
+
+- Handle missing variables in model data test
+
 ## 1.14.3 - 2023-10-23
 
 - Check if radar data is completely masked
