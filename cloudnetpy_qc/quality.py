@@ -624,14 +624,11 @@ class TestModelData(Test):
                 if hour < should_be_data_until
                 and ma.count_masked(data[ind, :]) == data.shape[1]
             ]
-
-            if missing_hours:
-                plural = "" if len(missing_hours) == 1 else "s"
-                hours_str = ", ".join(map(str, missing_hours))
-                self._add_error(
-                    f"Model {key} is missing for {len(missing_hours)} hour{plural}: {hours_str}."
-                )
-                break
+            if not missing_hours:
+                continue
+            noun, verb = ("Hour", "is") if len(missing_hours) == 1 else ("Hours", "are")
+            values = utils.format_list(utils.integer_ranges(missing_hours), "and")
+            self._add_error(f"{noun} {values} {verb} missing from variable '{key}'.")
 
 
 # ------------------------------#

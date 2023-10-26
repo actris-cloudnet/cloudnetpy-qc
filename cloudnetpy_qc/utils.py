@@ -28,12 +28,12 @@ def format_msg(msg_in: str | list) -> str:
     return msg
 
 
-def _format_list(values: list[str]):
+def format_list(values: list[str], conj: str) -> str:
     if len(values) == 0:
         return ""
     if len(values) == 1:
-        return "'" + values[0] + "'"
-    return "'" + "', '".join(values[:-1]) + "' or '" + values[-1] + "'"
+        return values[0]
+    return ", ".join(values[:-1]) + f" {conj} " + values[-1]
 
 
 def create_expected_received_msg(
@@ -43,7 +43,8 @@ def create_expected_received_msg(
 ) -> str:
     if isinstance(expected, str):
         expected = [expected]
-    msg = f"Expected {_format_list(expected)} but received '{received}'"
+    expected = format_list([f"'{var}'" for var in expected], "or")
+    msg = f"Expected {expected} but received '{received}'"
     if variable is not None:
         return f"{msg} with variable '{variable}'"
     return msg
@@ -74,3 +75,21 @@ def fetch_pid(pid: str) -> dict:
     res = requests.get(url, timeout=30)
     res.raise_for_status()
     return res.json()
+
+
+def integer_ranges(ints: list[int]) -> list[str]:
+    """
+    Convert given integers to list of ranges.
+    >>> integer_ranges([1,2,3,5,7,8,9])
+    ['1–3', '5', '7–9']
+    """
+    if len(ints) == 0:
+        return []
+    ints = sorted(ints)
+    output = [[ints[0], ints[0]]]
+    for x in ints[1:]:
+        if x == output[-1][1] + 1:
+            output[-1][1] = x
+        else:
+            output.append([x, x])
+    return [str(a) if a == b else f"{a}–{b}" for a, b in output]
