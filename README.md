@@ -1,6 +1,7 @@
 # CloudnetPy-QC
 
-![](https://github.com/actris-cloudnet/cloudnetpy-qc/workflows/CloudnetPy-QC%20CI/badge.svg)
+[![CloudnetPy-QC CI](https://github.com/actris-cloudnet/cloudnetpy-qc/actions/workflows/test.yml/badge.svg)](https://github.com/actris-cloudnet/cloudnetpy-qc/actions/workflows/test.yml)
+[![PyPI version](https://badge.fury.io/py/cloudnetpy-qc.svg)](https://badge.fury.io/py/cloudnetpy-qc)
 
 Software for evaluating quality of [ACTRIS-Cloudnet](https://cloudnet.fmi.fi) data products.
 
