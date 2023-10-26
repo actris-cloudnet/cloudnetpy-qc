@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.14.5 - 2023-10-26
+
+- Simplify output from model data test
+
 ## 1.14.4 - 2023-10-25
 
 - Handle missing variables in model data test
