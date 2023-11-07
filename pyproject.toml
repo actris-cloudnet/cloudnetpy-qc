@@ -23,6 +23,7 @@ test = [
   "pytest-flakefinder",
   "types-requests",
 ]
+dev = ["release-version"]
 
 [project.urls]
 Homepage = "https://github.com/actris-cloudnet/cloudnetpy-qc"
@@ -44,6 +45,11 @@ disable = [
   "missing-function-docstring",
   "too-few-public-methods",
 ]
+
+[tool.release-version]
+filename = "cloudnetpy_qc/version.py"
+pattern = ["MAJOR = (?P<major>\\d+)", "MINOR = (?P<minor>\\d+)", "PATCH = (?P<patch>\\d+)"]
+changelog = "CHANGELOG.md"
 
 [tool.setuptools.dynamic]
 version = {attr = "cloudnetpy_qc.version.__version__"}
