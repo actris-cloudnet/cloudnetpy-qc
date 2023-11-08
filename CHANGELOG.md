@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.14.6 – 2023-11-08
+
+- Make `ir_beamwidth` variable optional
+
 ## 1.14.5 – 2023-10-26
 
 - Simplify output from model data test
