@@ -538,7 +538,6 @@ VARIABLES = {
     "ir_beamwidth": Variable(
         long_name="Beam width of the infrared radiometer",
         units="degree",
-        required=[Product.MWR_L1C],
     ),
     "n_sidebands": Variable(
         long_name="Number of sidebands", dtype=Dtype.INT, required=[Product.MWR_L1C]
