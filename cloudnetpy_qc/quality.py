@@ -802,10 +802,10 @@ class TestInstrumentPid(Test):
             "https://vocabulary.actris.nilu.no/actris_vocab/OTTParsivel2"
         ],
         "RAL Space Copernicus": [
-            "https://vocabulary.actris.nilu.no/actris_vocab/UFAMCopernicus"
+            "https://vocabulary.actris.nilu.no/actris_vocab/RALCopernicus"
         ],
         "RAL Space Galileo": [
-            "https://vocabulary.actris.nilu.no/actris_vocab/UFAMGalileo"
+            "https://vocabulary.actris.nilu.no/actris_vocab/RALGalileo"
         ],
         "RPG-Radiometer Physics HATPRO": [
             "https://vocabulary.actris.nilu.no/actris_vocab/RPGHATPRO"
