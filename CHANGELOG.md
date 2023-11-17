@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.15.0 – 2023-11-17
+
+- Refactor types
+- Fix vocabulary links of RAL instruments
+
 ## 1.14.6 – 2023-11-08
 
 - Make `ir_beamwidth` variable optional
