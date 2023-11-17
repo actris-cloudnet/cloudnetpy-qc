@@ -11,15 +11,12 @@ repos:
       - id: mixed-line-ending
         args: ["--fix", "lf"]
       - id: trailing-whitespace
-  - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.5
     hooks:
-      - id: isort
-        args: ["--profile", "black"]
-  - repo: https://github.com/psf/black
-    rev: 23.9.1
-    hooks:
-      - id: black
+      - id: ruff
+        args: ["--fix"]
+      - id: ruff-format
   - repo: local
     hooks:
       - id: mypy
@@ -28,13 +25,6 @@ repos:
         language: system
         types: [python]
         require_serial: true
-      - id: pylint
-        name: pylint
-        entry: pylint
-        language: system
-        types: [python]
-        require_serial: true
-        args: ["--jobs=4"]
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v3.0.3
     hooks:

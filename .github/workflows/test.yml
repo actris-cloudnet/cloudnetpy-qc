@@ -25,10 +25,11 @@ jobs:
           cache: "pip"
       - name: Install dependencies
         run: |
-          pip install .[test]
-      - name: Lint with pylint
+          pip install .[dev,test]
+      - name: Run pre-commit checks
+        if: startsWith(matrix.os, 'ubuntu-')
         run: |
-          pylint cloudnetpy_qc
+          pre-commit run --all-files --show-diff-on-failure
       - name: Type check
         run: |
           mypy cloudnetpy_qc/ tests/

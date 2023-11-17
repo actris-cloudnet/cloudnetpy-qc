@@ -19,11 +19,10 @@ dynamic = ["version"]
 [project.optional-dependencies]
 test = [
   "mypy",
-  "pylint",
   "pytest-flakefinder",
   "types-requests",
 ]
-dev = ["release-version"]
+dev = ["pre-commit", "release-version"]
 
 [project.urls]
 Homepage = "https://github.com/actris-cloudnet/cloudnetpy-qc"
@@ -34,22 +33,13 @@ Changelog = "https://github.com/actris-cloudnet/cloudnetpy-qc/blob/main/CHANGELO
 module = ["cfchecker.*", "netCDF4.*", "scipy.*"]
 ignore_missing_imports = true
 
-[tool.pylint]
-ignored-modules = ["netCDF4", "numpy", "scipy"]
-disable = [
-  "consider-using-f-string",
-  "fixme",
-  "invalid-name",
-  "logging-fstring-interpolation",
-  "missing-class-docstring",
-  "missing-function-docstring",
-  "too-few-public-methods",
-]
-
 [tool.release-version]
 filename = "cloudnetpy_qc/version.py"
 pattern = ["MAJOR = (?P<major>\\d+)", "MINOR = (?P<minor>\\d+)", "PATCH = (?P<patch>\\d+)"]
 changelog = "CHANGELOG.md"
+
+[tool.ruff]
+extend-select = ["I"]
 
 [tool.setuptools.dynamic]
 version = {attr = "cloudnetpy_qc.version.__version__"}
