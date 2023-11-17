@@ -1,13 +1,13 @@
 """Cloudnet product quality checks."""
-import dataclasses
 import datetime
 import json
 import logging
 import os
 import re
-from dataclasses import dataclass
 from enum import Enum
+from os import PathLike
 from pathlib import Path
+from typing import Iterable, NamedTuple
 
 import netCDF4
 import numpy as np
@@ -27,91 +27,82 @@ CF_STANDARD_NAMES_XML = os.path.join(DATA_PATH, "cf-standard-name-table.xml")
 CF_REGION_NAMES_XML = os.path.join(DATA_PATH, "standardized-region-list.xml")
 
 
-class ErrorLevel(str, Enum):
+class ErrorLevel(Enum):
     WARNING = "warning"
     ERROR = "error"
     INFO = "info"
 
 
-@dataclass
-class TestReport:
-    testId: str
-    exceptions: list[dict]
+class TestException(NamedTuple):
+    result: ErrorLevel
+    message: str
 
-    def values(self):
+
+class TestReport(NamedTuple):
+    test_id: str
+    exceptions: list[TestException]
+
+
+class FileReport(NamedTuple):
+    timestamp: datetime.datetime
+    qc_version: str
+    tests: list[TestReport]
+
+    def to_dict(self) -> dict:
         return {
-            field.name: getattr(self, field.name)
-            for field in dataclasses.fields(self)
-            if getattr(self, field.name) is not None
+            "timestamp": self.timestamp.isoformat(),
+            "qcVersion": self.qc_version,
+            "tests": [
+                {
+                    "testId": test.test_id,
+                    "exceptions": [
+                        {"result": exception.result.value, "message": exception.message}
+                        for exception in test.exceptions
+                    ],
+                }
+                for test in self.tests
+            ],
         }
 
 
-@dataclass
-class FileReport:
-    timestamp: str
-    qcVersion: str
-    tests: list[dict]
-
-
 def run_tests(
-    filename: Path | str,
-    cloudnet_file_type: str | None = None,
+    filename: str | PathLike,
+    product: Product | str | None = None,
     ignore_tests: list[str] | None = None,
-) -> dict:
-    if isinstance(filename, str):
-        filename = Path(filename)
+) -> FileReport:
+    filename = Path(filename)
+    if isinstance(product, str):
+        product = Product(product)
     with netCDF4.Dataset(filename) as nc:
-        if cloudnet_file_type is None:
+        if product is None:
             try:
-                cloudnet_file_type = nc.cloudnet_file_type
-            except AttributeError:
-                logging.error(
-                    "No cloudnet_file_type global attribute found, can not run tests. "
+                product = Product(nc.cloudnet_file_type)
+            except AttributeError as exc:
+                raise ValueError(
+                    "No 'cloudnet_file_type' global attribute found, can not run tests. "
                     "Is this a legacy file?"
-                )
-                return {}
+                ) from exc
         logging.debug(f"Filename: {filename.stem}")
-        logging.debug(f"File type: {cloudnet_file_type}")
-        test_reports: list[dict] = []
+        logging.debug(f"File type: {product}")
+        test_reports: list[TestReport] = []
         for cls in Test.__subclasses__():
             if ignore_tests and cls.__name__ in ignore_tests:
                 continue
-            test_instance = cls(nc, filename, cloudnet_file_type)
-            if cloudnet_file_type in test_instance.products:
+            test_instance = cls(nc, filename, product)
+            if product in test_instance.products:
                 test_instance.run()
-                for exception in test_instance.report.values()["exceptions"]:
-                    assert exception["result"] in (
+                for exception in test_instance.report.exceptions:
+                    assert exception.result in (
                         ErrorLevel.ERROR,
                         ErrorLevel.WARNING,
                         ErrorLevel.INFO,
                     )
-                test_reports.append(test_instance.report.values())
+                test_reports.append(test_instance.report)
     return FileReport(
-        timestamp=f"{datetime.datetime.now().isoformat()}Z",
-        qcVersion=__version__,
+        timestamp=datetime.datetime.now(tz=datetime.timezone.utc),
+        qc_version=__version__,
         tests=test_reports,
-    ).__dict__
-
-
-def test(
-    name: str,
-    description: str,
-    products: list[Product] | None = None,
-    ignore_products: list[Product] | None = None,
-):
-    """Decorator for the tests."""
-
-    def fun(cls):
-        setattr(cls, "name", name)
-        setattr(cls, "description", description)
-        if products is not None:
-            setattr(cls, "products", [member.value for member in products])
-        if ignore_products is not None:
-            prods = list(set(getattr(cls, "products")) - set(ignore_products))
-            setattr(cls, "products", prods)
-        return cls
-
-    return fun
+    )
 
 
 class Test:
@@ -119,14 +110,14 @@ class Test:
 
     name: str
     description: str
-    products: list[str] = Product.all()
+    products: Iterable[Product] = Product.all()
 
-    def __init__(self, nc: netCDF4.Dataset, filename: Path, cloudnet_file_type: str):
+    def __init__(self, nc: netCDF4.Dataset, filename: Path, product: Product):
         self.filename = filename
         self.nc = nc
-        self.cloudnet_file_type = cloudnet_file_type
+        self.product = product
         self.report = TestReport(
-            testId=self.__class__.__name__,
+            test_id=self.__class__.__name__,
             exceptions=[],
         )
 
@@ -135,10 +126,7 @@ class Test:
 
     def _add_message(self, message: str | list, severity: ErrorLevel):
         self.report.exceptions.append(
-            {
-                "message": utils.format_msg(message),
-                "result": severity,
-            }
+            TestException(result=severity, message=utils.format_msg(message))
         )
 
     def _add_info(self, message: str | list):
@@ -151,7 +139,7 @@ class Test:
         self._add_message(message, ErrorLevel.ERROR)
 
     def _read_config_keys(self, config_section: str) -> np.ndarray:
-        field = "all" if "attr" in config_section else self.cloudnet_file_type
+        field = "all" if "attr" in config_section else self.product.value
         keys = METADATA_CONFIG[config_section][field].split(",")
         return np.char.strip(keys)
 
@@ -159,7 +147,7 @@ class Test:
         return {
             name: var
             for name, var in VARIABLES.items()
-            if var.required is not None and self.cloudnet_file_type in var.required
+            if var.required is not None and self.product in var.required
         }
 
     def _get_required_variable_names(self) -> set:
@@ -200,11 +188,17 @@ class Test:
 # --------------------#
 
 
-@test("Variable outliers", "Find suspicious data values.")
 class FindVariableOutliers(Test):
+    name = "Variable outliers"
+    description = "Find suspicious data values."
+
     def run(self):
         for key, limits_str in DATA_CONFIG.items("limits"):
-            if key == "zenith_angle" and self.cloudnet_file_type.startswith("mwr-"):
+            if key == "zenith_angle" and self.product in (
+                Product.MWR_L1C,
+                Product.MWR_SINGLE,
+                Product.MWR_MULTI,
+            ):
                 continue
             limits = [float(x) for x in limits_str.split(",")]
             if key in self.nc.variables:
@@ -221,12 +215,11 @@ class FindVariableOutliers(Test):
                     self._add_info(msg)
 
 
-@test(
-    "Radar folding",
-    "Test for radar folding.",
-    products=[Product.RADAR, Product.CATEGORIZE],
-)
 class FindFolding(Test):
+    name = "Radar folding"
+    description = "Test for radar folding."
+    products = [Product.RADAR, Product.CATEGORIZE]
+
     def run(self):
         key = "v"
         v_threshold = 8
@@ -243,11 +236,10 @@ class FindFolding(Test):
             )
 
 
-@test(
-    "Data coverage",
-    "Test that file contains enough data.",
-)
 class TestDataCoverage(Test):
+    name = "Data coverage"
+    description = "Test that file contains enough data."
+
     RESOLUTIONS = {
         Product.DISDROMETER: datetime.timedelta(minutes=1),
         Product.L3_CF: datetime.timedelta(hours=1),
@@ -270,9 +262,7 @@ class TestDataCoverage(Test):
             return
         if n_time < 2:
             return
-        expected_res = self.RESOLUTIONS.get(
-            self.cloudnet_file_type, self.DEFAULT_RESOLUTION
-        )
+        expected_res = self.RESOLUTIONS.get(self.product, self.DEFAULT_RESOLUTION)
         duration = self._get_duration()
         bins = max(1, duration // expected_res)
         hist, _bin_edges = np.histogram(
@@ -294,12 +284,16 @@ class TestDataCoverage(Test):
             )
 
 
-@test(
-    "Variable names",
-    "Check that variables have expected names.",
-    ignore_products=[Product.MODEL, Product.L3_CF, Product.L3_IWC, Product.L3_LWC],
-)
 class TestVariableNamesDefined(Test):
+    name = "Variable names"
+    description = "Check that variables have expected names."
+    products = Product.all() - {
+        Product.MODEL,
+        Product.L3_CF,
+        Product.L3_IWC,
+        Product.L3_LWC,
+    }
+
     def run(self):
         for key in self.nc.variables.keys():
             if key not in VARIABLES:
@@ -311,34 +305,43 @@ class TestVariableNamesDefined(Test):
 # ---------------------- #
 
 
-@test("Units", "Check that variables have expected units.")
 class TestUnits(Test):
+    name = "Units"
+    description = "Check that variables have expected units."
+
     def run(self):
         self._test_variable_attribute("units")
 
 
-@test(
-    "Long names",
-    "Check that variables have expected long names.",
-    ignore_products=[Product.MODEL, Product.L3_CF, Product.L3_IWC, Product.L3_LWC],
-)
 class TestLongNames(Test):
+    name = "Long names"
+    description = "Check that variables have expected long names."
+    ignore_products = (
+        Product.all() - {Product.MODEL, Product.L3_CF, Product.L3_IWC, Product.L3_LWC},
+    )
+
     def run(self):
         self._test_variable_attribute("long_name")
 
 
-@test(
-    "Standard names",
-    "Check that variable have expected standard names.",
-    ignore_products=[Product.MODEL, Product.L3_CF, Product.L3_IWC, Product.L3_LWC],
-)
 class TestStandardNames(Test):
+    name = "Standard names"
+    description = "Check that variable have expected standard names."
+    products = Product.all() - {
+        Product.MODEL,
+        Product.L3_CF,
+        Product.L3_IWC,
+        Product.L3_LWC,
+    }
+
     def run(self):
         self._test_variable_attribute("standard_name")
 
 
-@test("Data types", "Check that variables have expected data types.")
 class TestDataTypes(Test):
+    name = "Data types"
+    description = "Check that variables have expected data types."
+
     def run(self):
         for key in self.nc.variables:
             if key not in VARIABLES:
@@ -354,18 +357,16 @@ class TestDataTypes(Test):
                 self._add_warning(msg)
 
 
-# @test(
-#     "Time data type",
-#     "Check that time vector is in double precision.",
+# class TestTimeVectorDataType(Test):
+#     name = "Time data type"
+#     description = "Check that time vector is in double precision."
 #     products=[
 #         Product.RADAR,
 #         Product.LIDAR,
 #         Product.MWR,
 #         Product.DISDROMETER,
 #         Product.WEATHER_STATION,
-#     ],
-# )
-# class TestTimeVectorDataType(Test):
+#     ]
 #     def run(self):
 #         key = "time"
 #         received = self.nc.variables[key].dtype.name
@@ -375,8 +376,10 @@ class TestDataTypes(Test):
 #             self._add_warning(msg)
 
 
-@test("Global attributes", "Check that file contains required global attributes.")
 class TestGlobalAttributes(Test):
+    name = "Global attributes"
+    description = "Check that file contains required global attributes."
+
     REQUIRED_ATTRS = {
         "year",
         "month",
@@ -420,22 +423,21 @@ class TestGlobalAttributes(Test):
 
     def run(self):
         nc_keys = set(self.nc.ncattrs())
-        required_attrs = self._required_attrs(self.cloudnet_file_type)
+        required_attrs = self._required_attrs(self.product)
         missing_keys = required_attrs - nc_keys
         for key in missing_keys:
             self._add_warning(f"Attribute '{key}' is missing.")
         extra_keys = nc_keys - required_attrs
         for key in extra_keys:
-            if not self._optional_attr(key, self.cloudnet_file_type):
+            if not self._optional_attr(key, self.product):
                 self._add_warning(f"Unknown attribute '{key}' found.")
 
 
-@test(
-    "Median LWP",
-    "Test that LWP data are valid.",
-    [Product.MWR, Product.CATEGORIZE],
-)
 class TestMedianLwp(Test):
+    name = "Median LWP"
+    description = "Test that LWP data are valid."
+    products = [Product.MWR, Product.CATEGORIZE]
+
     def run(self):
         key = "lwp"
         if key not in self.nc.variables:
@@ -459,8 +461,10 @@ class TestMedianLwp(Test):
             self._add_warning(msg)
 
 
-@test("Attribute outliers", "Find suspicious values in global attributes.")
 class FindAttributeOutliers(Test):
+    name = "Attribute outliers"
+    description = "Find suspicious values in global attributes."
+
     def run(self):
         try:
             year = int(self.nc.year)
@@ -473,12 +477,11 @@ class FindAttributeOutliers(Test):
             self._add_warning("Invalid date attributes.")
 
 
-@test(
-    "LDR values",
-    "Test that LDR values are proper.",
-    products=[Product.RADAR, Product.CATEGORIZE],
-)
 class TestLDR(Test):
+    name = "LDR values"
+    description = "Test that LDR values are proper."
+    products = [Product.RADAR, Product.CATEGORIZE]
+
     def run(self):
         has_ldr = "ldr" in self.nc.variables or "sldr" in self.nc.variables
         has_v = "v" in self.nc.variables
@@ -493,21 +496,21 @@ class TestLDR(Test):
                 self._add_warning("LDR exists in less than 0.1 % of pixels.")
 
 
-@test(
-    "Data mask",
-    "Test that data are not completely masked.",
-    products=[Product.RADAR],
-)
 class TestMask(Test):
+    name = "Data mask"
+    description = "Test that data are not completely masked."
+    products = [Product.RADAR]
+
     def run(self):
         if not np.any(~self.nc["v"][:].mask):
             self._add_error("All data are masked.")
 
 
-@test(
-    "Range correction", "Test that beta is range corrected.", products=[Product.LIDAR]
-)
 class TestIfRangeCorrected(Test):
+    name = "Range correction"
+    description = "Test that beta is range corrected."
+    products = [Product.LIDAR]
+
     def run(self):
         try:
             range_var = self.nc["range"]
@@ -528,11 +531,13 @@ class TestIfRangeCorrected(Test):
             self._add_warning("Data might not be range corrected.")
 
 
-@test(
-    "Floating-point values",
-    "Test for special floating-point values which may indicate problems with the processing.",
-)
 class TestFloatingPointValues(Test):
+    name = "Floating-point values"
+    description = (
+        "Test for special floating-point values "
+        "which may indicate problems with the processing."
+    )
+
     def run(self):
         for name, variable in self.nc.variables.items():
             if variable.dtype.kind != "f":
@@ -548,12 +553,11 @@ class TestFloatingPointValues(Test):
 # -------------------- #
 
 
-@test(
-    "Beta presence",
-    "Test that one beta variable exists.",
-    products=[Product.LIDAR],
-)
 class TestLidarBeta(Test):
+    name = "Beta presence"
+    description = "Test that one beta variable exists."
+    products = [Product.LIDAR]
+
     def run(self):
         valid_keys = {"beta", "beta_1064", "beta_532", "beta_355"}
         for key in valid_keys:
@@ -562,8 +566,10 @@ class TestLidarBeta(Test):
         self._add_error("No valid beta variable found.")
 
 
-@test("Time vector", "Test that time vector is continuous.")
 class TestTimeVector(Test):
+    name = "Time vector"
+    description = "Test that time vector is continuous."
+
     def run(self):
         time = self.nc["time"][:]
         try:
@@ -588,8 +594,10 @@ class TestTimeVector(Test):
             self._add_error(msg)
 
 
-@test("Variables", "Check that file contains required variables.")
 class TestVariableNames(Test):
+    name = "Variables"
+    description = "Check that file contains required variables."
+
     def run(self):
         keys_in_file = set(self.nc.variables.keys())
         required_keys = self._get_required_variable_names()
@@ -598,8 +606,11 @@ class TestVariableNames(Test):
             self._add_error(f"'{key}' is missing.")
 
 
-@test("Model data", "Test that model data are valid.", [Product.MODEL])
 class TestModelData(Test):
+    name = "Model data"
+    description = "Test that model data are valid."
+    products = [Product.MODEL]
+
     def run(self):
         time = np.array(self.nc["time"][:])
         time_unit = datetime.timedelta(hours=1)
@@ -636,8 +647,10 @@ class TestModelData(Test):
 # ----------------------------- #
 
 
-@test("CF conventions", "Test compliance with the CF metadata conventions.")
 class TestCFConvention(Test):
+    name = "CF conventions"
+    description = "Test compliance with the CF metadata conventions."
+
     def run(self):
         from cfchecker import cfchecks  # pylint: disable=import-outside-toplevel
 
@@ -665,19 +678,18 @@ class TestCFConvention(Test):
                 self._add_message(msg, severity)
 
 
-@test(
-    "Instrument PID",
-    "Test that valid instrument PID exists.",
-    [
+class TestInstrumentPid(Test):
+    name = "Instrument PID"
+    description = "Test that valid instrument PID exists."
+    products = [
         Product.MWR,
         Product.LIDAR,
         Product.RADAR,
         Product.DISDROMETER,
         Product.DOPPLER_LIDAR,
         Product.WEATHER_STATION,
-    ],
-)
-class TestInstrumentPid(Test):
+    ]
+
     data: dict = {}
 
     def run(self):

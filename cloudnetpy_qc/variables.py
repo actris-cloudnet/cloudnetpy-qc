@@ -1,13 +1,15 @@
 """Variable definitions"""
 # pylint: disable=too-many-lines
+from __future__ import annotations
+
 from collections.abc import Callable
 from enum import Enum
-from typing import Literal, NamedTuple
+from typing import Iterable, Literal, NamedTuple
 
 import netCDF4
 
 
-class Product(str, Enum):
+class Product(Enum):
     # Level 1b
     RADAR = "radar"
     LIDAR = "lidar"
@@ -35,8 +37,8 @@ class Product(str, Enum):
     L3_LWC = "l3-lwc"
 
     @classmethod
-    def all(cls) -> list[str]:
-        return [e.value for e in cls]
+    def all(cls) -> set[Product]:
+        return set(cls)
 
 
 Level = Literal["1b", "1c", "2", "3"]
@@ -78,7 +80,7 @@ class Variable(NamedTuple):
     units: str | Callable[[netCDF4.Dataset], str] | None = "1"
     dtype: str = Dtype.FLOAT
     standard_name: str | None = None
-    required: list[str] | None = None
+    required: Iterable[Product] | None = None
 
 
 def time_units(nc: netCDF4.Dataset) -> str:
@@ -636,20 +638,16 @@ VARIABLES = {
         long_name="Height above mean sea level",
         units="m",
         standard_name="height_above_mean_sea_level",
-        required=[
-            p
-            for p in Product.all()
-            if p
-            not in (
-                Product.MWR,
-                Product.DISDROMETER,
-                Product.WEATHER_STATION,
-                Product.MWR_L1C,
-                Product.L3_CF,
-                Product.L3_IWC,
-                Product.L3_LWC,
-            )
-        ],
+        required=Product.all()
+        - {
+            Product.MWR,
+            Product.DISDROMETER,
+            Product.WEATHER_STATION,
+            Product.MWR_L1C,
+            Product.L3_CF,
+            Product.L3_IWC,
+            Product.L3_LWC,
+        },
     ),
     "time": Variable(
         long_name="Time UTC",
@@ -661,11 +659,8 @@ VARIABLES = {
         long_name="Altitude of site",
         units="m",
         standard_name="altitude",
-        required=[
-            p
-            for p in Product.all()
-            if p not in (Product.MODEL, Product.L3_CF, Product.L3_IWC, Product.L3_LWC)
-        ],
+        required=Product.all()
+        - {Product.MODEL, Product.L3_CF, Product.L3_IWC, Product.L3_LWC},
     ),
     "latitude": Variable(
         long_name="Latitude of site",

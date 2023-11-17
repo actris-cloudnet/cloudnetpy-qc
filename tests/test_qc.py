@@ -13,18 +13,18 @@ def test_valid_file():
     check = Check(filename)
     check.errors()
     for test in check.tests:
-        exps = test["exceptions"]
+        excs = test.exceptions
         assert (
-            exps
-            if test["testId"]
+            excs
+            if test.test_id
             in (
                 "TestGlobalAttributes",
                 "TestInstrumentPid",
                 "TestUnits",
                 "FindVariableOutliers",
             )
-            else not exps
-        ), f"{test}, {exps}"
+            else not excs
+        ), f"{test}, {excs}"
 
 
 def test_legacy_file():
@@ -87,14 +87,14 @@ class Check:
     """Check class."""
 
     def __init__(self, filename: str, file_type: str | None = None):
-        self.report = quality.run_tests(Path(filename), cloudnet_file_type=file_type)
-        self.tests = self.report["tests"]
+        self.report = quality.run_tests(Path(filename), product=file_type)
+        self.tests = self.report.tests
 
     def verify_exceptions(self, keys: list):
         n = 0
         for test in self.tests:
-            if test["testId"] in keys:
-                assert test["exceptions"]
+            if test.test_id in keys:
+                assert test.exceptions
                 n += 1
         assert n == len(keys)
 
@@ -106,8 +106,8 @@ class Check:
 
     def _count(self, level: str):
         n = 0
-        for test in self.report["tests"]:
-            for exp in test["exceptions"]:
-                if exp["result"] == level:
+        for test in self.report.tests:
+            for exc in test.exceptions:
+                if exc.result == level:
                     n += 1
         return n
