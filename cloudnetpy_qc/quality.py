@@ -793,10 +793,11 @@ class TestInstrumentPid(Test):
     }
 
     SOURCE_TO_IDENTIFIER = {
-        "BASTA": ["https://vocabulary.actris.nilu.no/actris_vocab/BASTA"],
+        "BASTA": ["https://vocabulary.actris.nilu.no/actris_vocab/MeteomodemBASTA"],
         "METEK MIRA-35": [
-            "https://vocabulary.actris.nilu.no/actris_vocab/METEKMIRA35",
-            "https://vocabulary.actris.nilu.no/actris_vocab/METEKMIRA35S",
+            "https://vocabulary.actris.nilu.no/actris_vocab/MetekMIRA35",
+            "https://vocabulary.actris.nilu.no/actris_vocab/MetekMIRA35S",
+            "https://vocabulary.actris.nilu.no/actris_vocab/MetekMIRA35C",
         ],
         "OTT HydroMet Parsivel2": [
             "https://vocabulary.actris.nilu.no/actris_vocab/OTTParsivel2"
