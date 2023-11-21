@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.15.1 – 2023-11-21
+
+- Fix vocabulary links
+
 ## 1.15.0 – 2023-11-17
 
 - Refactor types
