@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.15.2 – 2023-11-22
+
+- Fix typo in product definition
+
 ## 1.15.1 – 2023-11-21
 
 - Fix vocabulary links
