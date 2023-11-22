@@ -591,7 +591,6 @@ VARIABLES = {
         units="m s-1",
         standard_name="rainfall_rate",
         required=[
-            Product.CATEGORIZE,
             Product.DISDROMETER,
             Product.WEATHER_STATION,
             Product.RAIN_RADAR,
