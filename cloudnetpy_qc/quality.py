@@ -316,9 +316,12 @@ class TestUnits(Test):
 class TestLongNames(Test):
     name = "Long names"
     description = "Check that variables have expected long names."
-    ignore_products = (
-        Product.all() - {Product.MODEL, Product.L3_CF, Product.L3_IWC, Product.L3_LWC},
-    )
+    products = Product.all() - {
+        Product.MODEL,
+        Product.L3_CF,
+        Product.L3_IWC,
+        Product.L3_LWC,
+    }
 
     def run(self):
         self._test_variable_attribute("long_name")
