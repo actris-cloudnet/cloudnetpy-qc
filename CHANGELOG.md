@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.15.3 – 2023-11-22
+
+- Make rainfall_rate optional in categorize file
+
 ## 1.15.2 – 2023-11-22
 
 - Fix typo in product definition
