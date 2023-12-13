@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.15.4 – 2023-12-13
+
+- Define mwr-single and mwr-multi variables
+
 ## 1.15.3 – 2023-11-22
 
 - Make rainfall_rate optional in categorize file
