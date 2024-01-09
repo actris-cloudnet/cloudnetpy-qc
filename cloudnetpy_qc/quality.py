@@ -13,6 +13,7 @@ import netCDF4
 import numpy as np
 import scipy.stats
 from numpy import ma
+from requests import RequestException
 
 from . import utils
 from .variables import LEVELS, VARIABLES, Product
@@ -697,10 +698,13 @@ class TestInstrumentPid(Test):
 
     def run(self):
         if self._check_exists():
-            self.data = utils.fetch_pid(self.nc.instrument_pid)
-            self._check_serial()
-            self._check_model_name()
-            self._check_model_identifier()
+            try:
+                self.data = utils.fetch_pid(self.nc.instrument_pid)
+                self._check_serial()
+                self._check_model_name()
+                self._check_model_identifier()
+            except RequestException:
+                self._add_info("Failed to fetch instrument PID")
 
     def _check_exists(self) -> bool:
         key = "instrument_pid"
