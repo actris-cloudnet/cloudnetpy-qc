@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.15.5 – 2024-01-09
+
+- Handle request errors in instrument PID test
+
 ## 1.15.4 – 2023-12-13
 
 - Define mwr-single and mwr-multi variables
