@@ -1440,4 +1440,5 @@ VARIABLES = {
         long_name="Horizontal angular beamwidth",
         units="degree",
     ),
+    "rain_detected": Variable(long_name="Rain detected", dtype=Dtype.INT),
 }
