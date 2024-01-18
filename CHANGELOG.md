@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.15.6 – 2024-01-18
+
+- Add rain_detected
+
 ## 1.15.5 – 2024-01-09
 
 - Handle request errors in instrument PID test
