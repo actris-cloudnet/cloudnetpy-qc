@@ -250,7 +250,7 @@ class TestDataCoverage(Test):
         Product.MWR: datetime.timedelta(minutes=2),
         Product.MWR_MULTI: datetime.timedelta(minutes=20),
         Product.MWR_SINGLE: datetime.timedelta(minutes=2),
-        Product.WEATHER_STATION: datetime.timedelta(minutes=1),
+        Product.WEATHER_STATION: datetime.timedelta(minutes=10),
     }
     DEFAULT_RESOLUTION = datetime.timedelta(seconds=30)
 

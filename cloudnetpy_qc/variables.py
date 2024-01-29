@@ -73,6 +73,7 @@ class Dtype(str, Enum):
     DOUBLE = "float64"
     INT = "int32"
     SHORT = "int16"
+    BYTE = "int8"
 
 
 class Variable(NamedTuple):
@@ -1441,4 +1442,50 @@ VARIABLES = {
         units="degree",
     ),
     "rain_detected": Variable(long_name="Rain detected", dtype=Dtype.INT),
+    "air_pressure_quality_flag": Variable(
+        long_name="Air pressure quality flag",
+        dtype=Dtype.BYTE,
+    ),
+    "air_temperature_quality_flag": Variable(
+        long_name="Air temperature quality flag",
+        dtype=Dtype.BYTE,
+    ),
+    "relative_humidity_quality_flag": Variable(
+        long_name="Relative humidity quality flag",
+        dtype=Dtype.BYTE,
+    ),
+    "wind_speed_quality_flag": Variable(
+        long_name="Wind speed quality flag",
+        dtype=Dtype.BYTE,
+    ),
+    "wind_direction_quality_flag": Variable(
+        long_name="Wind direction quality flag",
+        dtype=Dtype.BYTE,
+    ),
+    "rainfall_rate_quality_flag": Variable(
+        long_name="Rainfall rate quality flag",
+        dtype=Dtype.BYTE,
+    ),
+    "dew_point_temperature": Variable(
+        long_name="Dew point temperature",
+        dtype=Dtype.FLOAT,
+        units="K",
+    ),
+    "dew_point_temperature_quality_flag": Variable(
+        long_name="Dew point temperature quality flag",
+        dtype=Dtype.BYTE,
+    ),
+    "wind_speed_gust": Variable(
+        long_name="Wind speed gust",
+        dtype=Dtype.FLOAT,
+        units="m s-1",
+    ),
+    "wind_speed_gust_quality_flag": Variable(
+        long_name="Wind speed gust quality flag",
+        dtype=Dtype.BYTE,
+    ),
+    "visibility_quality_flag": Variable(
+        long_name="Visibility quality flag",
+        dtype=Dtype.BYTE,
+    ),
 }
