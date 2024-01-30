@@ -134,7 +134,7 @@ VARIABLES = {
         required=[Product.DISDROMETER],
     ),
     "visibility": Variable(
-        long_name="Visibility range in precipitation after MOR",
+        long_name="Meteorological optical range (MOR) visibility",
         units="m",
         standard_name="visibility_in_air",
         dtype=Dtype.INT,
