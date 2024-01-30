@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.15.7 – 2024-01-30
+
+- Support Lindenberg weather station
+- Fix visibility long_name
+
 ## 1.15.6 – 2024-01-18
 
 - Add rain_detected
