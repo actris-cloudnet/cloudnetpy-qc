@@ -90,15 +90,15 @@ def run_tests(
             if ignore_tests and cls.__name__ in ignore_tests:
                 continue
             test_instance = cls(nc, filename, product)
-            if product in test_instance.products:
+            if product not in test_instance.products:
+                continue
+            try:
                 test_instance.run()
-                for exception in test_instance.report.exceptions:
-                    assert exception.result in (
-                        ErrorLevel.ERROR,
-                        ErrorLevel.WARNING,
-                        ErrorLevel.INFO,
-                    )
-                test_reports.append(test_instance.report)
+            except Exception as err:
+                test_instance._add_error(
+                    f"Failed to run test: {err} ({type(err).__name__})"
+                )
+            test_reports.append(test_instance.report)
     return FileReport(
         timestamp=datetime.datetime.now(tz=datetime.timezone.utc),
         qc_version=__version__,
