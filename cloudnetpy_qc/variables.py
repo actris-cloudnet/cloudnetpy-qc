@@ -18,6 +18,7 @@ class Product(Enum):
     MODEL = "model"
     WEATHER_STATION = "weather-station"
     DOPPLER_LIDAR = "doppler-lidar"
+    DOPPLER_LIDAR_WIND = "doppler-lidar-wind"
     RAIN_RADAR = "rain-radar"
     # Level 1c
     CATEGORIZE = "categorize"
@@ -51,6 +52,7 @@ LEVELS: dict[Product, Level] = {
     Product.MODEL: "1b",
     Product.WEATHER_STATION: "1b",
     Product.DOPPLER_LIDAR: "1b",
+    Product.DOPPLER_LIDAR_WIND: "1c",
     Product.RAIN_RADAR: "1b",
     Product.CATEGORIZE: "1c",
     Product.MWR_L1C: "1c",
@@ -189,12 +191,22 @@ VARIABLES = {
     "uwind": Variable(
         long_name="Zonal wind",
         units="m s-1",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.DOPPLER_LIDAR_WIND],
+    ),
+    "uwind_raw": Variable(
+        long_name="Non-screened zonal wind",
+        units="m s-1",
+        required=[Product.DOPPLER_LIDAR_WIND],
     ),
     "vwind": Variable(
         long_name="Meridional wind",
         units="m s-1",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.DOPPLER_LIDAR_WIND],
+    ),
+    "vwind_raw": Variable(
+        long_name="Non-screened meridional wind",
+        units="m s-1",
+        required=[Product.DOPPLER_LIDAR_WIND],
     ),
     "q": Variable(
         long_name="Specific humidity",
