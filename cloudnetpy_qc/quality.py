@@ -728,6 +728,18 @@ class TestInstrumentPid(Test):
         except StopIteration:
             return None
 
+    def _create_message(
+        self,
+        expected: str | list[str],
+        received: str,
+        obj: str | None = None,
+    ) -> str:
+        if isinstance(expected, str):
+            expected = [expected]
+        expected = utils.format_list([f"'{var}'" for var in expected], "or")
+        msg = f"Expected {obj} to be {expected} but received '{received}'"
+        return msg
+
     def _check_serial(self):
         key = "serial_number"
         try:
@@ -744,7 +756,7 @@ class TestInstrumentPid(Test):
                 if "StreamLine" in model_name:
                     expected = expected.split("-")[-1]
                 if received != expected:
-                    msg = utils.create_expected_received_msg(expected, received)
+                    msg = self._create_message(expected, received, "serial number")
                     self._add_error(msg)
                 return
         self._add_warning(
@@ -763,7 +775,7 @@ class TestInstrumentPid(Test):
             return
         received = model["modelName"]
         if received not in allowed_values:
-            msg = utils.create_expected_received_msg(allowed_values, received)
+            msg = self._create_message(allowed_values, received, "model name")
             self._add_error(msg)
 
     def _check_model_identifier(self):
@@ -780,7 +792,7 @@ class TestInstrumentPid(Test):
             return
         received = model["modelIdentifier"]["modelIdentifierValue"]
         if received not in allowed_values:
-            msg = utils.create_expected_received_msg(allowed_values, received)
+            msg = self._create_message(allowed_values, received, "model identifier")
             self._add_error(msg)
 
     SOURCE_TO_NAME = {
