@@ -251,6 +251,7 @@ class TestDataCoverage(Test):
         Product.MWR_MULTI: datetime.timedelta(minutes=20),
         Product.MWR_SINGLE: datetime.timedelta(minutes=2),
         Product.WEATHER_STATION: datetime.timedelta(minutes=10),
+        Product.DOPPLER_LIDAR_WIND: datetime.timedelta(hours=1.5),
     }
     DEFAULT_RESOLUTION = datetime.timedelta(seconds=30)
 
@@ -400,7 +401,7 @@ class TestGlobalAttributes(Test):
     def _instrument_product(self, product: Product):
         return (
             LEVELS[product] == "1b" and product != Product.MODEL
-        ) or product == Product.MWR_L1C
+        ) or product in (Product.MWR_L1C, Product.DOPPLER_LIDAR_WIND)
 
     def _required_attrs(self, product: Product):
         attrs = set(self.REQUIRED_ATTRS)
@@ -691,6 +692,7 @@ class TestInstrumentPid(Test):
         Product.RADAR,
         Product.DISDROMETER,
         Product.DOPPLER_LIDAR,
+        Product.DOPPLER_LIDAR_WIND,
         Product.WEATHER_STATION,
     ]
 
