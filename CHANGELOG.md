@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.15.8 – 2024-02-14
+
+- Return error from failing tests
+- Improve PID test output
+
 ## 1.15.7 – 2024-01-30
 
 - Support Lindenberg weather station
