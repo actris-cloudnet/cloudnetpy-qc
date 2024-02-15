@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.16.0 – 2024-02-15
+
+- Add doppler-lidar-wind product
+
 ## 1.15.8 – 2024-02-14
 
 - Return error from failing tests
