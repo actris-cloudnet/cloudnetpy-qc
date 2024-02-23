@@ -1500,4 +1500,12 @@ VARIABLES = {
         long_name="Visibility quality flag",
         dtype=Dtype.BYTE,
     ),
+    "elevation_angle": Variable(
+        long_name="Sensor elevation angle",
+        units="degree",
+    ),
+    "ir_elevation_angle": Variable(
+        long_name="Infrared sensor elevation angle",
+        units="degree",
+    ),
 }
