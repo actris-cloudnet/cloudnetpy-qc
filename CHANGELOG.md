@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.16.1 – 2024-02-23
+
+- Add elevation angles
+
 ## 1.16.0 – 2024-02-15
 
 - Add doppler-lidar-wind product
