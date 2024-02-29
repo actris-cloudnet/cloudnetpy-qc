@@ -1508,4 +1508,7 @@ VARIABLES = {
         long_name="Infrared sensor elevation angle",
         units="degree",
     ),
+    "liquid_prob": Variable(
+        long_name="Liquid probability",
+    ),
 }
