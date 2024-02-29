@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.16.2 – 2024-02-29
+
+- Add liquid_prob
+
 ## 1.16.1 – 2024-02-23
 
 - Add elevation angles
