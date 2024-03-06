@@ -399,9 +399,10 @@ class TestGlobalAttributes(Test):
     }
 
     def _instrument_product(self, product: Product):
-        return (
-            LEVELS[product] == "1b" and product != Product.MODEL
-        ) or product in (Product.MWR_L1C, Product.DOPPLER_LIDAR_WIND)
+        return (LEVELS[product] == "1b" and product != Product.MODEL) or product in (
+            Product.MWR_L1C,
+            Product.DOPPLER_LIDAR_WIND,
+        )
 
     def _required_attrs(self, product: Product):
         attrs = set(self.REQUIRED_ATTRS)
@@ -833,14 +834,16 @@ class TestInstrumentPid(Test):
             "https://vocabulary.actris.nilu.no/actris_vocab/RPGHATPRO"
         ],
         "RPG-Radiometer Physics RPG-FMCW-35": [
-            "https://vocabulary.actris.nilu.no/skosmos/actris_vocab/en/page/RPG-FMCW-35-DP"
-            "https://vocabulary.actris.nilu.no/skosmos/actris_vocab/en/page/RPG-FMCW-35-SP"
-            "https://vocabulary.actris.nilu.no/skosmos/actris_vocab/en/page/RPG-FMCW-35S"
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-35-DP"
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-35-DP-S"
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-35-SP"
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-35-SP-S"
         ],
         "RPG-Radiometer Physics RPG-FMCW-94": [
             "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-94-DP",
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-94-DP-S",
             "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-94-SP",
-            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-94S",
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-94-SP-S",
         ],
         "Thies Clima LNM": ["https://vocabulary.actris.nilu.no/actris_vocab/ThiesLNM"],
     }
