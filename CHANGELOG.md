@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.16.3 – 2024-03-06
+
+- Update instrument vocabulary links
+
 ## 1.16.2 – 2024-02-29
 
 - Add liquid_prob
