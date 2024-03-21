@@ -554,6 +554,20 @@ class TestFloatingPointValues(Test):
                 self._add_warning(f"Variable '{name}' contains infinite value(s).")
 
 
+class TestFillValue(Test):
+    name = "Fill value"
+    description = (
+        "Test that fill value is explicitly set for variables with missing data."
+    )
+
+    def run(self):
+        for name, variable in self.nc.variables.items():
+            if variable[:].mask.any() and not hasattr(variable, "_FillValue"):
+                self._add_warning(
+                    f"Attribute '_FillValue' is missing from variable '{name}'."
+                )
+
+
 # ---------------------#
 # ------ Errors ------ #
 # -------------------- #
