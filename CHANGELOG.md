@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.1 – 2024-03-26
+
+- Fix PID test for RPG-FMCW-35
+
 ## 1.17.0 – 2024-03-21
 
 - Add fill value test
