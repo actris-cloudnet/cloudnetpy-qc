@@ -848,10 +848,10 @@ class TestInstrumentPid(Test):
             "https://vocabulary.actris.nilu.no/actris_vocab/RPGHATPRO"
         ],
         "RPG-Radiometer Physics RPG-FMCW-35": [
-            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-35-DP"
-            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-35-DP-S"
-            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-35-SP"
-            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-35-SP-S"
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-35-DP",
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-35-DP-S",
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-35-SP",
+            "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-35-SP-S",
         ],
         "RPG-Radiometer Physics RPG-FMCW-94": [
             "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-94-DP",
