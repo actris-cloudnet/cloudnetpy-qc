@@ -872,12 +872,10 @@ VARIABLES = {
     "rainfall_rate_1min_total": Variable(
         long_name="Total precipitation rate",
         units="m s-1",
-        dtype=Dtype.INT,
     ),
     "rainfall_rate_1min_solid": Variable(
         long_name="Solid precipitation rate",
         units="m s-1",
-        dtype=Dtype.INT,
     ),
     "snowfall_rate": Variable(
         long_name="Snowfall rate",
@@ -1351,7 +1349,6 @@ VARIABLES = {
     "maximum_hail_diameter": Variable(
         long_name="Maximum hail diameter",
         units="mm",
-        dtype=Dtype.INT,
     ),
     # rv-polarstern specific
     "beta_1064_raw": Variable(
