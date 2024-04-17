@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.2 – 2024-04-17
+
+- Fix data types of Thies variables
+
 ## 1.17.1 – 2024-03-26
 
 - Fix PID test for RPG-FMCW-35
