@@ -937,7 +937,6 @@ VARIABLES = {
     "V_sensor_supply": Variable(
         long_name="Sensor supply voltage",
         units="V",
-        dtype=Dtype.INT,
     ),
     "state_sensor": Variable(
         long_name="State of the sensor",
@@ -1324,7 +1323,6 @@ VARIABLES = {
     "I_mean_laser": Variable(
         long_name="Mean value of laser current",
         units="mA",
-        dtype=Dtype.INT,
     ),
     "V_control": Variable(
         long_name="Control voltage",
