@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.3 – 2024-04-17
+
+- Fix more data types
+
 ## 1.17.2 – 2024-04-17
 
 - Fix data types of Thies variables
