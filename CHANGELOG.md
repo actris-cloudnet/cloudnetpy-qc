@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.4 – 2024-04-18
+
+- Make `n_particles` optional
+
 ## 1.17.3 – 2024-04-17
 
 - Fix more data types
