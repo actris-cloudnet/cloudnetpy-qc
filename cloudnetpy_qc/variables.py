@@ -145,7 +145,6 @@ VARIABLES = {
     "n_particles": Variable(
         long_name="Number of particles in time interval",
         dtype=Dtype.INT,
-        required=[Product.DISDROMETER],
     ),
     # -----------------------------------------
     # Required in WEATHER STATION Level 1b file
