@@ -195,7 +195,6 @@ VARIABLES = {
     "uwind_raw": Variable(
         long_name="Non-screened zonal wind",
         units="m s-1",
-        required=[Product.DOPPLER_LIDAR_WIND],
     ),
     "vwind": Variable(
         long_name="Meridional wind",
@@ -205,7 +204,6 @@ VARIABLES = {
     "vwind_raw": Variable(
         long_name="Non-screened meridional wind",
         units="m s-1",
-        required=[Product.DOPPLER_LIDAR_WIND],
     ),
     "q": Variable(
         long_name="Specific humidity",
