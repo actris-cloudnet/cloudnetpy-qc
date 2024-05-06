@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.17.5 – 2024-05-06
+
+- List tests in README.md
+- Remove non-screened wind from required doppler lidar wind variables
+
 ## 1.17.4 – 2024-04-18
 
 - Make `n_particles` optional
