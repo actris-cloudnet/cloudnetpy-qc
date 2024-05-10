@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.6 – 2024-05-10
+
+- Fix typo
+
 ## 1.17.5 – 2024-05-06
 
 - List tests in README.md
