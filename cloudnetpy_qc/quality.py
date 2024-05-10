@@ -401,6 +401,8 @@ class TestGlobalAttributes(Test):
     def _instrument_product(self, product: Product):
         return (LEVELS[product] == "1b" and product != Product.MODEL) or product in (
             Product.MWR_L1C,
+            Product.MWR_SINGLE,
+            Product.MWR_MULTI,
             Product.DOPPLER_LIDAR_WIND,
         )
 
@@ -408,6 +410,8 @@ class TestGlobalAttributes(Test):
         attrs = set(self.REQUIRED_ATTRS)
         if product == Product.MWR_L1C:
             attrs.add("mwrpy_coefficients")
+        if product in (Product.MWR_SINGLE, Product.MWR_MULTI):
+            attrs.add("source_file_uuids")
         if product != Product.MODEL:
             attrs.add(
                 "instrument_pid"
