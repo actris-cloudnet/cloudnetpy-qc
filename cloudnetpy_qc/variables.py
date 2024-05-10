@@ -586,7 +586,7 @@ VARIABLES = {
         required=[Product.MWR_L1C],
     ),
     "met_quality_flag": Variable(
-        long_name="Meterological data quality flag",
+        long_name="Meteorological data quality flag",
         dtype=Dtype.INT,
         required=[Product.MWR_L1C],
     ),
