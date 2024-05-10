@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.7 – 2024-05-10
+
+- Fix attribute validation of mwr-single and mwr-multi
+
 ## 1.17.6 – 2024-05-10
 
 - Fix typo
