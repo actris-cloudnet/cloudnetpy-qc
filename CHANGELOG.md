@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.8 – 2024-05-29
+
+- Check hour 24 exists in model
+
 ## 1.17.7 – 2024-05-10
 
 - Fix attribute validation of mwr-single and mwr-multi
