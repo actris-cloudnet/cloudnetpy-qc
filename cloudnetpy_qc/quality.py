@@ -656,7 +656,7 @@ class TestModelData(Test):
             missing_hours = [
                 int(hour)
                 for ind, hour in enumerate(time)
-                if hour < should_be_data_until
+                if hour <= should_be_data_until
                 and ma.count_masked(data[ind, :]) == data.shape[1]
             ]
             if not missing_hours:
