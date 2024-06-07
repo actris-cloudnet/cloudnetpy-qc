@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.9 – 2024-06-07
+
+- Consider models "CHM 15k" and "CHM 15k-x" equal
+
 ## 1.17.8 – 2024-05-29
 
 - Check hour 24 exists in model
