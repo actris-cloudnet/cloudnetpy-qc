@@ -817,8 +817,8 @@ class TestInstrumentPid(Test):
             self._add_error(msg)
 
     SOURCE_TO_NAME = {
-        "Lufft CHM15k": ["Lufft CHM 15k"],
-        "Lufft CHM15kx": ["Lufft CHM 15k-x"],
+        "Lufft CHM15k": ["Lufft CHM 15k", "Lufft CHM 15k-x"],
+        "Lufft CHM15kx": ["Lufft CHM 15k", "Lufft CHM 15k-x"],
         "TROPOS PollyXT": ["PollyXT"],
         "Vaisala CL31": ["Vaisala CL31"],
         "Vaisala CL51": ["Vaisala CL51"],
