@@ -205,6 +205,10 @@ VARIABLES = {
         long_name="Non-screened meridional wind",
         units="m s-1",
     ),
+    "azimuth_offset": Variable(
+        long_name="Azimuth offset of the instrument (positive clockwise from north)",
+        units="degrees",
+    ),
     "q": Variable(
         long_name="Specific humidity",
         required=[Product.CATEGORIZE],
