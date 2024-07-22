@@ -3,7 +3,6 @@
 ## 1.17.10 – 2024-07-03
 
 - Add azimuth offset
-# - Merge pull request #12 from actris-cloudnet/azimuth-offset
 
 ## 1.17.9 – 2024-06-07
 
