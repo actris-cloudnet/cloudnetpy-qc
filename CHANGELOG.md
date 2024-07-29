@@ -51,7 +51,7 @@
 
 ## 1.16.2 – 2024-02-29
 
-- Add liquid_prob
+- Add `liquid_prob` variable
 
 ## 1.16.1 – 2024-02-23
 
@@ -69,11 +69,11 @@
 ## 1.15.7 – 2024-01-30
 
 - Support Lindenberg weather station
-- Fix visibility long_name
+- Fix visibility `long_name`
 
 ## 1.15.6 – 2024-01-18
 
-- Add rain_detected
+- Add `rain_detected`
 
 ## 1.15.5 – 2024-01-09
 
@@ -85,7 +85,7 @@
 
 ## 1.15.3 – 2023-11-22
 
-- Make rainfall_rate optional in categorize file
+- Make `rainfall_rate` optional in categorize file
 
 ## 1.15.2 – 2023-11-22
 
@@ -295,7 +295,7 @@
 
 ## 1.5.0 – 2023-01-12
 
-- Add rv-polarstern varibles
+- Add rv-polarstern variables
 - Allow several options for lidar beta
 - Fix copyright
 - Update `setup-python`
