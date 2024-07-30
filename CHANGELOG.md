@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.11 – 2024-07-30
+
+- Update limits for weather station variables
+
 ## 1.17.10 – 2024-07-03
 
 - Add azimuth offset
