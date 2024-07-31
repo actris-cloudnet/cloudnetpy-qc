@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.12 – 2024-07-31
+
+- Use space as thousand separator
+
 ## 1.17.11 – 2024-07-30
 
 - Update limits for weather station variables
