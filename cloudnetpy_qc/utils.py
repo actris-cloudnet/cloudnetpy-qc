@@ -63,7 +63,7 @@ def create_out_of_bounds_msg(
 
 
 def format_value(value: str | int | float) -> str:
-    return "{:,g}".format(float(value))
+    return "{:,g}".format(float(value)).replace(",", "\u202F")
 
 
 @lru_cache
