@@ -248,7 +248,7 @@ class TestDataCoverage(Test):
         Product.L3_LWC: datetime.timedelta(hours=1),
         Product.MODEL: datetime.timedelta(hours=1),
         Product.MWR: datetime.timedelta(minutes=2),
-        Product.MWR_MULTI: datetime.timedelta(minutes=20),
+        Product.MWR_MULTI: datetime.timedelta(minutes=30),
         Product.MWR_SINGLE: datetime.timedelta(minutes=2),
         Product.WEATHER_STATION: datetime.timedelta(minutes=10),
         Product.DOPPLER_LIDAR_WIND: datetime.timedelta(hours=1.5),
