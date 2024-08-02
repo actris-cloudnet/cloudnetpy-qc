@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.13 – 2024-08-02
+
+- Increase allowed gap for `mwr-multi`
+
 ## 1.17.12 – 2024-07-31
 
 - Use space as thousand separator
