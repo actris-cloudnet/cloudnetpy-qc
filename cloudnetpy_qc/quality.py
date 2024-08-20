@@ -577,6 +577,38 @@ class TestFillValue(Test):
 # -------------------- #
 
 
+class TestBrightnessTemperature(Test):
+    name = "Brightness temperature"
+    description = "Test that brightness temperature data are valid."
+    products = [Product.MWR_L1C]
+
+    def run(self):
+        if not np.any(self.nc["tb"][:]):
+            self._add_error("No valid brightness temperature data found.")
+
+
+class TestMWRSingleLWP(Test):
+    name = "Mwr-single LWP"
+    description = "Test that LWP data are valid."
+    products = [Product.MWR_SINGLE]
+
+    def run(self):
+        flags = self.nc["lwp_quality_flag"][:]
+        if not np.any(flags == 0):
+            self._add_error("No valid LWP data found.")
+
+
+class TestMWRMultiTemperature(Test):
+    name = "Mwr-multi temperature"
+    description = "Test that temperature data are valid."
+    products = [Product.MWR_MULTI]
+
+    def run(self):
+        flags = self.nc["temperature_quality_flag"][:]
+        if not np.any(flags == 0):
+            self._add_error("No valid temperature data found.")
+
+
 class TestLidarBeta(Test):
     name = "Beta presence"
     description = "Test that one beta variable exists."
