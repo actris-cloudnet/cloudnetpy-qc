@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.14 – 2024-08-20
+
+- Make missing LWP in categorize an warning
+
 ## 1.17.13 – 2024-08-02
 
 - Increase allowed gap for `mwr-multi`
