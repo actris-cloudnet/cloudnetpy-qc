@@ -451,7 +451,7 @@ class TestMedianLwp(Test):
     def run(self):
         key = "lwp"
         if key not in self.nc.variables:
-            self._add_error(f"'{key}' is missing.")
+            self._add_warning(f"'{key}' is missing.")
             return
         data = self.nc.variables[key][:]
         mask_percentage = ma.count_masked(data) / data.size * 100

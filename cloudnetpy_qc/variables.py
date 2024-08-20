@@ -806,7 +806,6 @@ VARIABLES = {
         standard_name="atmosphere_cloud_liquid_water_content",
         required=[
             Product.MWR,
-            Product.CATEGORIZE,
             Product.LWC,
             Product.MWR_SINGLE,
         ],
@@ -814,10 +813,7 @@ VARIABLES = {
     "lwp_error": Variable(
         long_name="Error in liquid water path",
         units="kg m-2",
-        required=[
-            Product.CATEGORIZE,
-            Product.LWC,
-        ],
+        required=[Product.LWC],
     ),
     "height": Variable(
         long_name="Height above mean sea level",
