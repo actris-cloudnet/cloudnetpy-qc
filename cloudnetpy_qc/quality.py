@@ -583,8 +583,12 @@ class TestBrightnessTemperature(Test):
     products = [Product.MWR_L1C]
 
     def run(self):
-        if not np.any(self.nc["tb"][:]):
-            self._add_error("No valid brightness temperature data found.")
+        flags = self.nc["quality_flag"][:]
+        bad_percentage = ma.sum(flags != 0) / flags.size * 100
+        if bad_percentage > 90:
+            self._add_error("More than 90% of the data are flagged.")
+        elif bad_percentage > 50:
+            self._add_warning("More than 50% of the data are flagged.")
 
 
 class TestMWRSingleLWP(Test):
@@ -594,8 +598,11 @@ class TestMWRSingleLWP(Test):
 
     def run(self):
         flags = self.nc["lwp_quality_flag"][:]
-        if not np.any(flags == 0):
-            self._add_error("No valid LWP data found.")
+        bad_percentage = ma.sum(flags != 0) / flags.size * 100
+        if bad_percentage > 90:
+            self._add_error("More than 90% of the data are flagged.")
+        elif bad_percentage > 50:
+            self._add_warning("More than 50% of the data are flagged.")
 
 
 class TestMWRMultiTemperature(Test):
