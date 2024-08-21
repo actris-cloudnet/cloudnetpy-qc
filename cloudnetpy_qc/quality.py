@@ -588,7 +588,7 @@ class TestBrightnessTemperature(Test):
 
 
 class TestMWRSingleLWP(Test):
-    name = "Mwr-single LWP"
+    name = "MWR single pointing LWP"
     description = "Test that LWP data are valid."
     products = [Product.MWR_SINGLE]
 
@@ -599,7 +599,7 @@ class TestMWRSingleLWP(Test):
 
 
 class TestMWRMultiTemperature(Test):
-    name = "Mwr-multi temperature"
+    name = "MWR multiple pointing temperature"
     description = "Test that temperature data are valid."
     products = [Product.MWR_MULTI]
 
