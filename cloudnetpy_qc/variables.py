@@ -978,6 +978,14 @@ VARIABLES = {
         long_name="Attenuated backscatter coefficient",
         units="sr-1 m-1",
     ),
+    "beta_cross_raw": Variable(
+        long_name="Attenuated backscatter coefficient for the cross-polarised signal",
+        units="sr-1 m-1",
+    ),
+    "beta_cross": Variable(
+        long_name="Attenuated backscatter coefficient for the cross-polarised signal",
+        units="sr-1 m-1",
+    ),
     "iwv": Variable(
         long_name="Integrated water vapour",
         units="kg m-2",
@@ -1502,5 +1510,8 @@ VARIABLES = {
     ),
     "liquid_prob": Variable(
         long_name="Liquid probability",
+    ),
+    "polariser_bleed_through": Variable(
+        long_name="Polariser bleed-through",
     ),
 }
