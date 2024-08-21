@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.16 – 2024-08-21
+
+- Adjust mwrpy tests
+
 ## 1.17.15 – 2024-08-21
 
 - Add mwrpy tests
