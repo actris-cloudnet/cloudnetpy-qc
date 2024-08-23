@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.17.17 – 2024-08-23
+
+- Add beta cross channel to doppler lidar stare depol product
+# - Merge pull request #13 from actris-cloudnet/depol-add-beta-cross
+
 ## 1.17.16 – 2024-08-21
 
 - Adjust mwrpy tests
