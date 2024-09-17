@@ -194,26 +194,37 @@ class FindVariableOutliers(Test):
     description = "Find suspicious data values."
 
     def run(self):
-        for key, limits_str in DATA_CONFIG.items("limits"):
-            if key == "zenith_angle" and self.product in (
-                Product.MWR_L1C,
-                Product.MWR_SINGLE,
-                Product.MWR_MULTI,
-            ):
+        for key in self.nc.variables:
+            limits = self._get_limits(key)
+            if limits is None:
                 continue
-            limits = [float(x) for x in limits_str.split(",")]
-            if key in self.nc.variables:
-                data = self.nc.variables[key][:]
-                if data.ndim > 0 and len(data) == 0:
-                    break
-                max_value = np.max(data)
-                min_value = np.min(data)
-                if min_value < limits[0]:
-                    msg = utils.create_out_of_bounds_msg(key, *limits, min_value)
-                    self._add_info(msg)
-                if max_value > limits[1]:
-                    msg = utils.create_out_of_bounds_msg(key, *limits, max_value)
-                    self._add_info(msg)
+            data = self.nc.variables[key][:]
+            if data.ndim > 0 and len(data) == 0:
+                break
+            max_value = np.max(data)
+            min_value = np.min(data)
+            if min_value < limits[0]:
+                msg = utils.create_out_of_bounds_msg(key, *limits, min_value)
+                self._add_info(msg)
+            if max_value > limits[1]:
+                msg = utils.create_out_of_bounds_msg(key, *limits, max_value)
+                self._add_info(msg)
+
+    def _get_limits(self, key: str) -> tuple[float, float] | None:
+        if key == "zenith_angle" and self.product in (
+            Product.MWR_L1C,
+            Product.MWR_SINGLE,
+            Product.MWR_MULTI,
+        ):
+            return None
+        if key == "air_pressure":
+            pressure = utils.calc_pressure(self.nc["altitude"][:])
+            max_diff = pressure * 0.05
+            return (pressure - max_diff, pressure + max_diff)
+        if not DATA_CONFIG.has_option("limits", key):
+            return None
+        limit_min, limit_max = DATA_CONFIG.get("limits", key).split(",", maxsplit=1)
+        return (float(limit_min), float(limit_max))
 
 
 class FindFolding(Test):

@@ -3,6 +3,7 @@ import configparser
 import re
 from functools import lru_cache
 
+import numpy as np
 import requests
 
 PID_FORMAT = r"https?://hdl\.handle\.net/(.+)"
@@ -93,3 +94,23 @@ def integer_ranges(ints: list[int]) -> list[str]:
         else:
             output.append([x, x])
     return [str(a) if a == b else f"{a}–{b}" for a, b in output]
+
+
+def calc_pressure(altitude: float) -> float:
+    """
+    Calculate atmospheric pressure in International Standard Atmosphere.
+
+    Args:
+        altitude: Geopotential altitude above mean sea level (m)
+
+    Returns:
+        Atmospheric pressure (Pa)
+    """
+    if np.any(altitude >= 11_000):
+        raise NotImplementedError("Implemented only up to 11 km")
+    P0 = 101_325  # Standard atmospheric pressure at sea level (Pa)
+    T0 = 288.15  # Standard temperature at sea level (K)
+    L = 0.0065  # Temperature lapse rate (K m-1)
+    g = 9.80665  # Gravitational acceleration (m s-2)
+    R = 287.0528  # Specific gas constant (J kg-1 K-1)
+    return P0 * (1 - L * altitude / T0) ** (g / (R * L))
