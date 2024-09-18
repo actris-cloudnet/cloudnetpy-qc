@@ -379,15 +379,15 @@ VARIABLES = {
         units="kg m-3",
         required=[Product.IWC],
     ),
-    "iwc_inc_rain": Variable(
-        long_name="Ice water content including rain",
-        units="kg m-3",
-        required=[Product.IWC],
-    ),
     "iwc_retrieval_status": Variable(
         long_name="Ice water content retrieval status",
         dtype=Dtype.INT,
         required=[Product.IWC],
+    ),
+    # Deprecated:
+    "iwc_inc_rain": Variable(
+        long_name="Ice water content including rain",
+        units="kg m-3",
     ),
     # --------------------------------
     # Required in DRIZZLE Level 2 file
