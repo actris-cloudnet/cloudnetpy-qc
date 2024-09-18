@@ -498,11 +498,6 @@ VARIABLES = {
         units="m",
         required=[Product.IER],
     ),
-    "ier_inc_rain": Variable(
-        long_name="Ice effective radius including rain",
-        units="m",
-        required=[Product.IER],
-    ),
     "ier_error": Variable(
         long_name="Random error in ice effective radius",
         units="m",
@@ -512,6 +507,11 @@ VARIABLES = {
         long_name="Ice effective radius retrieval status",
         dtype=Dtype.INT,
         required=[Product.IER],
+    ),
+    # Deprecated:
+    "ier_inc_rain": Variable(
+        long_name="Ice effective radius including rain",
+        units="m",
     ),
     # ----------------------------
     # Required in DER Level 2 file
