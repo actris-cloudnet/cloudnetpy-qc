@@ -233,6 +233,16 @@ VARIABLES = {
         units="dB",
         required=[Product.CATEGORIZE],
     ),
+    "radar_rain_atten": Variable(
+        long_name="Two-way radar attenuation due to rain",
+        units="dB",
+        required=[Product.CATEGORIZE],
+    ),
+    "radar_melting_atten": Variable(
+        long_name="Two-way radar attenuation due to melting ice",
+        units="dB",
+        required=[Product.CATEGORIZE],
+    ),
     "quality_bits": Variable(
         long_name="Data quality bits",
         dtype=Dtype.INT,
