@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.17.18 – 2024-09-25
+
+- Specify pressure limits by altitude
+- Remove `ier_inc_rain` and `iwc_inc_rain` from required variables
+- Add `radar_rain_atten` and `radar_melting_atten` variables
+
 ## 1.17.17 – 2024-08-23
 
 - Add beta cross channel to doppler lidar stare depol product
