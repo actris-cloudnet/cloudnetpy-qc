@@ -257,7 +257,6 @@ class TestDataCoverage(Test):
         Product.L3_CF: datetime.timedelta(hours=1),
         Product.L3_IWC: datetime.timedelta(hours=1),
         Product.L3_LWC: datetime.timedelta(hours=1),
-        Product.MODEL: datetime.timedelta(hours=1),
         Product.MWR: datetime.timedelta(minutes=2),
         Product.MWR_MULTI: datetime.timedelta(minutes=30),
         Product.MWR_SINGLE: datetime.timedelta(minutes=2),
@@ -265,6 +264,12 @@ class TestDataCoverage(Test):
         Product.DOPPLER_LIDAR_WIND: datetime.timedelta(hours=1.5),
     }
     DEFAULT_RESOLUTION = datetime.timedelta(seconds=30)
+
+    def _model_resolution(self):
+        source = self.nc.source.lower()
+        if "gdas" in source or "ecmwf open" in source:
+            return datetime.timedelta(hours=3)
+        return datetime.timedelta(hours=1)
 
     def run(self):
         time = np.array(self.nc["time"][:])
@@ -275,7 +280,10 @@ class TestDataCoverage(Test):
             return
         if n_time < 2:
             return
-        expected_res = self.RESOLUTIONS.get(self.product, self.DEFAULT_RESOLUTION)
+        if self.nc.cloudnet_file_type == "model":
+            expected_res = self._model_resolution()
+        else:
+            expected_res = self.RESOLUTIONS.get(self.product, self.DEFAULT_RESOLUTION)
         duration = self._get_duration()
         bins = max(1, duration // expected_res)
         hist, _bin_edges = np.histogram(

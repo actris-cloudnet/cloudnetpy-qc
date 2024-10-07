@@ -1152,12 +1152,6 @@ VARIABLES = {
         long_name="Model level",
         units=None,
         dtype=Dtype.SHORT,
-        required=[
-            Product.MODEL,
-            Product.L3_CF,
-            Product.L3_IWC,
-            Product.L3_LWC,
-        ],
     ),
     "flux_level": Variable(
         long_name="Model flux level",
