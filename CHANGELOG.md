@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.19 – 2024-10-07
+
+- Support `ecmwf-open` model
+
 ## 1.17.18 – 2024-09-25
 
 - Specify pressure limits by altitude
