@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.20 – 2024-11-14
+
+- Add VOODOO products
+
 ## 1.17.19 – 2024-10-07
 
 - Support `ecmwf-open` model
