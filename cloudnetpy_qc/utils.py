@@ -1,4 +1,5 @@
-""" Helper functions. """
+"""Helper functions."""
+
 import configparser
 import re
 from functools import lru_cache
@@ -64,7 +65,7 @@ def create_out_of_bounds_msg(
 
 
 def format_value(value: str | int | float) -> str:
-    return "{:,g}".format(float(value)).replace(",", "\u202F")
+    return "{:,g}".format(float(value)).replace(",", "\u202f")
 
 
 @lru_cache

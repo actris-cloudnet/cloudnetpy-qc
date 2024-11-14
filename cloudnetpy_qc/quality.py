@@ -1,4 +1,5 @@
 """Cloudnet product quality checks."""
+
 import datetime
 import json
 import logging

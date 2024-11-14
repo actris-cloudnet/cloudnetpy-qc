@@ -1,6 +1,5 @@
 """Script for generating documentation."""
 
-
 from cloudnetpy_qc.quality import Test
 
 if __name__ == "__main__":
