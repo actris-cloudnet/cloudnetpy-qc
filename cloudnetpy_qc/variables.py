@@ -23,8 +23,10 @@ class Product(Enum):
     # Level 1c
     CATEGORIZE = "categorize"
     MWR_L1C = "mwr-l1c"
+    CATEGORIZE_VOODOO = "categorize-voodoo"
     # Level 2
     CLASSIFICATION = "classification"
+    CLASSIFICATION_VOODOO = "classification-voodoo"
     IWC = "iwc"
     LWC = "lwc"
     DER = "der"
@@ -55,8 +57,10 @@ LEVELS: dict[Product, Level] = {
     Product.DOPPLER_LIDAR_WIND: "1c",
     Product.RAIN_RADAR: "1b",
     Product.CATEGORIZE: "1c",
+    Product.CATEGORIZE_VOODOO: "1c",
     Product.MWR_L1C: "1c",
     Product.CLASSIFICATION: "2",
+    Product.CLASSIFICATION_VOODOO: "2",
     Product.IWC: "2",
     Product.LWC: "2",
     Product.DER: "2",
@@ -181,16 +185,20 @@ VARIABLES = {
     "lidar_wavelength": Variable(
         long_name="Laser wavelength",
         units="nm",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "insect_prob": Variable(
         long_name="Insect probability",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "uwind": Variable(
         long_name="Zonal wind",
         units="m s-1",
-        required=[Product.CATEGORIZE, Product.DOPPLER_LIDAR_WIND],
+        required=[
+            Product.CATEGORIZE,
+            Product.CATEGORIZE_VOODOO,
+            Product.DOPPLER_LIDAR_WIND,
+        ],
     ),
     "uwind_raw": Variable(
         long_name="Non-screened zonal wind",
@@ -199,7 +207,11 @@ VARIABLES = {
     "vwind": Variable(
         long_name="Meridional wind",
         units="m s-1",
-        required=[Product.CATEGORIZE, Product.DOPPLER_LIDAR_WIND],
+        required=[
+            Product.CATEGORIZE,
+            Product.CATEGORIZE_VOODOO,
+            Product.DOPPLER_LIDAR_WIND,
+        ],
     ),
     "vwind_raw": Variable(
         long_name="Non-screened meridional wind",
@@ -211,42 +223,42 @@ VARIABLES = {
     ),
     "q": Variable(
         long_name="Specific humidity",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "Tw": Variable(
         long_name="Wet-bulb temperature",
         units="K",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "category_bits": Variable(
         long_name="Target categorization bits",
         dtype=Dtype.INT,
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "radar_liquid_atten": Variable(
         long_name="Two-way radar attenuation due to liquid water",
         units="dB",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "radar_gas_atten": Variable(
         long_name="Two-way radar attenuation due to atmospheric gases",
         units="dB",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "radar_rain_atten": Variable(
         long_name="Two-way radar attenuation due to rain",
         units="dB",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "radar_melting_atten": Variable(
         long_name="Two-way radar attenuation due to melting ice",
         units="dB",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "quality_bits": Variable(
         long_name="Data quality bits",
         dtype=Dtype.INT,
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "beta": Variable(
         long_name="Attenuated backscatter coefficient",
@@ -254,86 +266,87 @@ VARIABLES = {
         # Lidar has its own beta test
         required=[
             Product.CATEGORIZE,
+            Product.CATEGORIZE_VOODOO,
             Product.DOPPLER_LIDAR,
         ],
     ),
     "beta_error": Variable(
         long_name="Error in attenuated backscatter coefficient",
         units="dB",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "beta_bias": Variable(
         long_name="Bias in attenuated backscatter coefficient",
         units="dB",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "v_sigma": Variable(
         long_name="Standard deviation of mean Doppler velocity",
         units="m s-1",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "Z": Variable(
         long_name="Radar reflectivity factor",
         units="dBZ",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "Z_bias": Variable(
         long_name="Bias in radar reflectivity factor",
         units="dB",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "Z_error": Variable(
         long_name="Error in radar reflectivity factor",
         units="dB",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "Z_sensitivity": Variable(
         long_name="Minimum detectable radar reflectivity",
         units="dBZ",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "model_time": Variable(
         long_name="Model time UTC",
         units=time_units,
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     "model_height": Variable(
         long_name="Height of model variables above mean sea level",
         units="m",
-        required=[Product.CATEGORIZE],
+        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
     # ---------------------------------------
     # Required in CLASSIFICATION Level 2 file
     # ---------------------------------------
     "target_classification": Variable(
         long_name="Target classification",
-        required=[Product.CLASSIFICATION],
+        required=[Product.CLASSIFICATION, Product.CLASSIFICATION_VOODOO],
         dtype=Dtype.INT,
     ),
     "detection_status": Variable(
         long_name="Radar and lidar detection status",
-        required=[Product.CLASSIFICATION],
+        required=[Product.CLASSIFICATION, Product.CLASSIFICATION_VOODOO],
         dtype=Dtype.INT,
     ),
     "cloud_base_height_amsl": Variable(
         long_name="Height of cloud base above mean sea level",
         units="m",
-        required=[Product.CLASSIFICATION],
+        required=[Product.CLASSIFICATION, Product.CLASSIFICATION_VOODOO],
     ),
     "cloud_top_height_amsl": Variable(
         long_name="Height of cloud top above mean sea level",
         units="m",
-        required=[Product.CLASSIFICATION],
+        required=[Product.CLASSIFICATION, Product.CLASSIFICATION_VOODOO],
     ),
     "cloud_base_height_agl": Variable(
         long_name="Height of cloud base above ground level",
         units="m",
-        required=[Product.CLASSIFICATION],
+        required=[Product.CLASSIFICATION, Product.CLASSIFICATION_VOODOO],
     ),
     "cloud_top_height_agl": Variable(
         long_name="Height of cloud top above ground level",
         units="m",
-        required=[Product.CLASSIFICATION],
+        required=[Product.CLASSIFICATION, Product.CLASSIFICATION_VOODOO],
     ),
     # ----------------------------
     # Required in LWC Level 2 file
@@ -789,6 +802,7 @@ VARIABLES = {
         required=[
             Product.RADAR,
             Product.CATEGORIZE,
+            Product.CATEGORIZE_VOODOO,
             Product.DOPPLER_LIDAR,
             Product.RAIN_RADAR,
         ],
@@ -799,6 +813,7 @@ VARIABLES = {
         required=[
             Product.MODEL,
             Product.CATEGORIZE,
+            Product.CATEGORIZE_VOODOO,
             Product.MWR_MULTI,
         ],
     ),
@@ -808,6 +823,7 @@ VARIABLES = {
         required=[
             Product.MODEL,
             Product.CATEGORIZE,
+            Product.CATEGORIZE_VOODOO,
         ],
     ),
     "lwp": Variable(
@@ -1514,6 +1530,7 @@ VARIABLES = {
     ),
     "liquid_prob": Variable(
         long_name="Liquid probability",
+        required=[Product.CATEGORIZE_VOODOO],
     ),
     "polariser_bleed_through": Variable(
         long_name="Polariser bleed-through",
