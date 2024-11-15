@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.21 – 2024-11-15
+
+- Allow lower MWR time resolution
+
 ## 1.17.20 – 2024-11-14
 
 - Add VOODOO products
