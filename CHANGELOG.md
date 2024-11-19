@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.23 – 2024-11-19
+
+- Use flags when checking mwrpy data limits
+
 ## 1.17.22 – 2024-11-19
 
 - Add new mwrpy variables
