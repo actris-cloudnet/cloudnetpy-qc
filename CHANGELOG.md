@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.17.22 – 2024-11-19
+
+- Add new mwrpy variables
+- Increase relative humidity upper limit to 105%
+
 ## 1.17.21 – 2024-11-15
 
 - Allow lower MWR time resolution
