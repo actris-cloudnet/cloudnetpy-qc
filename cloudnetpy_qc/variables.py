@@ -1536,4 +1536,30 @@ VARIABLES = {
     "polariser_bleed_through": Variable(
         long_name="Polariser bleed-through",
     ),
+    "lifted_index": Variable(
+        long_name="Lifted index",
+    ),
+    "ko_index": Variable(
+        long_name="KO index",
+    ),
+    "total_totals": Variable(
+        long_name="Total totals index",
+    ),
+    "k_index": Variable(
+        long_name="K index",
+    ),
+    "showalter_index": Variable(
+        long_name="Showalter index",
+    ),
+    "cape": Variable(
+        long_name="Convective available potential energy",
+    ),
+    "stability_quality_flag": Variable(
+        long_name="Quality flag for stability products",
+        dtype=Dtype.INT,
+    ),
+    "stability_quality_flag_status": Variable(
+        long_name="Quality flag status for stability products",
+        dtype=Dtype.INT,
+    ),
 }
