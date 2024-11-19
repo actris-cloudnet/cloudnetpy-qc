@@ -199,7 +199,7 @@ class FindVariableOutliers(Test):
             limits = self._get_limits(key)
             if limits is None:
                 continue
-            data = self.nc.variables[key][:]
+            data = self._get_data(key)
             if data.ndim > 0 and len(data) == 0:
                 break
             max_value = np.max(data)
@@ -226,6 +226,19 @@ class FindVariableOutliers(Test):
             return None
         limit_min, limit_max = DATA_CONFIG.get("limits", key).split(",", maxsplit=1)
         return (float(limit_min), float(limit_max))
+
+    def _get_data(self, key: str) -> np.ndarray:
+        data = self.nc[key][:]
+        if self.product in (
+            Product.MWR_SINGLE,
+            Product.MWR_MULTI,
+        ) and self.nc[key].dimensions == ("time", "height"):
+            for flag_name in (f"{key}_quality_flag", "temperature_quality_flag"):
+                if flag_name in self.nc.variables:
+                    quality_flag = self.nc[flag_name][:]
+                    data = data[quality_flag == 0]
+                    break
+        return data
 
 
 class FindFolding(Test):
