@@ -200,8 +200,8 @@ class FindVariableOutliers(Test):
             if limits is None:
                 continue
             data = self._get_data(key)
-            if data.ndim > 0 and len(data) == 0:
-                break
+            if data.size == 0:
+                continue
             max_value = np.max(data)
             min_value = np.min(data)
             if min_value < limits[0]:
