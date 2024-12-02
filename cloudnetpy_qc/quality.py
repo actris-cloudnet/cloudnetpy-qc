@@ -902,6 +902,7 @@ class TestInstrumentPid(Test):
             "StreamLine XR",
             "StreamLine XR+",
         ],
+        "Vaisala WindCube WLS200S": ["Vaisala WindCube WLS200S"],
     }
 
     SOURCE_TO_IDENTIFIER = {
@@ -936,4 +937,7 @@ class TestInstrumentPid(Test):
             "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-94-SP-S",
         ],
         "Thies Clima LNM": ["https://vocabulary.actris.nilu.no/actris_vocab/ThiesLNM"],
+        "Vaisala WindCube WLS200S": [
+            "https://vocabulary.actris.nilu.no/skosmos/actris_vocab/en/page/VaisalaWindCube200S"
+        ],
     }
