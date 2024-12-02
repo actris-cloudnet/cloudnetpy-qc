@@ -936,7 +936,11 @@ class TestInstrumentPid(Test):
             "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-94-SP",
             "https://vocabulary.actris.nilu.no/actris_vocab/RPG-FMCW-94-SP-S",
         ],
-        "Thies Clima LNM": ["https://vocabulary.actris.nilu.no/actris_vocab/ThiesLNM"],
+        "Thies Clima LNM": [
+            "https://vocabulary.actris.nilu.no/actris_vocab/ThiesLNM",
+            "https://vocabulary.actris.nilu.no/actris_vocab/ThiesLPM",
+        ],
+        "Thies Clima LPM": ["https://vocabulary.actris.nilu.no/actris_vocab/ThiesLPM"],
         "Vaisala WindCube WLS200S": [
             "https://vocabulary.actris.nilu.no/skosmos/actris_vocab/en/page/VaisalaWindCube200S"
         ],
