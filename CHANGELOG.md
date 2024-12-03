@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.18.1 – 2024-12-03
+
+- Add MIRA-10
+
 ## 1.18.0 – 2024-12-03
 
 - Add windcube
