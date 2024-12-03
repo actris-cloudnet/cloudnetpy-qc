@@ -516,7 +516,9 @@ class TestLDR(Test):
             )
             v_count = ma.count(v)
             ldr_count = ma.count(ldr)
-            if v_count > 0 and (ldr_count / v_count * 100) < 0.1:
+            if v_count > 0 and ldr_count == 0:
+                self._add_warning("All LDR are masked.")
+            elif v_count > 0 and (ldr_count / v_count * 100) < 0.1:
                 self._add_warning("LDR exists in less than 0.1 % of pixels.")
 
 
