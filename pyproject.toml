@@ -38,7 +38,7 @@ filename = "cloudnetpy_qc/version.py"
 pattern = ["MAJOR = (?P<major>\\d+)", "MINOR = (?P<minor>\\d+)", "PATCH = (?P<patch>\\d+)"]
 changelog = "CHANGELOG.md"
 
-[tool.ruff]
+[tool.ruff.lint]
 extend-select = ["I"]
 
 [tool.setuptools.dynamic]
