@@ -913,6 +913,7 @@ class TestInstrumentPid(Test):
             "https://vocabulary.actris.nilu.no/actris_vocab/MetekMIRA35S",
             "https://vocabulary.actris.nilu.no/actris_vocab/MetekMIRA35C",
         ],
+        "METEK MIRA-10": ["https://vocabulary.actris.nilu.no/actris_vocab/MetekMIRA10"],
         "OTT HydroMet Parsivel2": [
             "https://vocabulary.actris.nilu.no/actris_vocab/OTTParsivel2"
         ],
