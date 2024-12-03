@@ -395,25 +395,6 @@ class TestDataTypes(Test):
                 self._add_warning(msg)
 
 
-# class TestTimeVectorDataType(Test):
-#     name = "Time data type"
-#     description = "Check that time vector is in double precision."
-#     products=[
-#         Product.RADAR,
-#         Product.LIDAR,
-#         Product.MWR,
-#         Product.DISDROMETER,
-#         Product.WEATHER_STATION,
-#     ]
-#     def run(self):
-#         key = "time"
-#         received = self.nc.variables[key].dtype.name
-#         expected = "float64"
-#         if received != expected:
-#             msg = utils.create_expected_received_msg(key, expected, received)
-#             self._add_warning(msg)
-
-
 class TestGlobalAttributes(Test):
     name = "Global attributes"
     description = "Check that file contains required global attributes."
