@@ -520,6 +520,24 @@ class TestLDR(Test):
                 self._add_warning("LDR exists in less than 0.1 % of pixels.")
 
 
+class TestUnexpectedMask(Test):
+    name = "Unexpected mask"
+    description = "Test if data contain unexpected masked values."
+
+    def run(self):
+        for key in ("zenith_angle", "azimuth_angle", "range", "time", "height"):
+            if key not in self.nc.variables:
+                continue
+            data = self.nc[key][:]
+            if np.all(data.mask):
+                self._add_warning(f"Variable '{key}' is completely masked.")
+            elif np.any(data.mask):
+                percentage = np.sum(data.mask) / data.size * 100
+                self._add_warning(
+                    f"Variable '{key}' contains masked values ({percentage:.1f} % are masked)."
+                )
+
+
 class TestMask(Test):
     name = "Data mask"
     description = "Test that data are not completely masked."
