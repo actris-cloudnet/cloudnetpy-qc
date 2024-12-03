@@ -75,30 +75,34 @@ print(json_object)
 
 ## Tests
 
-| Test                       | Description                                                                             |
-| -------------------------- | --------------------------------------------------------------------------------------- |
-| `FindAttributeOutliers`    | Find suspicious values in global attributes.                                            |
-| `FindFolding`              | Test for radar folding.                                                                 |
-| `FindVariableOutliers`     | Find suspicious data values.                                                            |
-| `TestCFConvention`         | Test compliance with the CF metadata conventions.                                       |
-| `TestDataCoverage`         | Test that file contains enough data.                                                    |
-| `TestDataTypes`            | Check that variables have expected data types.                                          |
-| `TestFillValue`            | Test that fill value is explicitly set for variables with missing data.                 |
-| `TestFloatingPointValues`  | Test for special floating-point values which may indicate problems with the processing. |
-| `TestGlobalAttributes`     | Check that file contains required global attributes.                                    |
-| `TestIfRangeCorrected`     | Test that beta is range corrected.                                                      |
-| `TestInstrumentPid`        | Test that valid instrument PID exists.                                                  |
-| `TestLDR`                  | Test that LDR values are proper.                                                        |
-| `TestLidarBeta`            | Test that one beta variable exists.                                                     |
-| `TestLongNames`            | Check that variables have expected long names.                                          |
-| `TestMask`                 | Test that data are not completely masked.                                               |
-| `TestMedianLwp`            | Test that LWP data are valid.                                                           |
-| `TestModelData`            | Test that model data are valid.                                                         |
-| `TestStandardNames`        | Check that variable have expected standard names.                                       |
-| `TestTimeVector`           | Test that time vector is continuous.                                                    |
-| `TestUnits`                | Check that variables have expected units.                                               |
-| `TestVariableNames`        | Check that file contains required variables.                                            |
-| `TestVariableNamesDefined` | Check that variables have expected names.                                               |
+| Test                        | Description                                                                             |
+| --------------------------- | --------------------------------------------------------------------------------------- |
+| `FindAttributeOutliers`     | Find suspicious values in global attributes.                                            |
+| `FindFolding`               | Test for radar folding.                                                                 |
+| `FindVariableOutliers`      | Find suspicious data values.                                                            |
+| `TestBrightnessTemperature` | Test that brightness temperature data are valid.                                        |
+| `TestCFConvention`          | Test compliance with the CF metadata conventions.                                       |
+| `TestDataCoverage`          | Test that file contains enough data.                                                    |
+| `TestDataTypes`             | Check that variables have expected data types.                                          |
+| `TestFillValue`             | Test that fill value is explicitly set for variables with missing data.                 |
+| `TestFloatingPointValues`   | Test for special floating-point values which may indicate problems with the processing. |
+| `TestGlobalAttributes`      | Check that file contains required global attributes.                                    |
+| `TestIfRangeCorrected`      | Test that beta is range corrected.                                                      |
+| `TestInstrumentPid`         | Test that valid instrument PID exists.                                                  |
+| `TestLDR`                   | Test that LDR values are proper.                                                        |
+| `TestLidarBeta`             | Test that one beta variable exists.                                                     |
+| `TestLongNames`             | Check that variables have expected long names.                                          |
+| `TestMWRMultiTemperature`   | Test that temperature data are valid.                                                   |
+| `TestMWRSingleLWP`          | Test that LWP data are valid.                                                           |
+| `TestMask`                  | Test that data are not completely masked.                                               |
+| `TestMedianLwp`             | Test that LWP data are valid.                                                           |
+| `TestModelData`             | Test that model data are valid.                                                         |
+| `TestStandardNames`         | Check that variable have expected standard names.                                       |
+| `TestTimeVector`            | Test that time vector is continuous.                                                    |
+| `TestUnexpectedMask`        | Test if data contain unexpected masked values.                                          |
+| `TestUnits`                 | Check that variables have expected units.                                               |
+| `TestVariableNames`         | Check that file contains required variables.                                            |
+| `TestVariableNamesDefined`  | Check that variables have expected names.                                               |
 
 ## License
 
