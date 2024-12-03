@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.18.0 – 2024-12-03
+
+- Add windcube
+- Add LPM
+- Add test for unexpected mask
+- Fix empty data check in outlier test
+
 ## 1.17.23 – 2024-11-19
 
 - Use flags when checking mwrpy data limits
