@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.18.2 – 2024-12-18
+
+- Update long name of MWRpy product
+
 ## 1.18.1 – 2024-12-03
 
 - Add MIRA-10
