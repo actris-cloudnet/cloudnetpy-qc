@@ -605,7 +605,7 @@ VARIABLES = {
         required=[Product.MWR_L1C],
     ),
     "tb_spectrum": Variable(
-        long_name="Brightness temperature spectrum",
+        long_name="Retrieved brightness temperature spectrum",
         units="K",
     ),
     "receiver_nb": Variable(
