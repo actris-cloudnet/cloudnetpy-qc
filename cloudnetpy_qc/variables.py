@@ -686,37 +686,37 @@ VARIABLES = {
     # Required in MWR SINGLE file
     # ---------------------------
     "iwv_quality_flag": Variable(
-        long_name="Quality flag",
+        long_name="Integrated water vapour quality flag",
         units="1",
         required=[Product.MWR_SINGLE],
         dtype=Dtype.INT,
     ),
     "iwv_quality_flag_status": Variable(
-        long_name="Quality flag status",
+        long_name="Integrated water vapour quality flag status",
         units="1",
         required=[Product.MWR_SINGLE],
         dtype=Dtype.INT,
     ),
     "absolute_humidity_quality_flag": Variable(
-        long_name="Quality flag",
+        long_name="Absolute humidity quality flag",
         units="1",
         required=[Product.MWR_SINGLE],
         dtype=Dtype.INT,
     ),
     "absolute_humidity_quality_flag_status": Variable(
-        long_name="Quality flag status",
+        long_name="Absolute humidity quality flag status",
         units="1",
         required=[Product.MWR_SINGLE],
         dtype=Dtype.INT,
     ),
     "lwp_quality_flag": Variable(
-        long_name="Quality flag",
+        long_name="Liquid water path quality flag",
         units="1",
         required=[Product.MWR_SINGLE],
         dtype=Dtype.INT,
     ),
     "lwp_quality_flag_status": Variable(
-        long_name="Quality flag status",
+        long_name="Liquid water path quality flag status",
         units="1",
         required=[Product.MWR_SINGLE],
         dtype=Dtype.INT,
@@ -759,7 +759,7 @@ VARIABLES = {
         ],
     ),
     "temperature_quality_flag": Variable(
-        long_name="Quality flag",
+        long_name="Temperature quality flag",
         units="1",
         required=[
             Product.MWR_SINGLE,
@@ -768,7 +768,7 @@ VARIABLES = {
         dtype=Dtype.INT,
     ),
     "temperature_quality_flag_status": Variable(
-        long_name="Quality flag status",
+        long_name="Temperature quality flag status",
         units="1",
         required=[
             Product.MWR_SINGLE,
