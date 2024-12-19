@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.18.3 – 2024-12-19
+
+- Fix long names for MWR single and multi
+
 ## 1.18.2 – 2024-12-18
 
 - Update long name of MWRpy product
