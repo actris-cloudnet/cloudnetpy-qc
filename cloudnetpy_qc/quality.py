@@ -527,7 +527,7 @@ class TestUnexpectedMask(Test):
     description = "Test if data contain unexpected masked values."
 
     def run(self):
-        for key in ("zenith_angle", "azimuth_angle", "range", "time", "height"):
+        for key in ("range", "time", "height"):
             if key not in self.nc.variables:
                 continue
             data = self.nc[key][:]
