@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.18.5 – 2025-01-14
+
+- Add rain gauges
+- Add model variables
+
 ## 1.18.4 – 2025-01-07
 
 - Remove mask check from zenith and azimuth angles
