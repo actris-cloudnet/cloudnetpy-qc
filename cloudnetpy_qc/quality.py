@@ -275,6 +275,7 @@ class TestDataCoverage(Test):
         Product.MWR_MULTI: datetime.timedelta(minutes=30),
         Product.MWR_SINGLE: datetime.timedelta(minutes=5),
         Product.WEATHER_STATION: datetime.timedelta(minutes=10),
+        Product.RAIN_GAUGE: datetime.timedelta(minutes=1),
         Product.DOPPLER_LIDAR_WIND: datetime.timedelta(hours=1.5),
     }
     DEFAULT_RESOLUTION = datetime.timedelta(seconds=30)
