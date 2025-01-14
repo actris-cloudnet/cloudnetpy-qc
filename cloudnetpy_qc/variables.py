@@ -198,6 +198,7 @@ VARIABLES = {
         long_name="Zonal wind",
         units="m s-1",
         required=[
+            Product.MODEL,
             Product.CATEGORIZE,
             Product.CATEGORIZE_VOODOO,
             Product.DOPPLER_LIDAR_WIND,
@@ -211,6 +212,7 @@ VARIABLES = {
         long_name="Meridional wind",
         units="m s-1",
         required=[
+            Product.MODEL,
             Product.CATEGORIZE,
             Product.CATEGORIZE_VOODOO,
             Product.DOPPLER_LIDAR_WIND,
@@ -220,13 +222,23 @@ VARIABLES = {
         long_name="Non-screened meridional wind",
         units="m s-1",
     ),
+    "wwind": Variable(
+        long_name="Vertical wind",
+        units="m s-1",
+    ),
     "azimuth_offset": Variable(
         long_name="Azimuth offset of the instrument (positive clockwise from north)",
         units="degrees",
     ),
     "q": Variable(
         long_name="Specific humidity",
-        required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
+        units="1",
+        required=[Product.MODEL, Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
+    ),
+    "rh": Variable(
+        long_name="Relative humidity",
+        units="1",
+        required=[Product.MODEL],
     ),
     "Tw": Variable(
         long_name="Wet-bulb temperature",
