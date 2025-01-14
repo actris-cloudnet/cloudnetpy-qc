@@ -21,6 +21,7 @@ class Product(Enum):
     DOPPLER_LIDAR = "doppler-lidar"
     DOPPLER_LIDAR_WIND = "doppler-lidar-wind"
     RAIN_RADAR = "rain-radar"
+    RAIN_GAUGE = "rain-gauge"
     # Level 1c
     CATEGORIZE = "categorize"
     MWR_L1C = "mwr-l1c"
@@ -55,6 +56,7 @@ LEVELS: dict[Product, Level] = {
     Product.MODEL: "1b",
     Product.WEATHER_STATION: "1b",
     Product.DOPPLER_LIDAR: "1b",
+    Product.RAIN_GAUGE: "1b",
     Product.DOPPLER_LIDAR_WIND: "1c",
     Product.RAIN_RADAR: "1b",
     Product.CATEGORIZE: "1c",
@@ -170,7 +172,7 @@ VARIABLES = {
         long_name="Rainfall amount",
         units="m",
         standard_name="thickness_of_rainfall_amount",
-        required=[Product.WEATHER_STATION],
+        required=[Product.WEATHER_STATION, Product.RAIN_GAUGE],
     ),
     # ------------------------------------
     # Required in RAIN RADAR Level 1b file
@@ -784,6 +786,7 @@ VARIABLES = {
         units="m s-1",
         standard_name="rainfall_rate",
         required=[
+            Product.RAIN_GAUGE,
             Product.DISDROMETER,
             Product.WEATHER_STATION,
             Product.RAIN_RADAR,
@@ -851,6 +854,7 @@ VARIABLES = {
             Product.MWR,
             Product.DISDROMETER,
             Product.WEATHER_STATION,
+            Product.RAIN_GAUGE,
             Product.MWR_L1C,
             Product.L3_CF,
             Product.L3_IWC,
@@ -891,6 +895,14 @@ VARIABLES = {
     ),
     "range_offset": Variable(
         long_name="Radar range offset",
+        units="m",
+    ),
+    "r_accum_RT": Variable(
+        long_name="Real time accumulated rainfall",
+        units="m",
+    ),
+    "r_accum_NRT": Variable(
+        long_name="Near real time accumulated rainfall",
         units="m",
     ),
     "rainfall_rate_1min_total": Variable(
