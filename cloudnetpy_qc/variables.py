@@ -87,6 +87,7 @@ class Dtype(str, Enum):
 
 class Variable(NamedTuple):
     long_name: str
+    comment: str | None = None
     units: str | Callable[[netCDF4.Dataset], str] | None = "1"
     dtype: str = Dtype.FLOAT
     standard_name: str | None = None
@@ -172,6 +173,7 @@ VARIABLES = {
         long_name="Rainfall amount",
         units="m",
         standard_name="thickness_of_rainfall_amount",
+        comment="Cumulated precipitation since 00:00 UTC",
         required=[Product.WEATHER_STATION, Product.RAIN_GAUGE],
     ),
     # ------------------------------------

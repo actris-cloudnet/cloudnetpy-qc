@@ -157,14 +157,19 @@ class Test:
         return set(required_variables.keys())
 
     def _test_variable_attribute(self, attribute: str):
-        for key in self.nc.variables.keys():
+        for key, variable in self.nc.variables.items():
+            if hasattr(variable, attribute):
+                value = getattr(variable, attribute)
+                if isinstance(value, str) and not value.strip():
+                    msg = f"Empty value in variable '{key}'"
+                    self._add_warning(msg)
             if key not in VARIABLES:
                 continue
             expected = getattr(VARIABLES[key], attribute)
             if callable(expected):
                 expected = expected(self.nc)
             if expected is not None:
-                value = getattr(self.nc.variables[key], attribute, "")
+                value = getattr(variable, attribute, "")
                 if value != expected:
                     msg = utils.create_expected_received_msg(
                         expected, value, variable=key
@@ -377,6 +382,14 @@ class TestStandardNames(Test):
         self._test_variable_attribute("standard_name")
 
 
+class TestComment(Test):
+    name = "Comment"
+    description = "Check that variables have expected comments."
+
+    def run(self):
+        self._test_variable_attribute("comment")
+
+
 class TestDataTypes(Test):
     name = "Data types"
     description = "Check that variables have expected data types."
@@ -448,6 +461,11 @@ class TestGlobalAttributes(Test):
 
     def run(self):
         nc_keys = set(self.nc.ncattrs())
+        for key in nc_keys:
+            value = getattr(self.nc, key)
+            if isinstance(value, str) and not value.strip():
+                msg = f"Empty value in attribute '{key}'"
+                self._add_warning(msg)
         required_attrs = self._required_attrs(self.product)
         missing_keys = required_attrs - nc_keys
         for key in missing_keys:

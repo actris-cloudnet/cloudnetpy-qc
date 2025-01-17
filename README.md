@@ -82,6 +82,7 @@ print(json_object)
 | `FindVariableOutliers`      | Find suspicious data values.                                                            |
 | `TestBrightnessTemperature` | Test that brightness temperature data are valid.                                        |
 | `TestCFConvention`          | Test compliance with the CF metadata conventions.                                       |
+| `TestComment`               | Check that variables have expected comments.                                            |
 | `TestDataCoverage`          | Test that file contains enough data.                                                    |
 | `TestDataTypes`             | Check that variables have expected data types.                                          |
 | `TestFillValue`             | Test that fill value is explicitly set for variables with missing data.                 |
