@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.18.6 – 2025-01-17
+
+- Test comment and empty attributes
+
 ## 1.18.5 – 2025-01-14
 
 - Add rain gauges
