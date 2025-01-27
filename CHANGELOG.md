@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.19.2 – 2025-01-27
+
+- Make visibility not mandatory
+
 ## 1.19.1 – 2025-01-27
 
 - Fix rainfall amount check
