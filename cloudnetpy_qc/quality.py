@@ -28,6 +28,9 @@ CF_AREA_TYPES_XML = os.path.join(DATA_PATH, "area-type-table.xml")
 CF_STANDARD_NAMES_XML = os.path.join(DATA_PATH, "cf-standard-name-table.xml")
 CF_REGION_NAMES_XML = os.path.join(DATA_PATH, "standardized-region-list.xml")
 
+H_TO_S = 60 * 60
+M_TO_MM = 1000
+
 
 class ErrorLevel(Enum):
     WARNING = "warning"
@@ -623,6 +626,28 @@ class TestFillValue(Test):
                 self._add_warning(
                     f"Attribute '_FillValue' is missing from variable '{name}'."
                 )
+
+
+class TestRainfallConsistency(Test):
+    name = "Rainfall consistency"
+    description = "Test that rainfall rate and rainfall amount are consistent."
+    products = [Product.WEATHER_STATION, Product.RAIN_GAUGE, Product.DISDROMETER]
+
+    def run(self):
+        if (
+            "rainfall_rate" not in self.nc.variables
+            or "rainfall_amount" not in self.nc.variables
+        ):
+            return
+        expected_amount = self.nc["rainfall_amount"][-1]  # m
+        rate = self.nc["rainfall_rate"][:]  # m s-1
+        interval = np.diff(self.nc["time"][:], prepend=0) * H_TO_S
+        calculated_amount = np.sum(rate * interval)
+        error = (expected_amount - calculated_amount) * M_TO_MM
+        if error > 20:
+            self._add_warning(
+                f"Total accumulated rainfall has absolute error of {round(error, 1)} mm"
+            )
 
 
 # ---------------------#
