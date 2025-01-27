@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.19.1 – 2025-01-27
+
+- Fix rainfall amount check
+
 ## 1.19.0 – 2025-01-27
 
 - Add rainfall consistency test
