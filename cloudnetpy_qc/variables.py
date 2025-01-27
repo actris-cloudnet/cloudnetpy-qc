@@ -143,13 +143,6 @@ VARIABLES = {
         standard_name="equivalent_reflectivity_factor",
         required=[Product.DISDROMETER],
     ),
-    "visibility": Variable(
-        long_name="Meteorological optical range (MOR) visibility",
-        units="m",
-        standard_name="visibility_in_air",
-        dtype=Dtype.INT,
-        required=[Product.DISDROMETER],
-    ),
     "n_particles": Variable(
         long_name="Number of particles in time interval",
         dtype=Dtype.INT,
@@ -1586,6 +1579,12 @@ VARIABLES = {
     ),
     "stability_quality_flag_status": Variable(
         long_name="Quality flag status for stability products",
+        dtype=Dtype.INT,
+    ),
+    "visibility": Variable(
+        long_name="Meteorological optical range (MOR) visibility",
+        units="m",
+        standard_name="visibility_in_air",
         dtype=Dtype.INT,
     ),
 }
