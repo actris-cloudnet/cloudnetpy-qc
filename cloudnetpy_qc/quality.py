@@ -644,9 +644,9 @@ class TestRainfallConsistency(Test):
         interval = np.diff(self.nc["time"][:], prepend=0) * H_TO_S
         calculated_amount = np.sum(rate * interval)
         error = (expected_amount - calculated_amount) * M_TO_MM
-        if error > 20:
+        if np.abs(error) > 20:
             self._add_warning(
-                f"Total accumulated rainfall has absolute error of {round(error, 1)} mm"
+                f"Total accumulated rainfall has difference of {round(error, 1)} mm"
             )
 
 
