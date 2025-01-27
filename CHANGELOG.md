@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.19.0 – 2025-01-27
+
+- Add rainfall consistency test
+
 ## 1.18.6 – 2025-01-17
 
 - Test comment and empty attributes
