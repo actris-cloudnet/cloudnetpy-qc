@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.19.4 – 2025-01-29
+
+- Add `zenith_offset` variable
+
 ## 1.19.3 – 2025-01-29
 
 - Make rain variables optional in weather station
