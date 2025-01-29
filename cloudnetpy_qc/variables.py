@@ -167,7 +167,7 @@ VARIABLES = {
         units="m",
         standard_name="thickness_of_rainfall_amount",
         comment="Cumulated precipitation since 00:00 UTC",
-        required=[Product.WEATHER_STATION, Product.RAIN_GAUGE],
+        required=[Product.RAIN_GAUGE],
     ),
     # ------------------------------------
     # Required in RAIN RADAR Level 1b file
@@ -795,7 +795,6 @@ VARIABLES = {
         required=[
             Product.RAIN_GAUGE,
             Product.DISDROMETER,
-            Product.WEATHER_STATION,
             Product.RAIN_RADAR,
         ],
     ),
