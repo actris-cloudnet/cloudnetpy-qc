@@ -225,6 +225,10 @@ VARIABLES = {
         long_name="Azimuth offset of the instrument (positive clockwise from north)",
         units="degrees",
     ),
+    "zenith_offset": Variable(
+        long_name="Zenith offset of the instrument",
+        units="degrees",
+    ),
     "q": Variable(
         long_name="Specific humidity",
         units="1",
