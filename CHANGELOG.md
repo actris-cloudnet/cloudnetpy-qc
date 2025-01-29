@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.19.3 – 2025-01-29
+
+- Make rain variables optional in weather station
+
 ## 1.19.2 – 2025-01-27
 
 - Make visibility not mandatory
