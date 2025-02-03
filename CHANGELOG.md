@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.19.5 – 2025-02-03
+
+- Add snr_limit variable
+
 ## 1.19.4 – 2025-01-29
 
 - Add `zenith_offset` variable
