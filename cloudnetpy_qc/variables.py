@@ -1590,4 +1590,10 @@ VARIABLES = {
         standard_name="visibility_in_air",
         dtype=Dtype.INT,
     ),
+    "snr_limit": Variable(
+        long_name="SNR limit",
+        units="dB",
+        comment="SNR threshold used in data screening.",
+        dtype=Dtype.FLOAT,
+    ),
 }
