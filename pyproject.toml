@@ -30,7 +30,7 @@ Repository = "https://github.com/actris-cloudnet/cloudnetpy-qc"
 Changelog = "https://github.com/actris-cloudnet/cloudnetpy-qc/blob/main/CHANGELOG.md"
 
 [[tool.mypy.overrides]]
-module = ["cfchecker.*", "netCDF4.*", "scipy.*"]
+module = ["cfchecker.*", "scipy.*"]
 ignore_missing_imports = true
 
 [tool.release-version]
