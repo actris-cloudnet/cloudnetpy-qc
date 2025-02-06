@@ -226,6 +226,8 @@ class FindVariableOutliers(Test):
             Product.MWR_MULTI,
         ):
             return None
+        if key == "height" and self.product == Product.CPR:
+            return None
         if key == "air_pressure":
             pressure = utils.calc_pressure(self.nc["altitude"][:])
             max_diff = pressure * 0.05

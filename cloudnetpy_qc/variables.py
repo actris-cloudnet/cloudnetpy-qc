@@ -40,6 +40,7 @@ class Product(Enum):
     L3_CF = "l3-cf"
     L3_IWC = "l3-iwc"
     L3_LWC = "l3-lwc"
+    CPR = "cpr-simulation"
 
     @classmethod
     def all(cls) -> set[Product]:
@@ -74,6 +75,7 @@ LEVELS: dict[Product, Level] = {
     Product.L3_CF: "3",
     Product.L3_IWC: "3",
     Product.L3_LWC: "3",
+    Product.CPR: "3",
 }
 
 
@@ -788,6 +790,105 @@ VARIABLES = {
             Product.MWR_MULTI,
         ],
         dtype=Dtype.INT,
+    ),
+    # ---------------------------------------
+    # Required in cpr-simulation Level 3 file
+    # ---------------------------------------
+    "sat_ifov": Variable(
+        long_name="Satellite instantaneous field of view",
+        units="m",
+        required=[Product.CPR],
+    ),
+    "sat_range_resolution": Variable(
+        long_name="Satellite range resolution",
+        units="m",
+        required=[Product.CPR],
+    ),
+    "sat_along_track_resolution": Variable(
+        long_name="Satellite along-track resolution",
+        units="m",
+        required=[Product.CPR],
+    ),
+    "ze": Variable(
+        long_name="Radar reflectivity factor of input",
+        units="dBZ",
+        required=[Product.CPR],
+    ),
+    "vm": Variable(
+        long_name="Mean Doppler velocity of input",
+        units="m s-1",
+        required=[Product.CPR],
+    ),
+    "ze_sat": Variable(
+        long_name="Convolved and integrated radar reflectivity factor",
+        units="dBZ",
+        required=[Product.CPR],
+    ),
+    "vm_sat": Variable(
+        long_name="Convolved and integrated mean Doppler velocity",
+        units="m s-1",
+        required=[Product.CPR],
+    ),
+    "vm_sat_vel": Variable(
+        long_name="Convolved and integrated mean Doppler velocity with satellite motion error",
+        units="m s-1",
+        required=[Product.CPR],
+    ),
+    "vm_sat_noise": Variable(
+        long_name="Convolved and integrated mean Doppler velocity with noise and satellite motion error",
+        units="m s-1",
+        required=[Product.CPR],
+    ),
+    "ze_sat_noise": Variable(
+        long_name="Convolved and integrated radar reflectivity factor with noise",
+        units="dBZ",
+        required=[Product.CPR],
+    ),
+    "vm_sat_folded": Variable(
+        long_name="Doppler velocity with noise, satellite motion error, and folding",
+        units="m s-1",
+        required=[Product.CPR],
+    ),
+    "nubf": Variable(
+        long_name="Non-uniform beam filling",
+        units="dBZ",
+        required=[Product.CPR],
+    ),
+    "nubf_flag": Variable(
+        long_name="Non-uniform beam filling flag",
+        dtype=Dtype.INT,
+        required=[Product.CPR],
+    ),
+    "ms_flag": Variable(
+        long_name="Multiple scattering flag",
+        dtype=Dtype.INT,
+        required=[Product.CPR],
+    ),
+    "folding_flag": Variable(
+        long_name="Folding flag",
+        dtype=Dtype.INT,
+        required=[Product.CPR],
+    ),
+    "along_track_sat": Variable(
+        long_name="Along-track distance at satellite resolution",
+        units="m",
+        required=[Product.CPR],
+    ),
+    "along_track": Variable(
+        long_name="Along-track distance",
+        units="m",
+        required=[Product.CPR],
+    ),
+    "mean_wind": Variable(
+        long_name="Mean horizontal wind",
+        units="m s-1",
+        required=[Product.CPR],
+    ),
+    "height_sat": Variable(
+        long_name="Height above mean sea level at satellite resolution",
+        units="m",
+        dtype=Dtype.FLOAT,
+        required=[Product.CPR],
     ),
     # -------------------------
     # Required in several files
