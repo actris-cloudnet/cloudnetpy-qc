@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.20.0 – 2025-02-11
+
+- Add cpr-simulation variables
+
 ## 1.19.5 – 2025-02-03
 
 - Add snr_limit variable
