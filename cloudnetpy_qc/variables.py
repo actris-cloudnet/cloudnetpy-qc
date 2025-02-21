@@ -36,6 +36,7 @@ class Product(Enum):
     DRIZZLE = "drizzle"
     MWR_SINGLE = "mwr-single"
     MWR_MULTI = "mwr-multi"
+    EPSILON_LIDAR= "epsilon-lidar"
     # Level 3
     L3_CF = "l3-cf"
     L3_IWC = "l3-iwc"
@@ -72,6 +73,7 @@ LEVELS: dict[Product, Level] = {
     Product.DRIZZLE: "2",
     Product.MWR_SINGLE: "2",
     Product.MWR_MULTI: "2",
+    Product.EPSILON_LIDAR: "2",
     Product.L3_CF: "3",
     Product.L3_IWC: "3",
     Product.L3_LWC: "3",
@@ -890,6 +892,23 @@ VARIABLES = {
         dtype=Dtype.FLOAT,
         required=[Product.CPR],
     ),
+    # ----------------------------------------
+    # Required in Epsilon (lidar)
+    # ----------------------------------------
+    "epsilon": Variable(
+        long_name="Dissipation rate of turbulent kinetic energy",
+        units="m2 s-3",
+        required=[
+            Product.EPSILON_LIDAR,
+        ],
+    ),
+    "rolling_window_period": Variable(
+        long_name="Rolling window period",
+        units="s",
+        required=[
+            Product.EPSILON_LIDAR,
+        ],
+    ),
     # -------------------------
     # Required in several files
     # -------------------------
@@ -1658,6 +1677,16 @@ VARIABLES = {
     ),
     "polariser_bleed_through": Variable(
         long_name="Polariser bleed-through",
+    ),
+    "pulses_per_ray": Variable(
+        long_name="Pulses per ray",
+        units="1",
+        dtype=Dtype.INT
+    ),
+    "ray_accumulation_time": Variable(
+        long_name="Ray accumulation time",
+        units="s",
+        dtype=Dtype.FLOAT
     ),
     "lifted_index": Variable(
         long_name="Lifted index",
