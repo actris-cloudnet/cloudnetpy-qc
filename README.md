@@ -84,6 +84,7 @@ print(json_object)
 | `TestCFConvention`          | Test compliance with the CF metadata conventions.                                       |
 | `TestComment`               | Check that variables have expected comments.                                            |
 | `TestDataCoverage`          | Test that file contains enough data.                                                    |
+| `TestDataModel`             | Test netCDF data model.                                                                 |
 | `TestDataTypes`             | Check that variables have expected data types.                                          |
 | `TestFillValue`             | Test that fill value is explicitly set for variables with missing data.                 |
 | `TestFloatingPointValues`   | Test for special floating-point values which may indicate problems with the processing. |

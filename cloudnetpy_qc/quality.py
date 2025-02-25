@@ -657,6 +657,17 @@ class TestRainfallConsistency(Test):
 # -------------------- #
 
 
+class TestDataModel(Test):
+    name = "Data model"
+    description = "Test netCDF data model."
+
+    def run(self):
+        expected = "NETCDF4_CLASSIC"
+        received = self.nc.data_model
+        if expected != received:
+            self._add_error(utils.create_expected_received_msg(expected, received))
+
+
 class TestBrightnessTemperature(Test):
     name = "Brightness temperature"
     description = "Test that brightness temperature data are valid."
