@@ -1000,7 +1000,16 @@ class TestInstrumentPid(Test):
             "https://vocabulary.actris.nilu.no/actris_vocab/ThiesLPM",
         ],
         "Thies Clima LPM": ["https://vocabulary.actris.nilu.no/actris_vocab/ThiesLPM"],
+        "Vaisala WindCube WLS70": [
+            "https://vocabulary.actris.nilu.no/actris_vocab/VaisalaWindCubeWLS70"
+        ],
+        "Vaisala WindCube WLS100S": [
+            "https://vocabulary.actris.nilu.no/actris_vocab/VaisalaWindCube100S"
+        ],
         "Vaisala WindCube WLS200S": [
-            "https://vocabulary.actris.nilu.no/skosmos/actris_vocab/en/page/VaisalaWindCube200S"
+            "https://vocabulary.actris.nilu.no/actris_vocab/VaisalaWindCube200S"
+        ],
+        "Vaisala WindCube WLS400S": [
+            "https://vocabulary.actris.nilu.no/actris_vocab/VaisalaWindCube400S"
         ],
     }
