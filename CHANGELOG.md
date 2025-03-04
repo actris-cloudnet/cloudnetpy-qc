@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.21.0 – 2025-03-04
+
+- Add data model test
+- Add WindCube models
+- Update CF tables
+
 ## 1.20.0 – 2025-02-11
 
 - Add cpr-simulation variables
