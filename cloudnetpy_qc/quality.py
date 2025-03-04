@@ -437,13 +437,14 @@ class TestGlobalAttributes(Test):
             Product.MWR_SINGLE,
             Product.MWR_MULTI,
             Product.DOPPLER_LIDAR_WIND,
+            Product.EPSILON_LIDAR,
         )
 
     def _required_attrs(self, product: Product):
         attrs = set(self.REQUIRED_ATTRS)
         if product == Product.MWR_L1C:
             attrs.add("mwrpy_coefficients")
-        if product in (Product.MWR_SINGLE, Product.MWR_MULTI):
+        if product in (Product.MWR_SINGLE, Product.MWR_MULTI, Product.EPSILON_LIDAR):
             attrs.add("source_file_uuids")
         if product != Product.MODEL:
             attrs.add(
