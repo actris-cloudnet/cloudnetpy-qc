@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.22.0 – 2025-03-05
+
+- Add epsilon-lidar product
+
 ## 1.21.0 – 2025-03-04
 
 - Add data model test
