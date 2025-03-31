@@ -797,6 +797,21 @@ class TestModelData(Test):
             self._add_error(f"{noun} {values} {verb} missing from variable '{key}'.")
 
 
+class TestCoordinateVariables(Test):
+    name = "Coordinate variables"
+    description = "Test dimensions of coordinate variables are correct."
+
+    def run(self):
+        for key, variable in self.nc.variables.items():
+            if key in self.nc.dimensions and (
+                len(variable.dimensions) != 1 or key != variable.dimensions[0]
+            ):
+                received = "', '".join(variable.dimensions)
+                self._add_error(
+                    f"Expected variable '{key}' to have dimensions '{key}' but received '{received}'"
+                )
+
+
 # ------------------------------#
 # ------ Error / Warning ------ #
 # ----------------------------- #

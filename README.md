@@ -83,6 +83,7 @@ print(json_object)
 | `TestBrightnessTemperature` | Test that brightness temperature data are valid.                                        |
 | `TestCFConvention`          | Test compliance with the CF metadata conventions.                                       |
 | `TestComment`               | Check that variables have expected comments.                                            |
+| `TestCoordinateVariables`   | Test dimensions of coordinate variables are correct.                                    |
 | `TestDataCoverage`          | Test that file contains enough data.                                                    |
 | `TestDataModel`             | Test netCDF data model.                                                                 |
 | `TestDataTypes`             | Check that variables have expected data types.                                          |
