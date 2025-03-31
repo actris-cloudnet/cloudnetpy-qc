@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.23.0 – 2025-03-31
+
+- Add test for coordinate variables
+
 ## 1.22.0 – 2025-03-05
 
 - Add epsilon-lidar product
