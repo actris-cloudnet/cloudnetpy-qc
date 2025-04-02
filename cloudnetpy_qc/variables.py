@@ -36,7 +36,7 @@ class Product(Enum):
     DRIZZLE = "drizzle"
     MWR_SINGLE = "mwr-single"
     MWR_MULTI = "mwr-multi"
-    EPSILON_LIDAR= "epsilon-lidar"
+    EPSILON_LIDAR = "epsilon-lidar"
     # Level 3
     L3_CF = "l3-cf"
     L3_IWC = "l3-iwc"
@@ -1678,15 +1678,9 @@ VARIABLES = {
     "polariser_bleed_through": Variable(
         long_name="Polariser bleed-through",
     ),
-    "pulses_per_ray": Variable(
-        long_name="Pulses per ray",
-        units="1",
-        dtype=Dtype.INT
-    ),
+    "pulses_per_ray": Variable(long_name="Pulses per ray", units="1", dtype=Dtype.INT),
     "ray_accumulation_time": Variable(
-        long_name="Ray accumulation time",
-        units="s",
-        dtype=Dtype.FLOAT
+        long_name="Ray accumulation time", units="s", dtype=Dtype.FLOAT
     ),
     "lifted_index": Variable(
         long_name="Lifted index",

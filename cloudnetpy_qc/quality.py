@@ -8,7 +8,7 @@ import re
 from enum import Enum
 from os import PathLike
 from pathlib import Path
-from typing import Iterable, NamedTuple
+from typing import Iterable, NamedTuple, TypedDict
 
 import netCDF4
 import numpy as np
@@ -70,8 +70,15 @@ class FileReport(NamedTuple):
         }
 
 
+class SiteMeta(TypedDict):
+    latitude: float | None
+    longitude: float | None
+    altitude: float | None
+
+
 def run_tests(
     filename: str | PathLike,
+    site_meta: SiteMeta,
     product: Product | str | None = None,
     ignore_tests: list[str] | None = None,
 ) -> FileReport:
@@ -93,7 +100,7 @@ def run_tests(
         for cls in Test.__subclasses__():
             if ignore_tests and cls.__name__ in ignore_tests:
                 continue
-            test_instance = cls(nc, filename, product)
+            test_instance = cls(nc, filename, product, site_meta)
             if product not in test_instance.products:
                 continue
             try:
@@ -117,10 +124,13 @@ class Test:
     description: str
     products: Iterable[Product] = Product.all()
 
-    def __init__(self, nc: netCDF4.Dataset, filename: Path, product: Product):
+    def __init__(
+        self, nc: netCDF4.Dataset, filename: Path, product: Product, site_meta: SiteMeta
+    ):
         self.filename = filename
         self.nc = nc
         self.product = product
+        self.site_meta = site_meta
         self.report = TestReport(
             test_id=self.__class__.__name__,
             exceptions=[],
@@ -496,7 +506,7 @@ class TestMedianLwp(Test):
         mask_percentage = ma.count_masked(data) / data.size * 100
         if mask_percentage > 20:
             msg = (
-                f"{round(mask_percentage,1)} % of '{key}' data points are masked "
+                f"{round(mask_percentage, 1)} % of '{key}' data points are masked "
                 f"due to low quality data."
             )
             if mask_percentage > 60:
@@ -810,6 +820,39 @@ class TestCoordinateVariables(Test):
                 self._add_error(
                     f"Expected variable '{key}' to have dimensions '{key}' but received '{received}'"
                 )
+
+
+class TestCoordinates(Test):
+    name = "Coordinates"
+    description = "Check that file coordinates match site coordinates."
+
+    def run(self):
+        for key in ("latitude", "longitude", "altitude"):
+            if key not in self.nc.variables:
+                self._add_error(f"Variable '{key}' is missing")
+                return
+            if self.site_meta[key] is None:
+                return
+
+        site_lat = self.site_meta["latitude"]
+        site_lon = self.site_meta["longitude"]
+        file_lat = np.atleast_1d(self.nc["latitude"][:])
+        file_lon = np.atleast_1d(self.nc["longitude"][:])
+        dist = utils.haversine(site_lat, site_lon, file_lat, file_lon)
+        i = np.argmax(dist)
+        if dist[i] > 10:
+            self._add_error(
+                f"Variables 'latitude' and 'longitude' do not match the site coordinates: expected ({site_lat:.3f},\u00a0{site_lon:.3f}) but received ({file_lat[i]:.3f},\u00a0{file_lon[i]:.3}), distance {round(dist[i])}\u00a0km"
+            )
+
+        site_alt = self.site_meta["altitude"]
+        file_alt = np.atleast_1d(self.nc["altitude"][:])
+        diff_alt = np.abs(site_alt - file_alt)
+        i = np.argmax(diff_alt)
+        if diff_alt[i] > 100:
+            self._add_error(
+                f"Variable 'altitude' doesn't match the site altitude: expected {round(site_alt)}\u00a0m but received {round(file_alt[i])}\u00a0m"
+            )
 
 
 # ------------------------------#

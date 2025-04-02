@@ -23,6 +23,7 @@ def test_valid_file():
                 "TestInstrumentPid",
                 "TestUnits",
                 "FindVariableOutliers",
+                "TestCoordinates",
             )
             else not excs
         ), f"{test}, {excs}"
@@ -38,6 +39,7 @@ def test_legacy_file():
         "TestGlobalAttributes",
         "TestVariableNames",
         "TestCFConvention",
+        "TestCoordinates",
     ]
     check.verify_exceptions(keys)
 
@@ -46,6 +48,7 @@ def test_missing_data():
     filename = f"{SCRIPT_PATH}/data/20220729_norunda_cl51.nc"
     check = Check(filename)
     check.verify_exceptions(["TestDataCoverage"])
+    check.verify_passes(["TestCoordinates"])
 
 
 def test_invalid_lwp():
@@ -57,38 +60,44 @@ def test_invalid_lwp():
 def test_file_without_time_array():
     filename = f"{SCRIPT_PATH}/data/20200505_chilbolton_mira.nc"
     check = Check(filename)
-    check.verify_exceptions(["TestTimeVector"])
+    check.verify_exceptions(["TestTimeVector", "TestCoordinates"])
 
 
 def test_bad_mwr_from_delft():
     filename = f"{SCRIPT_PATH}/data/20210421_delft_hatpro.nc"
     check = Check(filename)
-    check.verify_exceptions(["TestTimeVector"])
+    check.verify_exceptions(["TestTimeVector", "TestCoordinates"])
 
 
 def test_bad_mwr_from_granada():
     filename = f"{SCRIPT_PATH}/data/20160610_granada_hatpro.nc"
     check = Check(filename)
-    check.verify_exceptions(["TestTimeVector"])
+    check.verify_exceptions(["TestTimeVector", "TestCoordinates"])
 
 
 def test_bad_categorize_from_chilbolton():
     filename = f"{SCRIPT_PATH}/data/20001017_chilbolton_categorize.nc"
     check = Check(filename, file_type="categorize")
-    check.verify_exceptions(["FindFolding"])
+    check.verify_exceptions(["FindFolding", "TestCoordinates"])
 
 
 def test_empty_instrument_pid():
     filename = f"{SCRIPT_PATH}/data/20220326_schneefernerhaus_mira.nc"
     check = Check(filename)
-    check.verify_exceptions(["TestInstrumentPid"])
+    check.verify_exceptions(["TestInstrumentPid", "TestCoordinates"])
 
 
 class Check:
     """Check class."""
 
     def __init__(self, filename: str, file_type: str | None = None):
-        self.report = quality.run_tests(Path(filename), product=file_type)
+        # Norunda
+        site_meta: quality.SiteMeta = {
+            "latitude": 60.086,
+            "longitude": 17.479,
+            "altitude": 46.0,
+        }
+        self.report = quality.run_tests(Path(filename), site_meta, product=file_type)
         self.tests = self.report.tests
 
     def verify_exceptions(self, keys: list):
@@ -96,6 +105,13 @@ class Check:
         for test in self.tests:
             if test.test_id in keys:
                 assert test.exceptions
+                n += 1
+        assert n == len(keys)
+
+    def verify_passes(self, keys: list):
+        n = 0
+        for test in self.tests:
+            if test.test_id in keys and not test.exceptions:
                 n += 1
         assert n == len(keys)
 

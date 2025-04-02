@@ -5,6 +5,7 @@ import re
 from functools import lru_cache
 
 import numpy as np
+import numpy.typing as npt
 import requests
 
 PID_FORMAT = r"https?://hdl\.handle\.net/(.+)"
@@ -115,3 +116,28 @@ def calc_pressure(altitude: float) -> float:
     g = 9.80665  # Gravitational acceleration (m s-2)
     R = 287.0528  # Specific gas constant (J kg-1 K-1)
     return P0 * (1 - L * altitude / T0) ** (g / (R * L))
+
+
+def haversine(
+    lat1: float | npt.ArrayLike,
+    lon1: float | npt.ArrayLike,
+    lat2: float | npt.ArrayLike,
+    lon2: float | npt.ArrayLike,
+) -> npt.NDArray:
+    """Calculate the great-circle distance between coordinates on Earth.
+
+    Returns:
+        Distance in kilometers.
+    """
+    r = 6371  # Radius of Earth (km)
+
+    lat1 = np.radians(lat1)
+    lon1 = np.radians(lon1)
+    lat2 = np.radians(lat2)
+    lon2 = np.radians(lon2)
+
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    a = np.sin(dlat / 2) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2) ** 2
+    return 2 * r * np.arcsin(np.sqrt(a))
