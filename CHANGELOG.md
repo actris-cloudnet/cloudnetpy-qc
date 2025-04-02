@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.24.0 – 2025-04-02
+
+- Add test for coordinates
+- Update CF tables
+
 ## 1.23.0 – 2025-03-31
 
 - Add test for coordinate variables
