@@ -1,11 +1,10 @@
-"""Variable definitions"""
+"""Variable definitions."""
 
-# pylint: disable=too-many-lines
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from enum import Enum
-from typing import Iterable, Literal, NamedTuple
+from typing import Literal, NamedTuple
 
 import netCDF4
 
@@ -832,12 +831,17 @@ VARIABLES = {
         required=[Product.CPR],
     ),
     "vm_sat_vel": Variable(
-        long_name="Convolved and integrated mean Doppler velocity with satellite motion error",
+        long_name=(
+            "Convolved and integrated mean Doppler velocity with satellite motion error"
+        ),
         units="m s-1",
         required=[Product.CPR],
     ),
     "vm_sat_noise": Variable(
-        long_name="Convolved and integrated mean Doppler velocity with noise and satellite motion error",
+        long_name=(
+            "Convolved and integrated mean Doppler velocity "
+            "with noise and satellite motion error"
+        ),
         units="m s-1",
         required=[Product.CPR],
     ),
@@ -1605,8 +1609,9 @@ VARIABLES = {
     "snr_355_nr": Variable(
         long_name="Signal-to-Noise Ratio (355 nm near range)",
     ),
+    # rv-polarstern categorize specific
     "lidar_depolarisation": Variable(
-        long_name="Calibrated volume depolarisation (532 nm)"  # in rv-polarstern categorize files
+        long_name="Calibrated volume depolarisation (532 nm)"
     ),
     "beamwidthV": Variable(
         long_name="Vertical angular beamwidth",

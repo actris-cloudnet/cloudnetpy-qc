@@ -60,13 +60,14 @@ def create_out_of_bounds_msg(
     value: str | int | float,
 ) -> str:
     return (
-        f"Value {format_value(value)} exceeds expected limits {format_value(lower_limit)} ... "
-        f"{format_value(upper_limit)} with variable '{variable}'"
+        f"Value {format_value(value)} exceeds expected limits "
+        f"{format_value(lower_limit)} ... {format_value(upper_limit)} "
+        f"with variable '{variable}'"
     )
 
 
 def format_value(value: str | int | float) -> str:
-    return "{:,g}".format(float(value)).replace(",", "\u202f")
+    return f"{float(value):,g}".replace(",", "\u202f")
 
 
 @lru_cache
@@ -81,8 +82,8 @@ def fetch_pid(pid: str) -> dict:
 
 
 def integer_ranges(ints: list[int]) -> list[str]:
-    """
-    Convert given integers to list of ranges.
+    """Convert given integers to list of ranges.
+
     >>> integer_ranges([1,2,3,5,7,8,9])
     ['1–3', '5', '7–9']
     """
@@ -99,8 +100,7 @@ def integer_ranges(ints: list[int]) -> list[str]:
 
 
 def calc_pressure(altitude: float) -> float:
-    """
-    Calculate atmospheric pressure in International Standard Atmosphere.
+    """Calculate atmospheric pressure in International Standard Atmosphere.
 
     Args:
         altitude: Geopotential altitude above mean sea level (m)

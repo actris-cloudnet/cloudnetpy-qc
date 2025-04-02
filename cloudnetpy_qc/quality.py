@@ -5,10 +5,11 @@ import json
 import logging
 import os
 import re
+from collections.abc import Iterable
 from enum import Enum
 from os import PathLike
 from pathlib import Path
-from typing import Iterable, NamedTuple, TypedDict
+from typing import NamedTuple, TypedDict
 
 import netCDF4
 import numpy as np
@@ -91,8 +92,8 @@ def run_tests(
                 product = Product(nc.cloudnet_file_type)
             except AttributeError as exc:
                 raise ValueError(
-                    "No 'cloudnet_file_type' global attribute found, can not run tests. "
-                    "Is this a legacy file?"
+                    "No 'cloudnet_file_type' global attribute found, "
+                    "can not run tests. Is this a legacy file?"
                 ) from exc
         logging.debug(f"Filename: {filename.stem}")
         logging.debug(f"File type: {product}")
@@ -351,7 +352,7 @@ class TestVariableNamesDefined(Test):
     }
 
     def run(self):
-        for key in self.nc.variables.keys():
+        for key in self.nc.variables:
             if key not in VARIABLES:
                 self._add_info(f"'{key}' is not defined in cloudnetpy-qc.")
 
@@ -571,7 +572,8 @@ class TestUnexpectedMask(Test):
             elif np.any(data.mask):
                 percentage = np.sum(data.mask) / data.size * 100
                 self._add_warning(
-                    f"Variable '{key}' contains masked values ({percentage:.1f} % are masked)."
+                    f"Variable '{key}' contains masked values "
+                    f"({percentage:.1f} % are masked)."
                 )
 
 
@@ -818,7 +820,8 @@ class TestCoordinateVariables(Test):
             ):
                 received = "', '".join(variable.dimensions)
                 self._add_error(
-                    f"Expected variable '{key}' to have dimensions '{key}' but received '{received}'"
+                    f"Expected variable '{key}' to have dimensions '{key}'"
+                    f" but received '{received}'"
                 )
 
 
@@ -842,7 +845,11 @@ class TestCoordinates(Test):
         i = np.argmax(dist)
         if dist[i] > 10:
             self._add_error(
-                f"Variables 'latitude' and 'longitude' do not match the site coordinates: expected ({site_lat:.3f},\u00a0{site_lon:.3f}) but received ({file_lat[i]:.3f},\u00a0{file_lon[i]:.3}), distance {round(dist[i])}\u00a0km"
+                f"Variables 'latitude' and 'longitude' do not match "
+                f"the site coordinates: "
+                f"expected ({site_lat:.3f},\u00a0{site_lon:.3f}) "
+                f"but received ({file_lat[i]:.3f},\u00a0{file_lon[i]:.3}), "
+                f"distance {round(dist[i])}\u00a0km"
             )
 
         site_alt = self.site_meta["altitude"]
@@ -851,7 +858,9 @@ class TestCoordinates(Test):
         i = np.argmax(diff_alt)
         if diff_alt[i] > 100:
             self._add_error(
-                f"Variable 'altitude' doesn't match the site altitude: expected {round(site_alt)}\u00a0m but received {round(file_alt[i])}\u00a0m"
+                f"Variable 'altitude' doesn't match the site altitude: "
+                f"expected {round(site_alt)}\u00a0m "
+                f"but received {round(file_alt[i])}\u00a0m"
             )
 
 
@@ -865,7 +874,7 @@ class TestCFConvention(Test):
     description = "Test compliance with the CF metadata conventions."
 
     def run(self):
-        from cfchecker import cfchecks  # pylint: disable=import-outside-toplevel
+        from cfchecker import cfchecks
 
         cf_version = "1.8"
         inst = cfchecks.CFChecker(
@@ -970,7 +979,8 @@ class TestInstrumentPid(Test):
                     self._add_error(msg)
                 return
         self._add_warning(
-            f"No serial number was defined in instrument PID but found '{received}' in the file."
+            f"No serial number was defined in instrument PID "
+            f"but found '{received}' in the file."
         )
 
     def _check_model_name(self):
