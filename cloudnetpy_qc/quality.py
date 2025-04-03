@@ -830,38 +830,41 @@ class TestCoordinates(Test):
     description = "Check that file coordinates match site coordinates."
 
     def run(self):
-        for key in ("latitude", "longitude", "altitude"):
+        required_vars = {"latitude", "longitude"}
+        if self.nc.cloudnet_file_type != "model":
+            required_vars.add("altitude")
+        for key in required_vars:
             if key not in self.nc.variables:
                 self._add_error(f"Variable '{key}' is missing")
-                return
-            if self.site_meta[key] is None:
-                return
 
-        site_lat = self.site_meta["latitude"]
-        site_lon = self.site_meta["longitude"]
-        file_lat = np.atleast_1d(self.nc["latitude"][:])
-        file_lon = np.atleast_1d(self.nc["longitude"][:])
-        dist = utils.haversine(site_lat, site_lon, file_lat, file_lon)
-        i = np.argmax(dist)
-        if dist[i] > 10:
-            self._add_error(
-                f"Variables 'latitude' and 'longitude' do not match "
-                f"the site coordinates: "
-                f"expected ({site_lat:.3f},\u00a0{site_lon:.3f}) "
-                f"but received ({file_lat[i]:.3f},\u00a0{file_lon[i]:.3}), "
-                f"distance {round(dist[i])}\u00a0km"
-            )
+        if "latitude" in self.nc.variables and "longitude" in self.nc.variables:
+            site_lat = self.site_meta["latitude"]
+            site_lon = self.site_meta["longitude"]
+            file_lat = np.atleast_1d(self.nc["latitude"][:])
+            file_lon = np.atleast_1d(self.nc["longitude"][:])
+            dist = utils.haversine(site_lat, site_lon, file_lat, file_lon)
+            i = np.argmax(dist)
+            max_dist = 100 if self.nc.cloudnet_file_type == "model" else 10
+            if dist[i] > max_dist:
+                self._add_error(
+                    f"Variables 'latitude' and 'longitude' do not match "
+                    f"the site coordinates: "
+                    f"expected ({site_lat:.3f},\u00a0{site_lon:.3f}) "
+                    f"but received ({file_lat[i]:.3f},\u00a0{file_lon[i]:.3}), "
+                    f"distance {round(dist[i])}\u00a0km"
+                )
 
-        site_alt = self.site_meta["altitude"]
-        file_alt = np.atleast_1d(self.nc["altitude"][:])
-        diff_alt = np.abs(site_alt - file_alt)
-        i = np.argmax(diff_alt)
-        if diff_alt[i] > 100:
-            self._add_error(
-                f"Variable 'altitude' doesn't match the site altitude: "
-                f"expected {round(site_alt)}\u00a0m "
-                f"but received {round(file_alt[i])}\u00a0m"
-            )
+        if "altitude" in self.nc.variables:
+            site_alt = self.site_meta["altitude"]
+            file_alt = np.atleast_1d(self.nc["altitude"][:])
+            diff_alt = np.abs(site_alt - file_alt)
+            i = np.argmax(diff_alt)
+            if diff_alt[i] > 100:
+                self._add_error(
+                    f"Variable 'altitude' doesn't match the site altitude: "
+                    f"expected {round(site_alt)}\u00a0m "
+                    f"but received {round(file_alt[i])}\u00a0m"
+                )
 
 
 # ------------------------------#
