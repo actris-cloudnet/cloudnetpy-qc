@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.24.1 – 2025-04-03
+
+- Handle model products in coordinate test
+
 ## 1.24.0 – 2025-04-02
 
 - Add test for coordinates
