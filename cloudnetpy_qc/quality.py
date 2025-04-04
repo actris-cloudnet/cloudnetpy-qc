@@ -850,7 +850,7 @@ class TestCoordinates(Test):
                     f"Variables 'latitude' and 'longitude' do not match "
                     f"the site coordinates: "
                     f"expected ({site_lat:.3f},\u00a0{site_lon:.3f}) "
-                    f"but received ({file_lat[i]:.3f},\u00a0{file_lon[i]:.3}), "
+                    f"but received ({file_lat[i]:.3f},\u00a0{file_lon[i]:.3f}), "
                     f"distance {round(dist[i])}\u00a0km"
                 )
 
