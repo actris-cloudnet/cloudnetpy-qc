@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.24.2 – 2025-04-04
+
+- Allow longitude range only from -180 to 180
+- Fix number formatting in error message
+
 ## 1.24.1 – 2025-04-03
 
 - Handle model products in coordinate test
