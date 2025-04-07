@@ -842,6 +842,7 @@ class TestCoordinates(Test):
             site_lon = self.site_meta["longitude"]
             file_lat = np.atleast_1d(self.nc["latitude"][:])
             file_lon = np.atleast_1d(self.nc["longitude"][:])
+            file_lon[file_lon > 180] -= 360
             dist = utils.haversine(site_lat, site_lon, file_lat, file_lon)
             i = np.argmax(dist)
             max_dist = 100 if self.nc.cloudnet_file_type == "model" else 10
