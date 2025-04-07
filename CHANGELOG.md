@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.24.3 – 2025-04-07
+
+- Fix formatting of longitude over 180 in error message
+
 ## 1.24.2 – 2025-04-04
 
 - Allow longitude range only from -180 to 180
