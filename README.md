@@ -27,6 +27,7 @@ print(json_object)
 - `timestamp`: UTC timestamp of the test
 - `qcVersion`: `cloudnetpy-qc` version
 - `tests`: `Test[]`
+- `data_coverage`: float
 
 ### `Test`
 
