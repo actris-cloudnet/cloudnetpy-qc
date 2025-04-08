@@ -17,6 +17,8 @@ import scipy.stats
 from numpy import ma
 from requests import RequestException
 
+from cloudnetpy_qc.coverage import data_coverage, get_duration
+
 from . import utils
 from .variables import LEVELS, VARIABLES, Product
 from .version import __version__
@@ -53,6 +55,7 @@ class FileReport(NamedTuple):
     timestamp: datetime.datetime
     qc_version: str
     tests: list[TestReport]
+    data_coverage: float | None
 
     def to_dict(self) -> dict:
         return {
@@ -84,6 +87,7 @@ def run_tests(
     ignore_tests: list[str] | None = None,
 ) -> FileReport:
     filename = Path(filename)
+    coverage = None
     if isinstance(product, str):
         product = Product(product)
     with netCDF4.Dataset(filename) as nc:
@@ -111,10 +115,13 @@ def run_tests(
                     f"Failed to run test: {err} ({type(err).__name__})"
                 )
             test_reports.append(test_instance.report)
+            if test_instance.coverage is not None:
+                coverage = test_instance.coverage
     return FileReport(
         timestamp=datetime.datetime.now(tz=datetime.timezone.utc),
         qc_version=__version__,
         tests=test_reports,
+        data_coverage=coverage,
     )
 
 
@@ -124,6 +131,7 @@ class Test:
     name: str
     description: str
     products: Iterable[Product] = Product.all()
+    coverage: float | None = None
 
     def __init__(
         self, nc: netCDF4.Dataset, filename: Path, product: Product, site_meta: SiteMeta
@@ -189,19 +197,6 @@ class Test:
                         expected, value, variable=key
                     )
                     self._add_warning(msg)
-
-    def _get_date(self):
-        date_in_file = [int(getattr(self.nc, x)) for x in ("year", "month", "day")]
-        return datetime.date(*date_in_file)
-
-    def _get_duration(self) -> datetime.timedelta:
-        now = datetime.datetime.now(tz=datetime.timezone.utc)
-        if now.date() == self._get_date():
-            midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
-            duration = now - midnight
-        else:
-            duration = datetime.timedelta(days=1)
-        return duration
 
 
 # --------------------#
@@ -287,45 +282,12 @@ class TestDataCoverage(Test):
     name = "Data coverage"
     description = "Test that file contains enough data."
 
-    RESOLUTIONS = {
-        Product.DISDROMETER: datetime.timedelta(minutes=1),
-        Product.L3_CF: datetime.timedelta(hours=1),
-        Product.L3_IWC: datetime.timedelta(hours=1),
-        Product.L3_LWC: datetime.timedelta(hours=1),
-        Product.MWR: datetime.timedelta(minutes=5),
-        Product.MWR_MULTI: datetime.timedelta(minutes=30),
-        Product.MWR_SINGLE: datetime.timedelta(minutes=5),
-        Product.WEATHER_STATION: datetime.timedelta(minutes=10),
-        Product.RAIN_GAUGE: datetime.timedelta(minutes=1),
-        Product.DOPPLER_LIDAR_WIND: datetime.timedelta(hours=1.5),
-    }
-    DEFAULT_RESOLUTION = datetime.timedelta(seconds=30)
-
-    def _model_resolution(self):
-        source = self.nc.source.lower()
-        if "gdas" in source or "ecmwf open" in source:
-            return datetime.timedelta(hours=3)
-        return datetime.timedelta(hours=1)
-
     def run(self):
-        time = np.array(self.nc["time"][:])
-        time_unit = datetime.timedelta(hours=1)
-        try:
-            n_time = len(time)
-        except (TypeError, ValueError):
+        coverage, expected_res, actual_res = data_coverage(self.nc)
+        if coverage is None:
             return
-        if n_time < 2:
-            return
-        if self.nc.cloudnet_file_type == "model":
-            expected_res = self._model_resolution()
-        else:
-            expected_res = self.RESOLUTIONS.get(self.product, self.DEFAULT_RESOLUTION)
-        duration = self._get_duration()
-        bins = max(1, duration // expected_res)
-        hist, _bin_edges = np.histogram(
-            time, bins=bins, range=(0, duration / time_unit)
-        )
-        missing = np.count_nonzero(hist == 0) / len(hist) * 100
+        self.coverage = coverage
+        missing = (1 - coverage) * 100
         if missing > 20:
             message = f"{round(missing)}% of day's data is missing."
             if missing > 60:
@@ -333,7 +295,6 @@ class TestDataCoverage(Test):
             else:
                 self._add_info(message)
 
-        actual_res = np.median(np.diff(time)) * time_unit
         if actual_res > expected_res * 1.05:
             self._add_warning(
                 f"Expected a measurement with interval at least {expected_res},"
@@ -789,7 +750,7 @@ class TestModelData(Test):
         if n_time < 2:
             return
 
-        duration = self._get_duration()
+        duration = get_duration(self.nc)
         should_be_data_until = duration / time_unit
 
         for key in ("temperature", "pressure", "q"):
