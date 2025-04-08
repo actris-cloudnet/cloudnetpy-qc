@@ -36,7 +36,7 @@ def data_coverage(
     else:
         product = Product(nc.cloudnet_file_type)
         expected_res = RESOLUTIONS.get(product, DEFAULT_RESOLUTION)
-    duration = _get_duration(nc)
+    duration = get_duration(nc)
     bins = max(1, duration // expected_res)
     hist, _ = np.histogram(time, bins=bins, range=(0, duration / time_unit))
     coverage = np.count_nonzero(hist > 0) / len(hist)
@@ -51,7 +51,7 @@ def _model_resolution(nc: netCDF4.Dataset) -> datetime.timedelta:
     return datetime.timedelta(hours=1)
 
 
-def _get_duration(nc: netCDF4.Dataset) -> datetime.timedelta:
+def get_duration(nc: netCDF4.Dataset) -> datetime.timedelta:
     now = datetime.datetime.now(tz=datetime.timezone.utc)
     if now.date() == _get_date(nc):
         midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)

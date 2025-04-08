@@ -17,7 +17,7 @@ import scipy.stats
 from numpy import ma
 from requests import RequestException
 
-from cloudnetpy_qc.coverage import data_coverage
+from cloudnetpy_qc.coverage import data_coverage, get_duration
 
 from . import utils
 from .variables import LEVELS, VARIABLES, Product
@@ -750,7 +750,7 @@ class TestModelData(Test):
         if n_time < 2:
             return
 
-        duration = self._get_duration()
+        duration = get_duration(self.nc)
         should_be_data_until = duration / time_unit
 
         for key in ("temperature", "pressure", "q"):
