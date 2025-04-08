@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.25.0 – 2025-04-08
+
+- Add public function for data coverage (#17)
+
 ## 1.24.3 – 2025-04-07
 
 - Fix formatting of longitude over 180 in error message
