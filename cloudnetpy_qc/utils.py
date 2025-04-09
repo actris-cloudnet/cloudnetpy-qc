@@ -141,3 +141,51 @@ def haversine(
 
     a = np.sin(dlat / 2) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2) ** 2
     return 2 * r * np.arcsin(np.sqrt(a))
+
+
+def find_closest(x: npt.NDArray, x_new: npt.NDArray) -> npt.NDArray[np.intp]:
+    """Find the closest values between two arrays.
+
+    Args:
+        x: Sorted array.
+        x_new: Sorted array.
+
+    Returns:
+        Indices into `x` which correspond to the closest values in `x_new`.
+
+    Example:
+        >>> x = np.array([0.9, 1.2, 2.0, 2.1])
+        >>> x_new = np.array([1, 2])
+        >>> find_closest(x, x_new)
+        array([0, 2])
+    """
+    idx = np.searchsorted(x, x_new)
+    idx_left = np.clip(idx - 1, 0, len(x) - 1)
+    idx_right = np.clip(idx, 0, len(x) - 1)
+    diff_left = np.abs(x_new - x[idx_left])
+    diff_right = np.abs(x_new - x[idx_right])
+    return np.where(diff_left < diff_right, idx_left, idx_right)
+
+
+def average_coordinate(
+    latitude: npt.NDArray, longitude: npt.NDArray
+) -> tuple[float, float]:
+    """Calculate average position from given coordinates.
+
+    Args:
+        latitude: Array of latitudes.
+        longitude: Array of longitudes.
+
+    Returns:
+        Tuple of average latitude and longitude.
+    """
+    if latitude.size == longitude.size == 1:
+        return latitude[0], longitude[0]
+    latitude = np.radians(latitude)
+    longitude = np.radians(longitude)
+    x = np.mean(np.cos(latitude) * np.cos(longitude))
+    y = np.mean(np.cos(latitude) * np.sin(longitude))
+    z = np.mean(np.sin(latitude))
+    avg_lat = np.degrees(np.atan2(z, np.sqrt(x * x + y * y)))
+    avg_lon = np.degrees(np.atan2(y, x))
+    return avg_lat, avg_lon

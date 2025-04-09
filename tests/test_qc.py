@@ -93,6 +93,7 @@ class Check:
     def __init__(self, filename: str, file_type: str | None = None):
         # Norunda
         site_meta: quality.SiteMeta = {
+            "time": None,
             "latitude": 60.086,
             "longitude": 17.479,
             "altitude": 46.0,

@@ -14,6 +14,7 @@ from typing import NamedTuple, TypedDict
 import netCDF4
 import numpy as np
 import scipy.stats
+from cftime import num2pydate
 from numpy import ma
 from requests import RequestException
 
@@ -75,8 +76,9 @@ class FileReport(NamedTuple):
 
 
 class SiteMeta(TypedDict):
-    latitude: float | None
-    longitude: float | None
+    time: np.ndarray | None
+    latitude: float | np.ndarray | None
+    longitude: float | np.ndarray | None
     altitude: float | None
 
 
@@ -800,14 +802,27 @@ class TestCoordinates(Test):
                 self._add_error(f"Variable '{key}' is missing")
 
         if "latitude" in self.nc.variables and "longitude" in self.nc.variables:
-            site_lat = self.site_meta["latitude"]
-            site_lon = self.site_meta["longitude"]
+            site_lat = np.atleast_1d(self.site_meta["latitude"])
+            site_lon = np.atleast_1d(self.site_meta["longitude"])
             file_lat = np.atleast_1d(self.nc["latitude"][:])
             file_lon = np.atleast_1d(self.nc["longitude"][:])
             file_lon[file_lon > 180] -= 360
-            dist = utils.haversine(site_lat, site_lon, file_lat, file_lon)
+
+            if self.site_meta.get("time") and file_lat.size > 1 and file_lon.size > 1:
+                site_time = self._read_site_time()
+                file_time = self._read_file_time()
+                idx = utils.find_closest(file_time, site_time)
+                file_lat = file_lat[idx]
+                file_lon = file_lon[idx]
+            else:
+                file_lat, file_lon = utils.average_coordinate(file_lat, file_lon)
+                site_lat, site_lon = utils.average_coordinate(site_lat, site_lon)
+
+            dist = np.atleast_1d(
+                utils.haversine(site_lat, site_lon, file_lat, file_lon)
+            )
             i = np.argmax(dist)
-            max_dist = 100 if self.nc.cloudnet_file_type == "model" else 10
+            max_dist = self._calc_max_dist(site_lat, site_lon)
             if dist[i] > max_dist:
                 self._add_error(
                     f"Variables 'latitude' and 'longitude' do not match "
@@ -828,6 +843,37 @@ class TestCoordinates(Test):
                     f"expected {round(site_alt)}\u00a0m "
                     f"but received {round(file_alt[i])}\u00a0m"
                 )
+
+    def _read_site_time(self):
+        for dt in self.site_meta["time"]:
+            if (
+                not isinstance(dt, datetime.datetime)
+                or dt.tzinfo is None
+                or dt.tzinfo.utcoffset(dt) is None
+            ):
+                raise ValueError("Naive datetimes are not supported")
+        naive_dt = [
+            dt.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+            for dt in self.site_meta["time"]
+        ]
+        return np.array(naive_dt, dtype="datetime64[s]")
+
+    def _read_file_time(self):
+        naive_dt = num2pydate(
+            self.nc["time"][:], self.nc["time"].units, self.nc["time"].calendar
+        )
+        return np.array(naive_dt, dtype="datetime64[s]")
+
+    def _calc_max_dist(self, latitude, longitude):
+        if self.nc.cloudnet_file_type == "model":
+            angle = 1  # Model resolution should be at least 1 degrees.
+            half_angle = angle / 2
+            min_lat = np.maximum(-90, latitude - half_angle)
+            max_lat = np.minimum(90, latitude + half_angle)
+            min_lon = np.maximum(-180, longitude - half_angle)
+            max_lon = np.minimum(180, longitude + half_angle)
+            return utils.haversine(min_lat, min_lon, max_lat, max_lon)
+        return 10
 
 
 # ------------------------------#
