@@ -808,7 +808,11 @@ class TestCoordinates(Test):
             file_lon = np.atleast_1d(self.nc["longitude"][:])
             file_lon[file_lon > 180] -= 360
 
-            if self.site_meta.get("time") and file_lat.size > 1 and file_lon.size > 1:
+            if (
+                self.site_meta["time"] is not None
+                and file_lat.size > 1
+                and file_lon.size > 1
+            ):
                 site_time = self._read_site_time()
                 file_time = self._read_file_time()
                 idx = utils.find_closest(file_time, site_time)
