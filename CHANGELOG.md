@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.25.1 – 2025-04-10
+
+- Support mobile sites in coordinate test
+- Print stack trace if test raises an exception
+
 ## 1.25.0 – 2025-04-08
 
 - Add public function for data coverage (#17)
