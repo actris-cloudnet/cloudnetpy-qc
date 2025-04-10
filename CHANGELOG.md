@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.25.2 – 2025-04-10
+
+- Fix numpy array check
+
 ## 1.25.1 – 2025-04-10
 
 - Support mobile sites in coordinate test
