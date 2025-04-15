@@ -116,7 +116,7 @@ def run_tests(
                 test_instance._add_error(
                     f"Failed to run test: {err} ({type(err).__name__})"
                 )
-                logging.exception("Failed to run test:")
+                logging.exception(f"Failed to run {cls.__name__}:")
             test_reports.append(test_instance.report)
             if test_instance.coverage is not None:
                 coverage = test_instance.coverage
