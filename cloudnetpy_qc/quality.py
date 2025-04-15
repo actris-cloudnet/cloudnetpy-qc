@@ -870,12 +870,14 @@ class TestCoordinates(Test):
 
     def _calc_max_dist(self, latitude, longitude):
         if self.nc.cloudnet_file_type == "model":
+            mean_lat = np.mean(latitude)
+            mean_lon = np.mean(longitude)
             angle = 1  # Model resolution should be at least 1 degrees.
             half_angle = angle / 2
-            min_lat = np.maximum(-90, latitude - half_angle)
-            max_lat = np.minimum(90, latitude + half_angle)
-            min_lon = np.maximum(-180, longitude - half_angle)
-            max_lon = np.minimum(180, longitude + half_angle)
+            min_lat = np.maximum(-90, mean_lat - half_angle)
+            max_lat = np.minimum(90, mean_lat + half_angle)
+            min_lon = np.maximum(-180, mean_lon - half_angle)
+            max_lon = np.minimum(180, mean_lon + half_angle)
             return utils.haversine(min_lat, min_lon, max_lat, max_lon)
         return 10
 
