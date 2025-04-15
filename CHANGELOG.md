@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.25.3 – 2025-04-15
+
+- Support model files with multiple locations
+- Log name of the test that raised an exception
+
 ## 1.25.2 – 2025-04-10
 
 - Fix numpy array check
