@@ -159,12 +159,6 @@ VARIABLES = {
         units="K",
         required=[Product.WEATHER_STATION],
     ),
-    "air_pressure": Variable(
-        long_name="Air pressure",
-        units="Pa",
-        standard_name="air_pressure",
-        required=[Product.WEATHER_STATION],
-    ),
     "rainfall_amount": Variable(
         long_name="Rainfall amount",
         units="m",
@@ -1288,6 +1282,11 @@ VARIABLES = {
     ),
     "status_flag": Variable(
         long_name="Status flag for heater and blower",
+    ),
+    "air_pressure": Variable(
+        long_name="Air pressure",
+        units="Pa",
+        standard_name="air_pressure",
     ),
     "wind_speed": Variable(
         long_name="Wind speed",
