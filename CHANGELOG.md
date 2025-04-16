@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.25.4 – 2025-04-16
+
+- Make `air_pressure` optional variable
+
 ## 1.25.3 – 2025-04-15
 
 - Support model files with multiple locations
