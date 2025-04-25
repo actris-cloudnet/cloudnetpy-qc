@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.25.5 – 2025-04-25
+
+- Correctly calculate percentile of masked array
+
 ## 1.25.4 – 2025-04-16
 
 - Make `air_pressure` optional variable
