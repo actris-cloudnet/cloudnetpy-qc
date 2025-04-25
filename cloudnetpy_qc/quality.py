@@ -569,7 +569,7 @@ class TestIfRangeCorrected(Test):
         sgl_res = scipy.stats.siegelslopes(y, x)
         residuals = np.abs(y - (sgl_res.intercept + sgl_res.slope * x))
         outliers = residuals > 20 * np.percentile(
-            residuals, 25
+            residuals.compressed(), 25
         )  # Ad hoc outlier detection
         res = scipy.stats.pearsonr(x[~outliers], y[~outliers])
         if res.statistic < 0.75:
