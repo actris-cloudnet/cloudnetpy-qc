@@ -821,17 +821,19 @@ class TestCoordinates(Test):
             else:
                 file_lat, file_lon = utils.average_coordinate(file_lat, file_lon)
                 site_lat, site_lon = utils.average_coordinate(site_lat, site_lon)
+                file_lat = np.atleast_1d(file_lat)
+                file_lon = np.atleast_1d(file_lon)
+                site_lat = np.atleast_1d(site_lat)
+                site_lon = np.atleast_1d(site_lon)
 
-            dist = np.atleast_1d(
-                utils.haversine(site_lat, site_lon, file_lat, file_lon)
-            )
+            dist = utils.haversine(site_lat, site_lon, file_lat, file_lon)
             i = np.argmax(dist)
             max_dist = self._calc_max_dist(site_lat, site_lon)
             if dist[i] > max_dist:
                 self._add_error(
                     f"Variables 'latitude' and 'longitude' do not match "
                     f"the site coordinates: "
-                    f"expected ({site_lat:.3f},\u00a0{site_lon:.3f}) "
+                    f"expected ({site_lat[i]:.3f},\u00a0{site_lon[i]:.3f}) "
                     f"but received ({file_lat[i]:.3f},\u00a0{file_lon[i]:.3f}), "
                     f"distance {round(dist[i])}\u00a0km"
                 )
