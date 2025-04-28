@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.25.6 – 2025-04-28
+
+- Fix exception when generating coordinate test error message
+
 ## 1.25.5 – 2025-04-25
 
 - Correctly calculate percentile of masked array
