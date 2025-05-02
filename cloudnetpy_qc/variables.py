@@ -747,43 +747,28 @@ VARIABLES = {
     "potential_temperature": Variable(
         long_name="Potential temperature",
         units="K",
-        required=[
-            Product.MWR_SINGLE,
-            Product.MWR_MULTI,
-        ],
+        required=[Product.MWR_MULTI],
     ),
     "equivalent_potential_temperature": Variable(
         long_name="Equivalent potential temperature",
         units="K",
-        required=[
-            Product.MWR_SINGLE,
-            Product.MWR_MULTI,
-        ],
+        required=[Product.MWR_MULTI],
     ),
     "relative_humidity": Variable(
         long_name="Relative humidity",
         standard_name="relative_humidity",
-        required=[
-            Product.MWR_SINGLE,
-            Product.MWR_MULTI,
-        ],
+        required=[Product.MWR_MULTI],
     ),
     "temperature_quality_flag": Variable(
         long_name="Temperature quality flag",
         units="1",
-        required=[
-            Product.MWR_SINGLE,
-            Product.MWR_MULTI,
-        ],
+        required=[Product.MWR_MULTI],
         dtype=Dtype.INT,
     ),
     "temperature_quality_flag_status": Variable(
         long_name="Temperature quality flag status",
         units="1",
-        required=[
-            Product.MWR_SINGLE,
-            Product.MWR_MULTI,
-        ],
+        required=[Product.MWR_MULTI],
         dtype=Dtype.INT,
     ),
     # ---------------------------------------
