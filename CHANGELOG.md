@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.25.7 – 2025-05-02
+
+- Make temperature and relative humidity optional in mwr-single
+
 ## 1.25.6 – 2025-04-28
 
 - Fix exception when generating coordinate test error message
