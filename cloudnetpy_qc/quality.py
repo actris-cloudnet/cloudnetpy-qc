@@ -608,24 +608,27 @@ class TestFillValue(Test):
 
 
 class TestRainfallConsistency(Test):
-    name = "Rainfall consistency"
-    description = "Test that rainfall rate and rainfall amount are consistent."
+    name = "Precipitation consistency"
+    description = "Test that precipitation rate and amount are consistent."
     products = [Product.WEATHER_STATION, Product.RAIN_GAUGE, Product.DISDROMETER]
 
     def run(self):
-        if (
-            "rainfall_rate" not in self.nc.variables
-            or "rainfall_amount" not in self.nc.variables
-        ):
+        for key in ("rainfall", "snowfall", "precipitation"):
+            self._test_variable(key)
+
+    def _test_variable(self, key: str) -> None:
+        key_rate = f"{key}_rate"
+        key_amount = f"{key}_amount"
+        if key_rate not in self.nc.variables or key_amount not in self.nc.variables:
             return
-        expected_amount = self.nc["rainfall_amount"][-1]  # m
-        rate = self.nc["rainfall_rate"][:]  # m s-1
+        expected_amount = self.nc[key_amount][-1]  # m
+        rate = self.nc[key_rate][:]  # m s-1
         interval = np.diff(self.nc["time"][:], prepend=0) * H_TO_S
         calculated_amount = np.sum(rate * interval)
         error = (expected_amount - calculated_amount) * M_TO_MM
         if np.abs(error) > 20:
             self._add_warning(
-                f"Total accumulated rainfall has difference of {round(error, 1)} mm"
+                f"Total accumulated {key} has difference of {round(error, 1)} mm"
             )
 
 

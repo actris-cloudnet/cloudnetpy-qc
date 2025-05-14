@@ -150,14 +150,13 @@ VARIABLES = {
         long_name="Number of particles in time interval",
         dtype=Dtype.INT,
     ),
-    # -----------------------------------------
-    # Required in WEATHER STATION Level 1b file
-    # -----------------------------------------
+    # --------------------------------------------
+    # Recommended in WEATHER STATION Level 1b file
+    # --------------------------------------------
     "air_temperature": Variable(
         long_name="Air temperature",
         standard_name="air_temperature",
         units="K",
-        required=[Product.WEATHER_STATION],
     ),
     "rainfall_amount": Variable(
         long_name="Rainfall amount",
@@ -165,6 +164,23 @@ VARIABLES = {
         standard_name="thickness_of_rainfall_amount",
         comment="Cumulated precipitation since 00:00 UTC",
         required=[Product.RAIN_GAUGE],
+    ),
+    "precipitation_rate": Variable(
+        long_name="Precipitation rate",
+        units="m s-1",
+        standard_name="lwe_precipitation_rate",
+    ),
+    "precipitation_amount": Variable(
+        long_name="Precipitation amount",
+        units="m",
+        standard_name="lwe_thickness_of_precipitation_amount",
+        comment="Cumulated precipitation since 00:00 UTC",
+    ),
+    "snowfall_amount": Variable(
+        long_name="Snowfall amount",
+        units="m",
+        standard_name="thickness_of_snowfall_amount",
+        comment="Cumulated snow since 00:00 UTC",
     ),
     # ------------------------------------
     # Required in RAIN RADAR Level 1b file

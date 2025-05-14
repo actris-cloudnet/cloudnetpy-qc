@@ -103,7 +103,7 @@ print(json_object)
 | `TestMask`                  | Test that data are not completely masked.                                               |
 | `TestMedianLwp`             | Test that LWP data are valid.                                                           |
 | `TestModelData`             | Test that model data are valid.                                                         |
-| `TestRainfallConsistency`   | Test that rainfall rate and rainfall amount are consistent.                             |
+| `TestRainfallConsistency`   | Test that precipitation rate and amount are consistent.                                 |
 | `TestStandardNames`         | Check that variable have expected standard names.                                       |
 | `TestTimeVector`            | Test that time vector is continuous.                                                    |
 | `TestUnexpectedMask`        | Test if data contain unexpected masked values.                                          |
