@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.25.8 – 2025-05-14
+
+- Add precipitation variables
+- Update CF tables
+
 ## 1.25.7 – 2025-05-02
 
 - Make temperature and relative humidity optional in mwr-single
