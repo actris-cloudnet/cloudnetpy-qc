@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.25.9 – 2025-06-03
+
+- Add correction_bits
+
 ## 1.25.8 – 2025-05-14
 
 - Add precipitation variables
