@@ -1725,4 +1725,8 @@ VARIABLES = {
         comment="SNR threshold used in data screening.",
         dtype=Dtype.FLOAT,
     ),
+    "correction_bits": Variable(
+        long_name="Correction bits",
+        dtype=Dtype.INT,
+    ),
 }
