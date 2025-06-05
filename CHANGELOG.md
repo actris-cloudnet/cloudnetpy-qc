@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.26.0 – 2025-06-05
+
+- Add test for lidar zenith angle
+
 ## 1.25.9 – 2025-06-03
 
 - Add correction_bits
