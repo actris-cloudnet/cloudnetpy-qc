@@ -110,6 +110,7 @@ print(json_object)
 | `TestUnits`                 | Check that variables have expected units.                                               |
 | `TestVariableNames`         | Check that file contains required variables.                                            |
 | `TestVariableNamesDefined`  | Check that variables have expected names.                                               |
+| `TestZenithAngle`           | Test lidar zenith angle.                                                                |
 
 ## License
 
