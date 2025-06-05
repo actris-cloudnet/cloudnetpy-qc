@@ -281,6 +281,23 @@ class FindFolding(Test):
             )
 
 
+class TestZenithAngle(Test):
+    name = "Lidar zenith angle"
+    description = "Test lidar zenith angle."
+    products = [Product.LIDAR]
+
+    def run(self):
+        key = "zenith_angle"
+        if key not in self.nc.variables:
+            self._add_error(f"Zenith angle, '{key}', is missing.")
+            return
+        max_value = np.max(self.nc[key][:])
+        if max_value < 1:
+            self._add_info(
+                f"Zenith angle {max_value} degrees – risk of specular reflection."
+            )
+
+
 class TestDataCoverage(Test):
     name = "Data coverage"
     description = "Test that file contains enough data."
