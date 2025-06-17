@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.26.1 – 2025-06-17
+
+- Fix test when zenith angle is negative
+
 ## 1.26.0 – 2025-06-05
 
 - Add test for lidar zenith angle
