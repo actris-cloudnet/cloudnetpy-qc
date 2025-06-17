@@ -291,10 +291,10 @@ class TestZenithAngle(Test):
         if key not in self.nc.variables:
             self._add_error(f"Zenith angle, '{key}', is missing.")
             return
-        max_value = np.max(self.nc[key][:])
-        if max_value < 1:
+        mean_angle = np.mean(self.nc[key][:])
+        if np.abs(mean_angle) < 1:
             self._add_info(
-                f"Zenith angle {max_value} degrees – risk of specular reflection."
+                f"Zenith angle {mean_angle} degrees – risk of specular reflection."
             )
 
 
