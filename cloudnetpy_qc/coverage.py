@@ -22,7 +22,7 @@ DEFAULT_RESOLUTION = datetime.timedelta(seconds=30)
 
 def data_coverage(
     nc: netCDF4.Dataset,
-) -> tuple[np.floating, datetime.timedelta, datetime.timedelta] | None:
+) -> tuple[float | np.floating, datetime.timedelta, datetime.timedelta] | None:
     time = np.array(nc["time"][:])
     time_unit = datetime.timedelta(hours=1)
     try:
