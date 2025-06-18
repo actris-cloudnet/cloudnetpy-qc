@@ -6,12 +6,12 @@ authors = [{name = "Finnish Meteorological Institute", email = "actris-cloudnet@
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
 classifiers = [
+  "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Topic :: Scientific/Engineering",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Atmospheric Science",
 ]
 dependencies = ["cfchecker", "netCDF4", "numpy", "requests", "scipy"]
 dynamic = ["version"]
