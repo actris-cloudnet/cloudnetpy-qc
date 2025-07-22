@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.26.2 – 2025-07-22
+
+- Add exception for serial number of L'Aquila LPM
+
 ## 1.26.1 – 2025-06-17
 
 - Fix test when zenith angle is negative
