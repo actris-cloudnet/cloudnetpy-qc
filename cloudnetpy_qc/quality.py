@@ -914,7 +914,7 @@ class TestCFConvention(Test):
     description = "Test compliance with the CF metadata conventions."
 
     def run(self):
-        from cfchecker import cfchecks
+        from cfchecker import cfchecks  # noqa: PLC0415
 
         cf_version = "1.8"
         inst = cfchecks.CFChecker(
