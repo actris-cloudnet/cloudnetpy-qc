@@ -1005,23 +1005,44 @@ class TestInstrumentPid(Test):
             received = str(getattr(self.nc, key))
         except AttributeError:
             return
-        items = self._get_value("21.T11148/eb3c713572f681e6c4c3")
-        if not isinstance(items, list):
-            return
-        model_name = self._get_value("21.T11148/c1a0ec5ad347427f25d6")["modelName"]
-        for item in items:
-            if item["alternateIdentifier"]["alternateIdentifierType"] == "SerialNumber":
-                expected = item["alternateIdentifier"]["alternateIdentifierValue"]
+        expected = self._get_serial_number()
+        if expected is None:
+            self._add_warning(
+                f"No serial number was defined in instrument PID "
+                f"but found '{received}' in the file."
+            )
+        elif received != expected:
+            msg = self._create_message(expected, received, "serial number")
+            self._add_error(msg)
+
+    def _get_serial_number(self) -> str | None:
+        # Exception for L'Aquila LPM whose serial number changed when wind
+        # sensors were added.
+        if (
+            self.nc.instrument_pid
+            == "https://hdl.handle.net/21.12132/3.7cd404bd07d74e93"
+        ):
+            return "3629" if self._get_date() <= datetime.date(2023, 10, 23) else "3778"
+        idents = self._get_value("21.T11148/eb3c713572f681e6c4c3")
+        if not isinstance(idents, list):
+            return None
+        model = self._get_value("21.T11148/c1a0ec5ad347427f25d6")
+        if not isinstance(model, dict):
+            return None
+        model_name = model["modelName"]
+        for ident in idents:
+            if (
+                ident["alternateIdentifier"]["alternateIdentifierType"]
+                == "SerialNumber"
+            ):
+                serial_number = ident["alternateIdentifier"]["alternateIdentifierValue"]
                 if "StreamLine" in model_name:
-                    expected = expected.split("-")[-1]
-                if received != expected:
-                    msg = self._create_message(expected, received, "serial number")
-                    self._add_error(msg)
-                return
-        self._add_warning(
-            f"No serial number was defined in instrument PID "
-            f"but found '{received}' in the file."
-        )
+                    serial_number = serial_number.split("-")[-1]
+                return serial_number
+        return None
+
+    def _get_date(self):
+        return datetime.date(int(self.nc.year), int(self.nc.month), int(self.nc.day))
 
     def _check_model_name(self):
         key = "source"
