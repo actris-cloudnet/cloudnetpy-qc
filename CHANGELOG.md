@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.26.3 – 2025-08-27
+
+- Support altitude vector
+
 ## 1.26.2 – 2025-07-22
 
 - Add exception for serial number of L'Aquila LPM
