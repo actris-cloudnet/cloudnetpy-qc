@@ -238,7 +238,7 @@ class FindVariableOutliers(Test):
         if key == "height" and self.product == Product.CPR:
             return None
         if key == "air_pressure":
-            pressure = utils.calc_pressure(self.nc["altitude"][:])
+            pressure = utils.calc_pressure(np.mean(self.nc["altitude"][:]))
             max_diff = pressure * 0.05
             return (pressure - max_diff, pressure + max_diff)
         if not DATA_CONFIG.has_option("limits", key):
