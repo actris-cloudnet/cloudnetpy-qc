@@ -815,7 +815,7 @@ class TestCoordinates(Test):
 
     def run(self):
         required_vars = {"latitude", "longitude"}
-        if self.nc.cloudnet_file_type != "model":
+        if self.product != Product.MODEL and LEVELS[self.product] != "3":
             required_vars.add("altitude")
         for key in required_vars:
             if key not in self.nc.variables:
@@ -891,7 +891,7 @@ class TestCoordinates(Test):
         return np.array(naive_dt, dtype="datetime64[s]")
 
     def _calc_max_dist(self, latitude, longitude):
-        if self.nc.cloudnet_file_type == "model":
+        if self.product == Product.MODEL:
             mean_lat = np.mean(latitude)
             mean_lon = np.mean(longitude)
             angle = 1  # Model resolution should be at least 1 degrees.
