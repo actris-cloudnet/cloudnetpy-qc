@@ -455,6 +455,7 @@ class TestGlobalAttributes(Test):
                 and name in ("initialization_time", "institution")
             )
             or (self._instrument_product(product) and name == "serial_number")
+            or (product == Product.MWR_L1C and name in ("source_file_uuids",))
         )
 
     def run(self):
