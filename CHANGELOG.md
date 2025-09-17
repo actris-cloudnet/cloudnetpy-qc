@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.26.4 – 2025-09-17
+
+- Don't require `altitude` variable in L3 products
+- Add optional source_file_uuids to mwr-l1c
+
 ## 1.26.3 – 2025-08-27
 
 - Support altitude vector
