@@ -236,9 +236,13 @@ class FindVariableOutliers(Test):
             pressure = utils.calc_pressure(np.mean(self.nc["altitude"][:]))
             max_diff = pressure * 0.05
             return (pressure - max_diff, pressure + max_diff)
-        if not DATA_CONFIG.has_option("limits", key):
+        if DATA_CONFIG.has_option(self.product.value, key):
+            section = self.product.value
+        elif DATA_CONFIG.has_option("defaults", key):
+            section = "defaults"
+        else:
             return None
-        limit_min, limit_max = DATA_CONFIG.get("limits", key).split(",", maxsplit=1)
+        limit_min, limit_max = DATA_CONFIG.get(section, key).split(",", maxsplit=1)
         return (float(limit_min), float(limit_max))
 
     def _get_data(self, key: str) -> np.ndarray:
