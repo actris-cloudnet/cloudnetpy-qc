@@ -224,12 +224,6 @@ class FindVariableOutliers(Test):
                 self._add_info(msg)
 
     def _get_limits(self, key: str) -> tuple[float, float] | None:
-        if key == "zenith_angle" and self.product in (
-            Product.MWR_L1C,
-            Product.MWR_SINGLE,
-            Product.MWR_MULTI,
-        ):
-            return None
         if key == "height" and self.product == Product.CPR:
             return None
         if key == "air_pressure":
