@@ -165,11 +165,6 @@ class Test:
     def _add_error(self, message: str | list):
         self._add_message(message, ErrorLevel.ERROR)
 
-    def _read_config_keys(self, config_section: str) -> np.ndarray:
-        field = "all" if "attr" in config_section else self.product.value
-        keys = METADATA_CONFIG[config_section][field].split(",")
-        return np.char.strip(keys)
-
     def _get_required_variables(self) -> dict:
         return {
             name: var
