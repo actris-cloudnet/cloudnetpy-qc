@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.27.0 – 2025-09-18
+
+- Add first product based outlier limits
+
 ## 1.26.4 – 2025-09-17
 
 - Don't require `altitude` variable in L3 products
