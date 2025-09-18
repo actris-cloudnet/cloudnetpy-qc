@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.27.1 – 2025-09-18
+
+- Check MWR zenith/elevation angles
+
 ## 1.27.0 – 2025-09-18
 
 - Add first product based outlier limits
