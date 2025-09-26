@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.27.2 – 2025-09-26
+
+- Add new classification variables
+
 ## 1.27.1 – 2025-09-18
 
 - Check MWR zenith/elevation angles
