@@ -375,6 +375,19 @@ VARIABLES = {
         units="m",
         required=[Product.CLASSIFICATION, Product.CLASSIFICATION_VOODOO],
     ),
+    # New variables in classification product, not yet mandatory in all files:
+    "cloud_top_height_status": Variable(
+        long_name="Cloud top height quality status",
+        dtype=Dtype.INT,
+    ),
+    "radar_attenuation_status": Variable(
+        long_name="Radar attenuation status",
+        dtype=Dtype.INT,
+    ),
+    "signal_source_status": Variable(
+        long_name="Signal source status",
+        dtype=Dtype.INT,
+    ),
     # ----------------------------
     # Required in LWC Level 2 file
     # ----------------------------
