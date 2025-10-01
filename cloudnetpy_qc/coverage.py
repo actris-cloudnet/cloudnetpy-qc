@@ -33,6 +33,8 @@ def data_coverage(
         return None
     if nc.cloudnet_file_type == "model":
         expected_res = _model_resolution(nc)
+    elif "da10" in getattr(nc, "source", "").lower():
+        expected_res = datetime.timedelta(minutes=2)
     else:
         product = Product(nc.cloudnet_file_type)
         expected_res = RESOLUTIONS.get(product, DEFAULT_RESOLUTION)
