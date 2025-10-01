@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.27.3 – 2025-10-01
+
+- Add expected da10 time resolution
+
 ## 1.27.2 – 2025-09-26
 
 - Add new classification variables
