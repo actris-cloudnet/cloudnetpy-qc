@@ -1017,6 +1017,17 @@ class TestInstrumentPid(Test):
             == "https://hdl.handle.net/21.12132/3.7cd404bd07d74e93"
         ):
             return "3629" if self._get_date() <= datetime.date(2023, 10, 23) else "3778"
+        # Also in Lindenberg DA10 the serial number changed after instrument upgrade
+        elif (
+            self.nc.instrument_pid
+            == "https://hdl.handle.net/21.12132/3.9c7bcece918642ea"
+        ):
+            return (
+                "V4610942"
+                if self._get_date() < datetime.date(2025, 7, 1)
+                else "V4610983"
+            )
+
         idents = self._get_value("21.T11148/eb3c713572f681e6c4c3")
         if not isinstance(idents, list):
             return None
