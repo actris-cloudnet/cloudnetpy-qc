@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.27.5 – 2025-10-03
+
+- Add tpow
+
 ## 1.27.4 – 2025-10-03
 
 - Fix checking of Lindenberg DA10 serial number
