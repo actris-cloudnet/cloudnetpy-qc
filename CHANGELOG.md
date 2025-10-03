@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.27.4 – 2025-10-03
+
+- Fix checking of Lindenberg DA10 serial number
+
 ## 1.27.3 – 2025-10-01
 
 - Add expected da10 time resolution
