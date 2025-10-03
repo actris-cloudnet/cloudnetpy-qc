@@ -1742,4 +1742,8 @@ VARIABLES = {
         long_name="Correction bits",
         dtype=Dtype.INT,
     ),
+    "tpow": Variable(
+        long_name="Average Transmit Power",
+        units="W",
+    ),
 }
