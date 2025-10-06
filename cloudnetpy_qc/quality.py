@@ -494,6 +494,8 @@ class TestMedianLwp(Test):
         if median_lwp < limits[0] or median_lwp > limits[1]:
             msg = utils.create_out_of_bounds_msg(key, *limits, median_lwp)
             self._add_warning(msg)
+        if ma.all(data == 0):
+            self._add_error(f"All unmasked '{key}' values are zero.")
 
 
 class FindAttributeOutliers(Test):
