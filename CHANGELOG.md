@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.27.6 – 2025-10-06
+
+- Add test for LWP all zeros
+
 ## 1.27.5 – 2025-10-03
 
 - Add tpow
