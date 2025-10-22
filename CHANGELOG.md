@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.28.0 – 2025-10-22
+
+- Add test for range and height
+
 ## 1.27.6 – 2025-10-06
 
 - Add test for LWP all zeros
