@@ -650,6 +650,30 @@ class TestRainfallConsistency(Test):
 # -------------------- #
 
 
+class TestRangeAndHeight(Test):
+    name = "Range and height"
+    description = "Test that range and height data are valid."
+    products = Product.all() - {
+        Product.RAIN_GAUGE,
+        Product.WEATHER_STATION,
+        Product.MODEL,
+        Product.DISDROMETER,
+        Product.MWR_L1C,
+        Product.MWR,
+    }
+
+    def run(self):
+        if "range" in self.nc.variables:
+            range_var = self.nc["range"][:]
+            if ma.min(range_var) < 0:
+                self._add_error("Range variable contains negative values.")
+        if "height" in self.nc.variables and "altitude" in self.nc.variables:
+            altitude = ma.median(self.nc["altitude"][:])
+            height_var = self.nc["height"][:]
+            if ma.min(height_var) < altitude:
+                self._add_error("Height variable contains values below ground.")
+
+
 class TestDataModel(Test):
     name = "Data model"
     description = "Test netCDF data model."
