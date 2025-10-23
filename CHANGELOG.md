@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.28.1 – 2025-10-23
+
+- Change calibration_offset to Zh_offset
+
 ## 1.28.0 – 2025-10-22
 
 - Add test for range and height
