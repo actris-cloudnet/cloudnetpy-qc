@@ -1031,7 +1031,7 @@ VARIABLES = {
     # --------------------------------------------
     # Variables included in some of Level 1b files
     # --------------------------------------------
-    "calibration_offset": Variable(
+    "Zh_offset": Variable(
         long_name="Radar reflectivity calibration offset",
         units="dBZ",
     ),
