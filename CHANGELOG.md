@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.28.2 – 2025-11-06
+
+- Skip height test for CPR product
+
 ## 1.28.1 – 2025-10-23
 
 - Change calibration_offset to Zh_offset
