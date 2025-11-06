@@ -660,6 +660,7 @@ class TestRangeAndHeight(Test):
         Product.DISDROMETER,
         Product.MWR_L1C,
         Product.MWR,
+        Product.CPR,
     }
 
     def run(self):
