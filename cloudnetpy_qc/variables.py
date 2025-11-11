@@ -907,6 +907,55 @@ VARIABLES = {
         required=[Product.CPR],
     ),
     # ----------------------------------------
+    # Required in cpr-validation Level 3 file
+    # ----------------------------------------
+    "time_cpr": Variable(
+        long_name="Time UTC",
+        units=time_units,
+        required=[Product.CPR_VALIDATION],
+        dtype=Dtype.DOUBLE,
+    ),
+    "echo_cpr": Variable(
+        long_name="Radar reflectivity factor",
+        required=[Product.CPR_VALIDATION],
+        units="dBZ",
+    ),
+    "v_cpr": Variable(
+        long_name="Doppler velocity",
+        units="m s-1",
+        required=[Product.CPR_VALIDATION],
+    ),
+    "latitude_cpr": Variable(
+        long_name="Latitude of CPR ground track",
+        units="degree_north",
+        required=[Product.CPR_VALIDATION],
+    ),
+    "longitude_cpr": Variable(
+        long_name="Longitude of CPR ground track",
+        units="degree_east",
+        required=[Product.CPR_VALIDATION],
+    ),
+    "distance": Variable(
+        long_name="Distance between site and CPR ground track",
+        units="km",
+        required=[Product.CPR_VALIDATION],
+    ),
+    "latitude_msi": Variable(
+        long_name="Latitude of MSI ground track",
+        units="degree_north",
+        required=[Product.CPR_VALIDATION],
+    ),
+    "longitude_msi": Variable(
+        long_name="Longitude of MSI ground track",
+        units="degree_east",
+        required=[Product.CPR_VALIDATION],
+    ),
+    "cloud_top_height": Variable(
+        long_name="Cloud top height",
+        units="m",
+        required=[Product.CPR_VALIDATION],
+    ),
+    # ----------------------------------------
     # Required in Epsilon (lidar)
     # ----------------------------------------
     "epsilon": Variable(
