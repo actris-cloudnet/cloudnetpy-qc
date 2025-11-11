@@ -41,6 +41,7 @@ class Product(Enum):
     L3_IWC = "l3-iwc"
     L3_LWC = "l3-lwc"
     CPR = "cpr-simulation"
+    CPR_VALIDATION = "cpr-validation"
 
     @classmethod
     def all(cls) -> set[Product]:
@@ -77,6 +78,7 @@ LEVELS: dict[Product, Level] = {
     Product.L3_IWC: "3",
     Product.L3_LWC: "3",
     Product.CPR: "3",
+    Product.CPR_VALIDATION: "3",
 }
 
 

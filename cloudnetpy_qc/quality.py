@@ -224,7 +224,7 @@ class FindVariableOutliers(Test):
                 self._add_info(msg)
 
     def _get_limits(self, key: str) -> tuple[float, float] | None:
-        if key == "height" and self.product == Product.CPR:
+        if key == "height" and self.product in (Product.CPR, Product.CPR_VALIDATION):
             return None
         if key == "air_pressure":
             pressure = utils.calc_pressure(np.mean(self.nc["altitude"][:]))
@@ -294,6 +294,7 @@ class TestZenithAngle(Test):
 class TestDataCoverage(Test):
     name = "Data coverage"
     description = "Test that file contains enough data."
+    products = Product.all() - {Product.CPR_VALIDATION}
 
     def run(self):
         coverage, expected_res, actual_res = data_coverage(self.nc)
@@ -449,6 +450,7 @@ class TestGlobalAttributes(Test):
             )
             or (self._instrument_product(product) and name == "serial_number")
             or (product == Product.MWR_L1C and name in ("source_file_uuids",))
+            or (product == Product.CPR_VALIDATION and name in ("cpr_l1b_baseline",))
         )
 
     def run(self):
@@ -661,6 +663,7 @@ class TestRangeAndHeight(Test):
         Product.MWR_L1C,
         Product.MWR,
         Product.CPR,
+        Product.CPR_VALIDATION,
     }
 
     def run(self):
