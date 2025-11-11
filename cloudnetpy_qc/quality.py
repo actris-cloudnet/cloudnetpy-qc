@@ -450,7 +450,10 @@ class TestGlobalAttributes(Test):
             )
             or (self._instrument_product(product) and name == "serial_number")
             or (product == Product.MWR_L1C and name in ("source_file_uuids",))
-            or (product == Product.CPR_VALIDATION and name in ("cpr_l1b_baseline",))
+            or (
+                product == Product.CPR_VALIDATION
+                and name in ("cpr_l1b_baseline", "cpr_l1b_filename")
+            )
         )
 
     def run(self):
