@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.29.0 – 2025-11-12
+
+- Add cpr-validation product
+
 ## 1.28.2 – 2025-11-06
 
 - Skip height test for CPR product
