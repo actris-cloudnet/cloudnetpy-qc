@@ -85,6 +85,7 @@ print(json_object)
 | `TestBrightnessTemperature` | Test that brightness temperature data are valid.                                        |
 | `TestCFConvention`          | Test compliance with the CF metadata conventions.                                       |
 | `TestComment`               | Check that variables have expected comments.                                            |
+| `TestCompression`           | Test netCDF compression.                                                                |
 | `TestCoordinateVariables`   | Test dimensions of coordinate variables are correct.                                    |
 | `TestCoordinates`           | Check that file coordinates match site coordinates.                                     |
 | `TestDataCoverage`          | Test that file contains enough data.                                                    |
@@ -104,6 +105,7 @@ print(json_object)
 | `TestMedianLwp`             | Test that LWP data are valid.                                                           |
 | `TestModelData`             | Test that model data are valid.                                                         |
 | `TestRainfallConsistency`   | Test that precipitation rate and amount are consistent.                                 |
+| `TestRangeAndHeight`        | Test that range and height data are valid.                                              |
 | `TestStandardNames`         | Check that variable have expected standard names.                                       |
 | `TestTimeVector`            | Test that time vector is continuous.                                                    |
 | `TestUnexpectedMask`        | Test if data contain unexpected masked values.                                          |
