@@ -692,6 +692,22 @@ class TestDataModel(Test):
             self._add_error(utils.create_expected_received_msg(expected, received))
 
 
+class TestCompression(Test):
+    name = "Compression"
+    description = "Test netCDF compression."
+
+    def run(self):
+        for key, var in self.nc.variables.items():
+            # Skip scalars.
+            if not var.dimensions:
+                continue
+            filters = var.filters()
+            if not filters["shuffle"]:
+                self._add_warning(f"Variable '{key}' is not shuffled.")
+            if not filters["zlib"]:
+                self._add_warning(f"Variable '{key}' is not compressed.")
+
+
 class TestBrightnessTemperature(Test):
     name = "Brightness temperature"
     description = "Test that brightness temperature data are valid."
