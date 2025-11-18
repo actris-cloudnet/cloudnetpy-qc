@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.30.0 – 2025-11-18
+
+- Add test for compression
+- Update CF tables
+
 ## 1.29.0 – 2025-11-12
 
 - Add cpr-validation product
