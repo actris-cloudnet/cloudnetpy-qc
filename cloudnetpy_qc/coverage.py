@@ -43,7 +43,7 @@ def data_coverage(
     bins = max(1, duration // expected_res)
     hist, _ = np.histogram(time, bins=bins, range=(0, duration / time_unit))
     coverage = np.count_nonzero(hist > 0) / len(hist)
-    actual_res = np.median(np.diff(time)) * time_unit
+    actual_res = float(np.median(np.diff(time))) * time_unit
     return coverage, expected_res, actual_res
 
 
