@@ -42,6 +42,7 @@ class Product(Enum):
     L3_LWC = "l3-lwc"
     CPR = "cpr-simulation"
     CPR_VALIDATION = "cpr-validation"
+    CPR_TC_VALIDATION = "cpr-tc-validation"
 
     @classmethod
     def all(cls) -> set[Product]:
@@ -79,6 +80,7 @@ LEVELS: dict[Product, Level] = {
     Product.L3_LWC: "3",
     Product.CPR: "3",
     Product.CPR_VALIDATION: "3",
+    Product.CPR_TC_VALIDATION: "3",
 }
 
 
@@ -912,7 +914,7 @@ VARIABLES = {
     "time_cpr": Variable(
         long_name="Time UTC",
         units=time_units,
-        required=[Product.CPR_VALIDATION],
+        required=[Product.CPR_VALIDATION, Product.CPR_TC_VALIDATION],
         dtype=Dtype.DOUBLE,
     ),
     "echo_cpr": Variable(
@@ -928,17 +930,17 @@ VARIABLES = {
     "latitude_cpr": Variable(
         long_name="Latitude of CPR ground track",
         units="degree_north",
-        required=[Product.CPR_VALIDATION],
+        required=[Product.CPR_VALIDATION, Product.CPR_TC_VALIDATION],
     ),
     "longitude_cpr": Variable(
         long_name="Longitude of CPR ground track",
         units="degree_east",
-        required=[Product.CPR_VALIDATION],
+        required=[Product.CPR_VALIDATION, Product.CPR_TC_VALIDATION],
     ),
     "distance": Variable(
         long_name="Distance between site and CPR ground track",
         units="km",
-        required=[Product.CPR_VALIDATION],
+        required=[Product.CPR_VALIDATION, Product.CPR_TC_VALIDATION],
     ),
     "latitude_msi": Variable(
         long_name="Latitude of MSI ground track",
@@ -954,6 +956,12 @@ VARIABLES = {
         long_name="Cloud top height",
         units="m",
         required=[Product.CPR_VALIDATION],
+    ),
+    "target_classification_cpr": Variable(
+        long_name="CPR target classification",
+        units="1",
+        dtype=Dtype.INT,
+        required=[Product.CPR_TC_VALIDATION],
     ),
     # ----------------------------------------
     # Required in Epsilon (lidar)
