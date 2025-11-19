@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.30.1 – 2025-11-19
+
+- Remove redundant warnings in compression test
+
 ## 1.30.0 – 2025-11-18
 
 - Add test for compression
