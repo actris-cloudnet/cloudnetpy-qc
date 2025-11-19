@@ -702,10 +702,10 @@ class TestCompression(Test):
             if not var.dimensions:
                 continue
             filters = var.filters()
-            if not filters["shuffle"]:
-                self._add_warning(f"Variable '{key}' is not shuffled.")
             if not filters["zlib"]:
                 self._add_warning(f"Variable '{key}' is not compressed.")
+            elif not filters["shuffle"]:
+                self._add_warning(f"Variable '{key}' is not shuffled.")
 
 
 class TestBrightnessTemperature(Test):
