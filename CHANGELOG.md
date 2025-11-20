@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.30.2 – 2025-11-20
+
+- Add cpr-tc-validation
+
 ## 1.30.1 – 2025-11-19
 
 - Remove redundant warnings in compression test
