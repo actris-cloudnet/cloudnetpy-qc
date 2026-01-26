@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.30.3 – 2026-01-26
+
+- Add `source_instrument_pids` attribute
+
 ## 1.30.2 – 2025-11-20
 
 - Add cpr-tc-validation
