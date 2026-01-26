@@ -437,11 +437,11 @@ class TestGlobalAttributes(Test):
         if product in (Product.MWR_SINGLE, Product.MWR_MULTI, Product.EPSILON_LIDAR):
             attrs.add("source_file_uuids")
         if product != Product.MODEL:
-            attrs.add(
-                "instrument_pid"
-                if self._instrument_product(product)
-                else "source_file_uuids"
-            )
+            if self._instrument_product(product):
+                attrs.add("instrument_pid")
+            else:
+                attrs.add("source_file_uuids")
+                attrs.add("source_instrument_pids")
         return attrs
 
     def _optional_attr(self, name: str, product: Product) -> bool:
