@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.30.4 – 2026-02-03
+
+- Change error to warning if lwp values are zeros
+
 ## 1.30.3 – 2026-01-26
 
 - Add `source_instrument_pids` attribute
