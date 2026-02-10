@@ -775,10 +775,12 @@ class TestLWC(Test):
     products = [Product.LWC]
 
     def run(self):
-        integrated_lwc = np.trapezoid(self.nc["lwc"][:], self.nc["height"][:], axis=1)
+        site_altitude = np.mean(self.nc["altitude"][:])
+        path_lengths = np.diff(self.nc["height"][:] - site_altitude, prepend=0)
+        integrated_lwc = ma.sum(self.nc["lwc"][:] * path_lengths, axis=1)
         lwp = self.nc["lwp"][:]
         diff = np.abs(integrated_lwc - lwp) / lwp
-        if np.any(diff > 0.01):
+        if np.any(diff > 0.0001):
             self._add_error("LWC and LWP data are not consistent.")
 
 
