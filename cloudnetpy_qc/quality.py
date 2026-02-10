@@ -769,6 +769,19 @@ class TestLidarBeta(Test):
         self._add_error("No valid beta variable found.")
 
 
+class TestLWC(Test):
+    name = "LWC consistency"
+    description = "Test that LWP and integrated LWC are consistent."
+    products = [Product.LWC]
+
+    def run(self):
+        integrated_lwc = np.trapezoid(self.nc["lwc"][:], self.nc["height"][:], axis=1)
+        lwp = self.nc["lwp"][:]
+        diff = np.abs(integrated_lwc - lwp) / lwp
+        if np.any(diff > 0.01):
+            self._add_error("LWC and LWP data are not consistent.")
+
+
 class TestTimeVector(Test):
     name = "Time vector"
     description = "Test that time vector is continuous."
