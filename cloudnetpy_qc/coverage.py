@@ -17,6 +17,7 @@ RESOLUTIONS = {
     Product.RAIN_GAUGE: datetime.timedelta(minutes=1),
     Product.DOPPLER_LIDAR_WIND: datetime.timedelta(hours=1.5),
     Product.CPR_VALIDATION: datetime.timedelta(hours=1.5),
+    Product.WEATHER_RADAR: datetime.timedelta(minutes=15),
 }
 DEFAULT_RESOLUTION = datetime.timedelta(seconds=30)
 

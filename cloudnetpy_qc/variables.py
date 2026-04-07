@@ -21,6 +21,7 @@ class Product(Enum):
     DOPPLER_LIDAR_WIND = "doppler-lidar-wind"
     RAIN_RADAR = "rain-radar"
     RAIN_GAUGE = "rain-gauge"
+    WEATHER_RADAR = "weather-radar"
     # Level 1c
     CATEGORIZE = "categorize"
     MWR_L1C = "mwr-l1c"
@@ -62,6 +63,7 @@ LEVELS: dict[Product, Level] = {
     Product.RAIN_GAUGE: "1b",
     Product.DOPPLER_LIDAR_WIND: "1c",
     Product.RAIN_RADAR: "1b",
+    Product.WEATHER_RADAR: "1b",
     Product.CATEGORIZE: "1c",
     Product.CATEGORIZE_VOODOO: "1c",
     Product.MWR_L1C: "1c",
