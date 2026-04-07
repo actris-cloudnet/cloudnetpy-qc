@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.30.5 – 2026-04-07
+
+- Add test for LWC consistency
+- Add weather radar file type
+
 ## 1.30.4 – 2026-02-03
 
 - Change error to warning if lwp values are zeros
