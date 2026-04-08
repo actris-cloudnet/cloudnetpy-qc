@@ -97,6 +97,7 @@ print(json_object)
 | `TestIfRangeCorrected`      | Test that beta is range corrected.                                                      |
 | `TestInstrumentPid`         | Test that valid instrument PID exists.                                                  |
 | `TestLDR`                   | Test that LDR values are proper.                                                        |
+| `TestLWC`                   | Test that LWP and integrated LWC are consistent.                                        |
 | `TestLidarBeta`             | Test that one beta variable exists.                                                     |
 | `TestLongNames`             | Check that variables have expected long names.                                          |
 | `TestMWRMultiTemperature`   | Test that temperature data are valid.                                                   |
