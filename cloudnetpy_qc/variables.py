@@ -114,7 +114,7 @@ VARIABLES = {
     "radar_frequency": Variable(
         long_name="Radar transmit frequency",
         units="GHz",
-        required=[Product.RADAR],
+        required=[Product.RADAR, Product.WEATHER_RADAR],
     ),
     "Zh": Variable(
         long_name="Radar reflectivity factor",
@@ -122,12 +122,18 @@ VARIABLES = {
         required=[
             Product.RADAR,
             Product.RAIN_RADAR,
+            Product.WEATHER_RADAR,
         ],
     ),
     "nyquist_velocity": Variable(
         long_name="Nyquist velocity",
         units="m s-1",
-        required=[Product.RADAR],
+        required=[Product.RADAR, Product.WEATHER_RADAR],
+    ),
+    "calibration_reflectivity_factor": Variable(
+        long_name="Calibration reflectivity factor",
+        units="dBZ",
+        required=[Product.WEATHER_RADAR],
     ),
     # -------------------------------
     # Required in LIDAR Level 1b file
