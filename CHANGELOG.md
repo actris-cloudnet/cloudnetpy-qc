@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.30.6 – 2026-04-10
+
+- Update weather radar variables
+
 ## 1.30.5 – 2026-04-07
 
 - Add test for LWC consistency
