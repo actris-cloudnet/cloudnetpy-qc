@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.30.7 – 2026-05-04
+
+- Use atmoslib
+- Update CF tables
+
 ## 1.30.6 – 2026-04-10
 
 - Update weather radar variables
