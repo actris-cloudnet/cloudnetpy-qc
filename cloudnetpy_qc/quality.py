@@ -11,6 +11,7 @@ from os import PathLike
 from pathlib import Path
 from typing import NamedTuple, TypedDict
 
+import atmoslib
 import netCDF4
 import numpy as np
 import scipy.stats
@@ -231,7 +232,8 @@ class FindVariableOutliers(Test):
         ):
             return None
         if key == "air_pressure":
-            pressure = utils.calc_pressure(np.mean(self.nc["altitude"][:]))
+            altitude = np.mean(self.nc["altitude"][:])
+            pressure = float(atmoslib.isa_pressure(altitude))
             max_diff = pressure * 0.05
             return (pressure - max_diff, pressure + max_diff)
         if DATA_CONFIG.has_option(self.product.value, key):
