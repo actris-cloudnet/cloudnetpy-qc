@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.31.0 – 2026-05-06
+
+- Add epsilon-radar
+
 ## 1.30.7 – 2026-05-04
 
 - Use atmoslib
