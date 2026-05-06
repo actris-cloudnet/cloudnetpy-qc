@@ -436,7 +436,12 @@ class TestGlobalAttributes(Test):
         attrs = set(self.REQUIRED_ATTRS)
         if product == Product.MWR_L1C:
             attrs.add("mwrpy_coefficients")
-        if product in (Product.MWR_SINGLE, Product.MWR_MULTI, Product.EPSILON_LIDAR):
+        if product in (
+            Product.MWR_SINGLE,
+            Product.MWR_MULTI,
+            Product.EPSILON_LIDAR,
+            Product.EPSILON_RADAR,
+        ):
             attrs.add("source_file_uuids")
         if product != Product.MODEL:
             if self._instrument_product(product):

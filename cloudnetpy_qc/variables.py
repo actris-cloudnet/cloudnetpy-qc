@@ -37,6 +37,7 @@ class Product(Enum):
     MWR_SINGLE = "mwr-single"
     MWR_MULTI = "mwr-multi"
     EPSILON_LIDAR = "epsilon-lidar"
+    EPSILON_RADAR = "epsilon-radar"
     # Level 3
     L3_CF = "l3-cf"
     L3_IWC = "l3-iwc"
@@ -77,6 +78,7 @@ LEVELS: dict[Product, Level] = {
     Product.MWR_SINGLE: "2",
     Product.MWR_MULTI: "2",
     Product.EPSILON_LIDAR: "2",
+    Product.EPSILON_RADAR: "2",
     Product.L3_CF: "3",
     Product.L3_IWC: "3",
     Product.L3_LWC: "3",
@@ -972,13 +974,21 @@ VARIABLES = {
         required=[Product.CPR_TC_VALIDATION],
     ),
     # ----------------------------------------
-    # Required in Epsilon (lidar)
+    # Required in Epsilon (lidar / radar)
     # ----------------------------------------
     "epsilon": Variable(
         long_name="Dissipation rate of turbulent kinetic energy",
         units="m2 s-3",
         required=[
             Product.EPSILON_LIDAR,
+            Product.EPSILON_RADAR,
+        ],
+    ),
+    "epsilon_error": Variable(
+        long_name="Absolute error in dissipation rate of turbulent kinetic energy",
+        units="m2 s-3",
+        required=[
+            Product.EPSILON_RADAR,
         ],
     ),
     "rolling_window_period": Variable(
