@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.31.1 – 2026-05-06
+
+- Require instrument_pid for epsilon-radar
+
 ## 1.31.0 – 2026-05-06
 
 - Add epsilon-radar
