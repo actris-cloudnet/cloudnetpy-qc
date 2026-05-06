@@ -430,6 +430,7 @@ class TestGlobalAttributes(Test):
             Product.MWR_MULTI,
             Product.DOPPLER_LIDAR_WIND,
             Product.EPSILON_LIDAR,
+            Product.EPSILON_RADAR,
         )
 
     def _required_attrs(self, product: Product):
