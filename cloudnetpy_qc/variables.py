@@ -615,6 +615,7 @@ VARIABLES = {
     ),
     "N_scaled": Variable(
         long_name="Cloud droplet number concentration",
+        units="m-3",
         required=[Product.DER],
     ),
     "der_retrieval_status": Variable(
