@@ -1,6 +1,6 @@
 #!/bin/sh
 cd $(dirname "$0")/../cloudnetpy_qc/data
-url=${1:-http://cfconventions.org}
+url=${1:-https://cfconventions.org}
 curl -O $url/Data/cf-standard-names/current/src/cf-standard-name-table.xml
 curl -O $url/Data/area-type-table/current/src/area-type-table.xml
 curl -O $url/Data/standardized-region-list/standardized-region-list.xml
