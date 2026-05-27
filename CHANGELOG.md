@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.31.2 – 2026-05-27
+
+- Fix `N_scaled` units
+
 ## 1.31.1 – 2026-05-06
 
 - Require instrument_pid for epsilon-radar
