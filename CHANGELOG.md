@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.31.3 – 2026-06-17
+
+- Improve support of L3 model products
+
 ## 1.31.2 – 2026-05-27
 
 - Fix `N_scaled` units
