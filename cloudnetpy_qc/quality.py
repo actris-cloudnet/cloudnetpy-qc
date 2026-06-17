@@ -470,6 +470,10 @@ class TestGlobalAttributes(Test):
                 product == Product.CPR_TC_VALIDATION
                 and name in ("cpr_2a_baseline", "cpr_2a_filename")
             )
+            or (
+                product in (Product.L3_CF, Product.L3_IWC, Product.L3_LWC)
+                and name in ("model_name", "model_id")
+            )
         )
 
     def run(self):
@@ -966,7 +970,12 @@ class TestCoordinates(Test):
         return np.array(naive_dt, dtype="datetime64[s]")
 
     def _calc_max_dist(self, latitude, longitude):
-        if self.product == Product.MODEL:
+        if self.product in (
+            Product.MODEL,
+            Product.L3_CF,
+            Product.L3_IWC,
+            Product.L3_LWC,
+        ):
             mean_lat = np.mean(latitude)
             mean_lon = np.mean(longitude)
             angle = 1  # Model resolution should be at least 1 degrees.
