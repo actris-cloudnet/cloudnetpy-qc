@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.31.4 – 2026-07-16
+
+- Extend allowed range for radar reflectivity
+
 ## 1.31.3 – 2026-06-17
 
 - Improve support of L3 model products
