@@ -154,15 +154,79 @@ VARIABLES = {
     # -------------------------------------
     # Required in DISDROMETER Level 1b file
     # -------------------------------------
+    "nominal_area": Variable(
+        long_name="Nominal sampling area of the instrument",
+        units="m2",
+        required=[Product.DISDROMETER],
+    ),
+    "effective_area": Variable(
+        long_name="Effective sampling area as a function of diameter",
+        units="m2",
+    ),
+    "velocity": Variable(
+        long_name="Center fall velocity of precipitation particles",
+        units="m s-1",
+        required=[Product.DISDROMETER],
+    ),
+    "velocity_spread": Variable(
+        long_name="Width of velocity interval",
+        units="m s-1",
+        required=[Product.DISDROMETER],
+    ),
+    "velocity_bnds": Variable(
+        long_name="Velocity bounds", units="m s-1", required=[Product.DISDROMETER]
+    ),
+    "diameter": Variable(
+        long_name="Center diameter of precipitation particles",
+        units="m",
+        required=[Product.DISDROMETER],
+    ),
+    "diameter_spread": Variable(
+        long_name="Width of diameter interval",
+        units="m",
+        required=[Product.DISDROMETER],
+    ),
+    "diameter_bnds": Variable(
+        long_name="Diameter bounds", units="m", required=[Product.DISDROMETER]
+    ),
     "radar_reflectivity": Variable(
         long_name="Equivalent radar reflectivity factor",
         units="dBZ",
         standard_name="equivalent_reflectivity_factor",
         required=[Product.DISDROMETER],
     ),
+    # ----------------------------------------
+    # Recommended in DISDROMETER Level 1b file
+    # ----------------------------------------
+    "snowfall_rate": Variable(
+        long_name="Snowfall rate",
+        units="m s-1",
+    ),
     "n_particles": Variable(
         long_name="Number of particles in time interval",
         dtype=Dtype.INT,
+    ),
+    "synop_WaWa": Variable(
+        long_name="Synop code WaWa",
+        dtype=Dtype.INT,
+    ),
+    "interval": Variable(
+        long_name="Length of measurement interval",
+        units="s",
+        dtype=Dtype.INT,
+    ),
+    "number_concentration": Variable(
+        long_name="Number of particles per diameter class",
+        units="m-3 mm-1",
+    ),
+    "fall_velocity": Variable(
+        long_name="Average velocity of each diameter class",
+        units="m s-1",
+    ),
+    "data_raw": Variable(
+        long_name="Raw data as a function of particle diameter and velocity",
+        units="1",
+        dtype=Dtype.SHORT,
     ),
     # --------------------------------------------
     # Recommended in WEATHER STATION Level 1b file
@@ -1133,43 +1197,6 @@ VARIABLES = {
         long_name="Solid precipitation rate",
         units="m s-1",
     ),
-    "snowfall_rate": Variable(
-        long_name="Snowfall rate",
-        units="m s-1",
-    ),
-    "velocity": Variable(
-        long_name="Center fall velocity of precipitation particles",
-        units="m s-1",
-    ),
-    "velocity_spread": Variable(
-        long_name="Width of velocity interval",
-        units="m s-1",
-    ),
-    "velocity_bnds": Variable(
-        long_name="Velocity bounds",
-        units="m s-1",
-    ),
-    "diameter": Variable(
-        long_name="Center diameter of precipitation particles",
-        units="m",
-    ),
-    "diameter_spread": Variable(
-        long_name="Width of diameter interval",
-        units="m",
-    ),
-    "diameter_bnds": Variable(
-        long_name="Diameter bounds",
-        units="m",
-    ),
-    "synop_WaWa": Variable(
-        long_name="Synop code WaWa",
-        dtype=Dtype.INT,
-    ),
-    "interval": Variable(
-        long_name="Length of measurement interval",
-        units="s",
-        dtype=Dtype.INT,
-    ),
     "sig_laser": Variable(
         long_name="Signal amplitude of the laser strip",
         dtype=Dtype.INT,
@@ -1201,19 +1228,6 @@ VARIABLES = {
     "error_code": Variable(
         long_name="Error code",
         dtype=Dtype.INT,
-    ),
-    "number_concentration": Variable(
-        long_name="Number of particles per diameter class",
-        units="m-3 mm-1",
-    ),
-    "fall_velocity": Variable(
-        long_name="Average velocity of each diameter class",
-        units="m s-1",
-    ),
-    "data_raw": Variable(
-        long_name="Raw data as a function of particle diameter and velocity",
-        units="1",
-        dtype=Dtype.SHORT,
     ),
     "phi_cx": Variable(
         long_name="Co-cross-channel differential phase",

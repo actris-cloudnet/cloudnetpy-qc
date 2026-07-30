@@ -177,8 +177,10 @@ class Test:
         required_variables = self._get_required_variables()
         return set(required_variables.keys())
 
-    def _test_variable_attribute(self, attribute: str):
+    def _test_variable_attribute(self, attribute: str, skip_keys: tuple[str, ...] = ()):
         for key, variable in self.nc.variables.items():
+            if key in skip_keys:
+                continue
             if hasattr(variable, attribute):
                 value = getattr(variable, attribute)
                 if isinstance(value, str) and not value.strip():
@@ -362,7 +364,7 @@ class TestLongNames(Test):
     }
 
     def run(self):
-        self._test_variable_attribute("long_name")
+        self._test_variable_attribute("long_name", skip_keys=("data_raw",))
 
 
 class TestStandardNames(Test):
