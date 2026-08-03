@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.31.5 – 2026-08-03
+
+- Update disdrometer variables
+
 ## 1.31.4 – 2026-07-16
 
 - Extend allowed range for radar reflectivity
