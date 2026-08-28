@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.31.6 – 2026-08-28
+
+- Allow missing source_instrument_pids for ARM sites
+
 ## 1.31.5 – 2026-08-03
 
 - Update disdrometer variables
