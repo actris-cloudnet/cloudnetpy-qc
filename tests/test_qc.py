@@ -44,6 +44,15 @@ def test_legacy_file():
     check.verify_exceptions(keys)
 
 
+def test_arm_site_without_source_instrument_pids():
+    filename = f"{SCRIPT_PATH}/data/20120203_arm-maldives_classification.nc"
+    msg = "Attribute 'source_instrument_pids' is missing."
+    check = Check(filename, file_type="classification")
+    assert msg in check.messages("TestGlobalAttributes")
+    check = Check(filename, file_type="classification", site_type=["arm"])
+    assert msg not in check.messages("TestGlobalAttributes")
+
+
 def test_missing_data():
     filename = f"{SCRIPT_PATH}/data/20220729_norunda_cl51.nc"
     check = Check(filename)
@@ -90,7 +99,12 @@ def test_empty_instrument_pid():
 class Check:
     """Check class."""
 
-    def __init__(self, filename: str, file_type: str | None = None):
+    def __init__(
+        self,
+        filename: str,
+        file_type: str | None = None,
+        site_type: list[str] | None = None,
+    ):
         # Norunda
         site_meta: quality.SiteMeta = {
             "time": None,
@@ -98,8 +112,18 @@ class Check:
             "longitude": 17.479,
             "altitude": 46.0,
         }
+        if site_type is not None:
+            site_meta["type"] = site_type
         self.report = quality.run_tests(Path(filename), site_meta, product=file_type)
         self.tests = self.report.tests
+
+    def messages(self, test_id: str) -> list[str]:
+        return [
+            exc.message
+            for test in self.tests
+            if test.test_id == test_id
+            for exc in test.exceptions
+        ]
 
     def verify_exceptions(self, keys: list):
         n = 0

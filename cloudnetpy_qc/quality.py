@@ -76,7 +76,11 @@ class FileReport(NamedTuple):
         }
 
 
-class SiteMeta(TypedDict):
+class _SiteMetaOptional(TypedDict, total=False):
+    type: list[str]  # site types from the data portal, e.g. ["arm"]
+
+
+class SiteMeta(_SiteMetaOptional):
     time: np.ndarray | None
     latitude: float | np.ndarray | None
     longitude: float | np.ndarray | None
@@ -451,8 +455,13 @@ class TestGlobalAttributes(Test):
                 attrs.add("instrument_pid")
             else:
                 attrs.add("source_file_uuids")
-                attrs.add("source_instrument_pids")
+                # ARM Level 1b files are not in the portal and have no PIDs
+                if not self._is_arm_site():
+                    attrs.add("source_instrument_pids")
         return attrs
+
+    def _is_arm_site(self) -> bool:
+        return "arm" in self.site_meta.get("type", [])
 
     def _optional_attr(self, name: str, product: Product) -> bool:
         return (
@@ -464,6 +473,7 @@ class TestGlobalAttributes(Test):
             )
             or (self._instrument_product(product) and name == "serial_number")
             or (product == Product.MWR_L1C and name in ("source_file_uuids",))
+            or (self._is_arm_site() and name == "source_instrument_pids")
             or (
                 product == Product.CPR_VALIDATION
                 and name in ("cpr_l1b_baseline", "cpr_l1b_filename")
