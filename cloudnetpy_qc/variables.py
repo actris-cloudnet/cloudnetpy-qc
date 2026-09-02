@@ -30,6 +30,7 @@ class Product(Enum):
     CLASSIFICATION = "classification"
     CLASSIFICATION_VOODOO = "classification-voodoo"
     IWC = "iwc"
+    IWC_WEATHER_RADAR = "iwc-weather-radar"
     LWC = "lwc"
     DER = "der"
     IER = "ier"
@@ -71,6 +72,7 @@ LEVELS: dict[Product, Level] = {
     Product.CLASSIFICATION: "2",
     Product.CLASSIFICATION_VOODOO: "2",
     Product.IWC: "2",
+    Product.IWC_WEATHER_RADAR: "2",
     Product.LWC: "2",
     Product.DER: "2",
     Product.IER: "2",

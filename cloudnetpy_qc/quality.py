@@ -437,6 +437,7 @@ class TestGlobalAttributes(Test):
             Product.DOPPLER_LIDAR_WIND,
             Product.EPSILON_LIDAR,
             Product.EPSILON_RADAR,
+            Product.IWC_WEATHER_RADAR,
         )
 
     def _required_attrs(self, product: Product):
@@ -448,6 +449,7 @@ class TestGlobalAttributes(Test):
             Product.MWR_MULTI,
             Product.EPSILON_LIDAR,
             Product.EPSILON_RADAR,
+            Product.IWC_WEATHER_RADAR,
         ):
             attrs.add("source_file_uuids")
         if product != Product.MODEL:
