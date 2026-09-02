@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.31.7 – 2026-09-02
+
+- Add `iwc-weather-radar` product
+
 ## 1.31.6 – 2026-08-28
 
 - Allow missing source_instrument_pids for ARM sites
