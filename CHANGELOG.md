@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.31.8 – 2026-09-03
+
+- Add relaxed value limits for model variables
+
 ## 1.31.7 – 2026-09-02
 
 - Add `iwc-weather-radar` product
