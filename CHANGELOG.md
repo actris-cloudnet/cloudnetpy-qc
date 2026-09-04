@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.31.9 – 2026-09-04
+
+- Add Z_offset variable
+
 ## 1.31.8 – 2026-09-03
 
 - Add relaxed value limits for model variables
