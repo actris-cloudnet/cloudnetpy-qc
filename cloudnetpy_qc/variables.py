@@ -402,6 +402,10 @@ VARIABLES = {
         units="dB",
         required=[Product.CATEGORIZE, Product.CATEGORIZE_VOODOO],
     ),
+    "Z_offset": Variable(
+        long_name="Radar reflectivity calibration offset",
+        units="dBZ",
+    ),
     "Z_error": Variable(
         long_name="Error in radar reflectivity factor",
         units="dB",
