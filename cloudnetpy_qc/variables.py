@@ -34,6 +34,7 @@ class Product(Enum):
     LWC = "lwc"
     DER = "der"
     IER = "ier"
+    COD = "cod"
     DRIZZLE = "drizzle"
     MWR_SINGLE = "mwr-single"
     MWR_MULTI = "mwr-multi"
@@ -76,6 +77,7 @@ LEVELS: dict[Product, Level] = {
     Product.LWC: "2",
     Product.DER: "2",
     Product.IER: "2",
+    Product.COD: "2",
     Product.DRIZZLE: "2",
     Product.MWR_SINGLE: "2",
     Product.MWR_MULTI: "2",
@@ -692,6 +694,57 @@ VARIABLES = {
         long_name="Droplet effective radius retrieval status",
         dtype=Dtype.INT,
         required=[Product.DER],
+    ),
+    # ------------------------------
+    # Required in COD Level 2 file
+    # ------------------------------
+    "extinction_liquid": Variable(
+        long_name="Visible extinction coefficient of liquid cloud",
+        units="m-1",
+        required=[Product.COD],
+    ),
+    "extinction_ice": Variable(
+        long_name="Visible extinction coefficient of ice cloud",
+        units="m-1",
+        required=[Product.COD],
+    ),
+    "extinction_retrieval_status": Variable(
+        long_name="Extinction coefficient retrieval status",
+        dtype=Dtype.INT,
+        required=[Product.COD],
+    ),
+    "extinction_liquid_error": Variable(
+        long_name="Random error in liquid extinction coefficient",
+        units="dB",
+        required=[Product.COD],
+    ),
+    "extinction_ice_error": Variable(
+        long_name="Random error in ice extinction coefficient",
+        units="dB",
+        required=[Product.COD],
+    ),
+    "optical_depth_error": Variable(
+        long_name="Random error in cloud optical depth",
+        units="dB",
+        required=[Product.COD],
+    ),
+    "optical_depth_liquid": Variable(
+        long_name="Liquid cloud optical depth",
+        required=[Product.COD],
+    ),
+    "optical_depth_ice": Variable(
+        long_name="Ice cloud optical depth",
+        required=[Product.COD],
+    ),
+    "optical_depth": Variable(
+        long_name="Cloud optical depth",
+        standard_name="atmosphere_optical_thickness_due_to_cloud",
+        required=[Product.COD],
+    ),
+    "optical_depth_retrieval_status": Variable(
+        long_name="Cloud optical depth retrieval status",
+        dtype=Dtype.INT,
+        required=[Product.COD],
     ),
     # ------------------------
     # Required in MWR L1C file
