@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.32.0 – 2026-09-10
+
+- Add cod product
+
 ## 1.31.9 – 2026-09-04
 
 - Add Z_offset variable
