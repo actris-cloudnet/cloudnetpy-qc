@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.32.1 – 2026-10-01
+
+- Add radar_constant variable
+
 ## 1.32.0 – 2026-09-10
 
 - Add cod product
