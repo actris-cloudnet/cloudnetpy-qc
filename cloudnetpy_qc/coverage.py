@@ -57,7 +57,7 @@ def _model_resolution(nc: netCDF4.Dataset) -> datetime.timedelta:
 
 
 def get_duration(nc: netCDF4.Dataset) -> datetime.timedelta:
-    now = datetime.datetime.now(tz=datetime.timezone.utc)
+    now = datetime.datetime.now(tz=datetime.UTC)
     if now.date() == _get_date(nc):
         midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
         duration = now - midnight

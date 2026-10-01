@@ -4,7 +4,7 @@ description = "Quality control routines for CloudnetPy products"
 readme = "README.md"
 authors = [{name = "Finnish Meteorological Institute", email = "actris-cloudnet@fmi.fi"}]
 license = {file = "LICENSE"}
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Science/Research",

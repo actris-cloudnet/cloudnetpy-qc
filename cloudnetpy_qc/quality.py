@@ -126,7 +126,7 @@ def run_tests(
             if test_instance.coverage is not None:
                 coverage = test_instance.coverage
     return FileReport(
-        timestamp=datetime.datetime.now(tz=datetime.timezone.utc),
+        timestamp=datetime.datetime.now(tz=datetime.UTC),
         qc_version=__version__,
         tests=test_reports,
         data_coverage=coverage,
@@ -972,7 +972,7 @@ class TestCoordinates(Test):
             ):
                 raise ValueError("Naive datetimes are not supported")
         naive_dt = [
-            dt.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+            dt.astimezone(datetime.UTC).replace(tzinfo=None)
             for dt in self.site_meta["time"]
         ]
         return np.array(naive_dt, dtype="datetime64[s]")
