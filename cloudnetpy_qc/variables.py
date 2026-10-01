@@ -1897,4 +1897,8 @@ VARIABLES = {
         long_name="Average Transmit Power",
         units="W",
     ),
+    "radar_constant": Variable(
+        long_name="Radar constant",
+        units="dB",
+    ),
 }
