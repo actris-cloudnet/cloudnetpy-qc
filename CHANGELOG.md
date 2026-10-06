@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.32.2 – 2026-10-06
+
+- Update lwc_error units and long name
+
 ## 1.32.1 – 2026-10-01
 
 - Add radar_constant variable
