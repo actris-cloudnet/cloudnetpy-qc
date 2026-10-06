@@ -486,8 +486,8 @@ VARIABLES = {
         ],
     ),
     "lwc_error": Variable(
-        long_name="Random error in liquid water content, one standard deviation",
-        units="dB",
+        long_name="Relative random error in liquid water content",
+        units="1",
         required=[Product.LWC],
     ),
     "lwc_retrieval_status": Variable(
