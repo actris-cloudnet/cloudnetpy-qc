@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import Literal, NamedTuple
 
 import netCDF4
@@ -92,7 +92,7 @@ LEVELS: dict[Product, Level] = {
 }
 
 
-class Dtype(str, Enum):
+class Dtype(StrEnum):
     FLOAT = "float32"
     DOUBLE = "float64"
     INT = "int32"

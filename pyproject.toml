@@ -2,8 +2,8 @@
 name = "cloudnetpy_qc"
 description = "Quality control routines for CloudnetPy products"
 readme = "README.md"
-authors = [{name = "Finnish Meteorological Institute", email = "actris-cloudnet@fmi.fi"}]
-license = {file = "LICENSE"}
+authors = [{ name = "Finnish Meteorological Institute", email = "actris-cloudnet@fmi.fi" }]
+license = { file = "LICENSE" }
 requires-python = ">=3.11"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -49,7 +49,7 @@ ignore = ["D1"]
 convention = "google"
 
 [tool.setuptools.dynamic]
-version = {attr = "cloudnetpy_qc.version.__version__"}
+version = { attr = "cloudnetpy_qc.version.__version__" }
 
 [tool.tomlsort]
 trailing_comma_inline_array = true

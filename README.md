@@ -16,8 +16,9 @@ $ pip3 install cloudnetpy-qc
 ```python
 import json
 from cloudnetpy_qc import quality
+
 site_meta = {"latitude": 61.844, "longitude": 24.287, "altitude": 150}
-report = quality.run_tests('cloudnet-file.nc', site_meta)
+report = quality.run_tests("cloudnet-file.nc", site_meta)
 json_object = json.dumps(report.to_dict(), indent=2)
 print(json_object)
 ```
