@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.33.0 – 2026-11-09
+
+- Add test for disdrometer interval
+
 ## 1.32.2 – 2026-10-06
 
 - Update lwc_error units and long name
