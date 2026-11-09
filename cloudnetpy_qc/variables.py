@@ -199,6 +199,12 @@ VARIABLES = {
         standard_name="equivalent_reflectivity_factor",
         required=[Product.DISDROMETER],
     ),
+    "interval": Variable(
+        long_name="Length of measurement interval",
+        units="s",
+        dtype=Dtype.INT,
+        required=[Product.DISDROMETER],
+    ),
     # ----------------------------------------
     # Recommended in DISDROMETER Level 1b file
     # ----------------------------------------
@@ -212,11 +218,6 @@ VARIABLES = {
     ),
     "synop_WaWa": Variable(
         long_name="Synop code WaWa",
-        dtype=Dtype.INT,
-    ),
-    "interval": Variable(
-        long_name="Length of measurement interval",
-        units="s",
         dtype=Dtype.INT,
     ),
     "number_concentration": Variable(

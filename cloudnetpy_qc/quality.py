@@ -684,6 +684,24 @@ class TestRainfallConsistency(Test):
             )
 
 
+class TestInterval(Test):
+    name = "Interval"
+    description = "Test that sampling interval matches logging interval."
+    products = [Product.DISDROMETER]
+
+    def run(self):
+        if "time" not in self.nc.variables or "interval" not in self.nc.variables:
+            return
+        time_diff = np.median(np.diff(self.nc["time"][:])) * H_TO_S
+        interval = np.median(self.nc["interval"][:])
+        eta = np.abs(interval - time_diff) / interval
+        if eta > 0.1:
+            self._add_warning(
+                f"Sampling interval ({int(round(interval))} s) doesn't match "
+                f"logging interval ({int(round(time_diff))} s)."
+            )
+
+
 # ---------------------#
 # ------ Errors ------ #
 # -------------------- #

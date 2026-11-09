@@ -96,6 +96,7 @@ print(json_object)
 | `TestGlobalAttributes`      | Check that file contains required global attributes.                                    |
 | `TestIfRangeCorrected`      | Test that beta is range corrected.                                                      |
 | `TestInstrumentPid`         | Test that valid instrument PID exists.                                                  |
+| `TestInterval`              | Test that sampling interval matches logging interval.                                   |
 | `TestLDR`                   | Test that LDR values are proper.                                                        |
 | `TestLWC`                   | Test that LWP and integrated LWC are consistent.                                        |
 | `TestLidarBeta`             | Test that one beta variable exists.                                                     |
