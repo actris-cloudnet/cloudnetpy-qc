@@ -3,12 +3,12 @@ name = "cloudnetpy_qc"
 description = "Quality control routines for CloudnetPy products"
 readme = "README.md"
 authors = [{ name = "Finnish Meteorological Institute", email = "actris-cloudnet@fmi.fi" }]
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.11"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
   "Topic :: Scientific/Engineering :: Atmospheric Science",
