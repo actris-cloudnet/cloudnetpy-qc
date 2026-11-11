@@ -678,10 +678,19 @@ class TestRainfallConsistency(Test):
         interval = np.diff(self.nc["time"][:], prepend=0) * H_TO_S
         calculated_amount = np.sum(rate * interval)
         error = (expected_amount - calculated_amount) * M_TO_MM
-        if np.abs(error) > 20:
+        if np.abs(error) > self._max_error():
             self._add_warning(
                 f"Total accumulated {key} has difference of {round(error, 1)} mm"
             )
+
+    def _max_error(self):
+        # For disdrometers, the amount is derived from the rate, so they should
+        # be close.
+        if self.product == Product.DISDROMETER:
+            return 0.1
+        # Differences can be large for rain gauges, for example, rate may not be
+        # given at all for light rain.
+        return 20
 
 
 class TestInterval(Test):
