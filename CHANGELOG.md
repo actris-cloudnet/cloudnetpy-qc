@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.33.1 – 2026-11-11
+
+- Improve rainfall consistency test for disdrometers
+
 ## 1.33.0 – 2026-11-09
 
 - Add test for disdrometer interval
