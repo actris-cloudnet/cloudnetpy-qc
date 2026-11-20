@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.33.3 – 2026-11-20
+
+- Add `snow_depth` variable
+
 ## 1.33.2 – 2026-11-20
 
 - Fix Zh_offset unit
