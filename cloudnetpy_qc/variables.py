@@ -265,6 +265,11 @@ VARIABLES = {
         standard_name="thickness_of_snowfall_amount",
         comment="Cumulated snow since 00:00 UTC",
     ),
+    "snow_depth": Variable(
+        long_name="Snow depth",
+        units="m",
+        standard_name="surface_snow_thickness",
+    ),
     # ------------------------------------
     # Required in RAIN RADAR Level 1b file
     # ------------------------------------
