@@ -407,7 +407,7 @@ VARIABLES = {
     ),
     "Z_offset": Variable(
         long_name="Radar reflectivity calibration offset",
-        units="dBZ",
+        units="dB",
     ),
     "Z_error": Variable(
         long_name="Error in radar reflectivity factor",
@@ -1235,7 +1235,7 @@ VARIABLES = {
     # --------------------------------------------
     "Zh_offset": Variable(
         long_name="Radar reflectivity calibration offset",
-        units="dBZ",
+        units="dB",
     ),
     "range_offset": Variable(
         long_name="Radar range offset",
